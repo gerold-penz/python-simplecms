@@ -15,8 +15,9 @@ Das Ergebnis wird aber ein sehr einfach bedienbares CMS sein.
 Technik
 =======
 
-Als begeisterter Python_-Programmierer werde ich als Web-Framework CherryPy_
-einsetzen. Als Vorlagensprache habe ich mich für Mako_ entschieden.
+Als begeisterter Python_-Programmierer der kleine und feine Tools schätzt,
+werde ich als Web-Framework CherryPy_ einsetzen.
+Als Vorlagensprache habe ich mich für Mako_ entschieden.
 
 .. _Python: http://www.python.org/
 .. _CherryPy: http://www.cherrypy.org/

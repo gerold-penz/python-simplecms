@@ -99,13 +99,39 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#html_theme = 'default'
-html_theme = 'sphinxdoc'
+html_theme = 'default'
+#html_theme = 'sphinxdoc'
+#html_theme = 'pyramid'
+#html_theme = 'agogo'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #html_theme_options = {}
+html_theme_options = {
+    "externalrefs": True,
+    # footerbgcolor" (CSS color): Background color for the footer line.
+    # footertextcolor (CSS color): Text color for the footer line.
+    # sidebarbgcolor (CSS color): Background color for the sidebar.
+    # sidebarbtncolor (CSS color): Background color for the sidebar collapse button (used when collapsiblesidebar is true).
+    # sidebartextcolor (CSS color): Text color for the sidebar.
+    # sidebarlinkcolor (CSS color): Link color for the sidebar.
+    # relbarbgcolor (CSS color): Background color for the relation bar.
+    # relbartextcolor (CSS color): Text color for the relation bar.
+    # relbarlinkcolor (CSS color): Link color for the relation bar.
+    # "bgcolor": "white", # (CSS color): Body background color.
+    # textcolor (CSS color): Body text color.
+    # linkcolor (CSS color): Body link color.
+    # visitedlinkcolor (CSS color): Body color for visited links.
+    # headbgcolor (CSS color): Background color for headings.
+    # headtextcolor (CSS color): Text color for headings.
+    # headlinkcolor (CSS color): Link color for headings.
+    # codebgcolor (CSS color): Background color for code blocks.
+    # codetextcolor (CSS color): Default text color for code blocks, if not set differently by the highlighting style.
+    # bodyfont (CSS font-family): Font for normal text.
+    # headfont (CSS font-family): Font for headings.
+
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
@@ -122,7 +148,7 @@ html_short_title = "Simple Python CMS"
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
 #html_logo = None
-html_logo = "images/python-powered-w-100x40.png"
+html_logo = "images/simple-python-cms-logo.png"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
