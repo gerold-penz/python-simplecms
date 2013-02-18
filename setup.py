@@ -20,27 +20,23 @@ HOMEPAGE = "http://gerold-penz.github.com/python-simplecms/"
 
 
 setup(
-#    install_requires = [
-#        "distribute",
-#        "cherrypy"
-#    ],
     name = "python-simplecms",
     version = VERSION,
     description = (
-        "Simple Python CMS - xxx"
+        "Simple Python CMS - Content Management System - Made Simple"
     ),
     long_description = open("README.rst").read(),
     keywords = "CherryPy Web Content Management System CMS",
     author = "Gerold Penz",
     author_email = "gerold@halvar.at",
     url = HOMEPAGE,
-    download_url = DOWNLOAD_URL,
-    packages = find_packages(),
+    # download_url = DOWNLOAD_URL,
+    # packages = find_packages(),
 #    data_files = [
 #        ["./yyy", ["_git_add.py"]],
 #    ],
     classifiers = [
-        Development Status :: 1 - Planning,
+        "Development Status :: 1 - Planning",
         #"Development Status :: 2 - Pre-Alpha",
         #"Development Status :: 3 - Alpha",
         #"Development Status :: 4 - Beta",
@@ -53,5 +49,9 @@ setup(
         "Programming Language :: Python :: 2",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: CGI Tools/Libraries",
     ],
+#    install_requires = [
+#        "distribute",
+#        "cherrypy"
+#    ],
 )
 

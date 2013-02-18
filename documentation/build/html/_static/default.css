@@ -181,18 +181,22 @@ div.body h2 {
 
 div.body h3 {
   font-size: 140%;
+  border-bottom: none;
 }
 
 div.body h4 {
   font-size: 120%;
+  border-bottom: none;
 }
 
 div.body h5 {
   font-size: 110%;
+  border-bottom: none;
 }
 
 div.body h6 {
   font-size: 100%;
+  border-bottom: none;
 }
 
 a.headerlink {
