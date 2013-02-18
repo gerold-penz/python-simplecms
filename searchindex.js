@@ -1,1 +1,0 @@
-Search.setIndex({objects:{},terms:{index:[],search:[],modulindex:[],welcom:[],python:0,die:1,modul:[],stichwortverzeichni:[],simpl:0,indic:[],ist:0,content:[],inhalt:0,dokument:0,tabl:[],testtext:0,document:[],instal:[0,1],page:[],ein:0},objtypes:{},titles:["Simple Python CMS - Dokumentation","Installation"],objnames:{},filenames:["index","installation/index"]})
