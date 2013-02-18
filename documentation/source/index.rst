@@ -31,7 +31,6 @@ Inhalt
    :maxdepth: 1
 
    installation/index.rst
-   installation/index.rst
 
 
 
