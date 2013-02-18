@@ -12,6 +12,9 @@ Contents:
    :maxdepth: 2
 
 
+Das ist ein Testtext.
+
+
 
 Indices and tables
 ==================
