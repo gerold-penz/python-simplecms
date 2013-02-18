@@ -1,1 +1,1 @@
-Search.setIndex({objects:{},terms:{index:0,search:0,welcom:0,python:0,modul:0,indic:0,ist:0,content:0,tabl:0,testtext:0,document:0,simpl:0,page:0,ein:0},objtypes:{},titles:["Welcome to Simple Python CMS&#8217;s documentation!"],objnames:{},filenames:["index"]})
+Search.setIndex({objects:{},terms:{index:[],search:[],document:0,welcom:0,python:0,modul:[],stichwortverzeichni:0,indic:0,ist:0,content:0,tabl:0,testtext:0,modulindex:0,simpl:0,page:[],ein:0},objtypes:{},titles:["Welcome to Simple Python CMS&#8217;s documentation!"],objnames:{},filenames:["index"]})
