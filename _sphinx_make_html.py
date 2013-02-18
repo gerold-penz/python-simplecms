@@ -20,7 +20,10 @@ try:
     for dirpath, dirnames, filenames in os.walk(HTMLDIR):
         for filename in filenames:
             sourcepath = os.path.join(dirpath, filename)
-            destpath = os.path.join(DESTDIR, dirpath[len(HTMLDIR) + 1:], filename)
+            destdir = os.path.join(DESTDIR, dirpath[len(HTMLDIR) + 1:])
+            if not os.path.isdir(destdir):
+                os.makedirs(destdir)
+            destpath = os.path.join(destdir, filename)
             shutil.copy2(sourcepath, destpath)
 except Exception, err:
     print unicode(err)
