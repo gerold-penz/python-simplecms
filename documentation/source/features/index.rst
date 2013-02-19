@@ -176,5 +176,3 @@ Das Hauptmenü (die UL-LI-Kombination) kann als Textmakro überall in die
 Seitenvorlagen eingebunden werden.
 
 
-
-

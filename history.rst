@@ -4,12 +4,28 @@ Simple Python CMS
 
 
 =============
+Version 0.0.5
+=============
+
+2013-02-19
+
+- Gedanken über die Datenbank gemacht.
+
+- Versuche, Redis als eingebundene Datenbank zu verwenden. Vielleicht kann
+  man Redis als "Embedded Database" verwenden.
+
+
+=============
 Version 0.0.4
 =============
 
 2013-02-19
 
-- Dokumentation: Featureliste erweitert
+- Dokumentation
+
+  - Featureliste erweitert
+
+  - Technik-Seite erstellt und Gedanken über die zu verwendende Technik gemacht
 
 
 =============

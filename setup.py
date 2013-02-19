@@ -44,7 +44,7 @@ setup(
         "Environment :: Web Environment",
         "Framework :: CherryPy",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
+        "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 2",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: CGI Tools/Libraries",

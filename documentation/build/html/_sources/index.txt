@@ -39,7 +39,7 @@ Seite selbst.
 Anleihe aus den WIKIs: Änderungen sollen alle gespeichert werden, so dass
 man zu jedem beliebigen Stand einer Seite zurückkehren kann.
 
-Da alles *einfach* sein soll, werde ich nur **einfaches
+Da alles *einfach* sein soll, werde ich nur ein **einfaches
 Berechtigungssystem** programmieren. Es gibt **nicht angemeldet**,
 **angemeldet** und **Admin**. Nicht am CMS angemeldete Personen dürfen nur
 lesen. Angemeldete Personen dürfen Kommentare schreiben und Admins haben

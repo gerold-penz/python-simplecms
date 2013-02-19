@@ -16,27 +16,11 @@ Ziel
 Technik
 =======
 
--------------
-Web-Framework
--------------
-
-Als Web-Framework setze ich CherryPy ein. Damit habe ich in den letzen paar
-Jahren viel Erfahrung sammeln können. Ich bin so sehr mit CherryPy zufrieden,
-dass kein anderes Web-Framework in Frage kommt.
 
 -------------------------------
 Web Templates - Vorlagensprache
 -------------------------------
 
-Den Schritt zu Python 3.x möchte ich mir nicht versperren.
-Deshalb könnte es sein, dass ich diesmal nicht mehr auf CheetahTemplate
-zurückgreifen werde -- was wirklich schäde wäre, denn CheetahTemplate
-bietet mir die volle Flexibilität von Python, ohne kompliziert zu wirken,
-was ich sehr schätze.
-
-Vielleicht probiere ich mal Mako_ aus.
-
-.. _Mako: http://www.makotemplates.org/
 
 -------------
 CSS Framework
