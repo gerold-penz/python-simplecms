@@ -46,7 +46,7 @@ div.body ul {
 }
 
 div.footer {
-  color: #ffffff;
+  /*color: #ffffff;*/
   width: 100%;
   padding: 9px 0 9px 0;
   text-align: center;
@@ -54,7 +54,7 @@ div.footer {
 }
 
 div.footer a {
-  color: #ffffff;
+  /*color: #ffffff;*/
   text-decoration: underline;
 }
 
@@ -213,7 +213,7 @@ a.headerlink:hover {
 }
 
 div.body p, div.body dd, div.body li {
-  text-align: justify;
+  /*text-align: justify;*/
   line-height: 130%;
 }
 
