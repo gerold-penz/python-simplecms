@@ -8,15 +8,31 @@ Created
 """
 
 import os
-from setuptools import setup, find_packages, findall
+import sys
+import distutils.core
+from setuptools import setup, find_packages
+
+# Upload zu Google-Code
+# http://code.google.com/p/support/source/browse/#svn%2Ftrunk%2Fscripts
+try:
+    from googlecode_upload.googlecode_distutils_upload import upload
+except ImportError:
+    class upload(distutils.core.Command):
+        user_options = []
+        def __init__(self, *args, **kwargs):
+            sys.stderr.write(
+                "error: Install this module in site-packages to upload: \n"
+                "http://support.googlecode.com/svn/trunk/scripts/googlecode_distutils_upload.py"
+            )
+            sys.exit(3)
 
 THISDIR = os.path.dirname(os.path.abspath(__file__))
 os.chdir(THISDIR)
 
 VERSION = open("version.txt").readline().strip()
 HOMEPAGE = "http://gerold-penz.github.com/python-simplecms/"
-#DOWNLOAD_BASEURL = "https://cherrypy-cgiserver.googlecode.com/files/"
-#DOWNLOAD_URL = DOWNLOAD_BASEURL + "cherrypy-cgiserver-%s.tar.gz" % VERSION
+DOWNLOAD_BASEURL = "https://python-simplecms.googlecode.com/files/"
+DOWNLOAD_URL = DOWNLOAD_BASEURL + "python-simplecms-%s.tar.gz" % VERSION
 
 
 setup(
@@ -30,11 +46,8 @@ setup(
     author = "Gerold Penz",
     author_email = "gerold@halvar.at",
     url = HOMEPAGE,
-    # download_url = DOWNLOAD_URL,
-    # packages = find_packages(),
-#    data_files = [
-#        ["./yyy", ["_git_add.py"]],
-#    ],
+    download_url = DOWNLOAD_URL,
+    packages = find_packages(),
     classifiers = [
         "Development Status :: 1 - Planning",
         #"Development Status :: 2 - Pre-Alpha",
@@ -49,9 +62,11 @@ setup(
         "Programming Language :: Python :: 2",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: CGI Tools/Libraries",
     ],
-#    install_requires = [
+    install_requires = [
 #        "distribute",
-#        "cherrypy"
-#    ],
+        "cherrypy",
+        "redis"
+    ],
+    cmdclass = {"upload": upload},
 )
 

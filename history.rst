@@ -14,6 +14,12 @@ Version 0.0.5
 - Versuche, Redis als eingebundene Datenbank zu verwenden. Vielleicht kann
   man Redis als "Embedded Database" verwenden.
 
+- *googlecode_upload* eingebunden. Damit können Dateien direkt zu Google-Code
+  hochgeladen werden.
+
+- Das Programm *_setup_upload.py* läd das vorher mit *_setup_sdist.py* gepackte
+  Quellcode-Archiv automatisch zu Google-Code hoch.
+
 
 =============
 Version 0.0.4

@@ -57,6 +57,27 @@ immer für die beste Lösung halte.
 
 
 .. index::
+  YAML
+  Thingintags
+  Textmakro
+  HTML
+
+=============
+CSS Framework
+=============
+
+YAML_ scheint für meine Zwecke ideal, da sich jeder selbst sein Layout
+damit gestalten kann. Und Platzhalter/Textmakros zeigen die Stellen an,
+die dynamisch mit Content befüllt werden sollen.
+Die Dokumentation zu YAML ist hervorragend.
+Ich habe noch keine Erfahrung mit YAML, aber ausprobieren werde ich es sicher.
+
+Mit Thinkintags_ gibt es ein aufstrebendes Werkzeug um HTML-Seiten
+zu designen. Vielleicht bringe ich es so hin, dass man die damit
+erstellte Struktur direkt in das CMS einbinden kann.
+
+
+.. index::
   Datenbank
   SQLite
 
@@ -92,9 +113,11 @@ Entwicklung zu den Datenbank-Dokumenten hinzuzufügen, ohne dass man etwas
 an der Struktur der Datenbank ändern muss. Dafür ist die Abfrage der Daten
 nicht so einfach wie bei Redis oder SQLite.
 
-Redis bietet viele Möglichkeiten beziehungsweise Strukturen an umd die
+Redis bietet viele Möglichkeiten beziehungsweise Strukturen an um die
 Daten zu speichern und wieder zu finden. Noch dazu ist Redis wirklich schnell
 und lässt sich von Python aus wunderbar einfach programmieren.
+
+Mal sehen, ob ich eine Möglichkeit finde, Redis trotzdem zu verwenden.
 
 
 
@@ -105,7 +128,11 @@ und lässt sich von Python aus wunderbar einfach programmieren.
 .. _CherryPy: http://www.cherrypy.org/
 .. _CheetahTemplate: http://www.cheetahtemplate.org/
 .. _Mako: http://www.makotemplates.org/
-
+.. _YAML: http://www.yaml.de/
+.. _Thinkintags: http://www.thinkintags.com/
+.. _Redis: http://redis.io/
+.. _CouchDB: http://couchdb.apache.org/
+.. _SQLite: http://www.sqlite.org/
 
 
 
