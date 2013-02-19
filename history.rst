@@ -20,6 +20,9 @@ Version 0.0.5
 - Das Programm *_setup_upload.py* läd das vorher mit *_setup_sdist.py* gepackte
   Quellcode-Archiv automatisch zu Google-Code hoch.
 
+- Tests mit Redis als Datenbankserver. Es sieht gut aus. Redis lässt sich unter 
+  Linux ziemlich gut verwenden. Tests mit Windows mache ich später einmal.
+
 
 =============
 Version 0.0.4
