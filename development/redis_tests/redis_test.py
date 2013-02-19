@@ -5,9 +5,8 @@ import random
 import string
 import threading
 import subprocess
-import redis
 import time
-import logging
+import redis
 
 
 THISDIR = os.path.dirname(os.path.abspath(__file__))
@@ -45,13 +44,16 @@ def get_redis_connection():
                 unix_socket_path = DATABASESOCKET,
                 password = DATABASEPASSWORD
             )
-            r.get("test")
+            r.ping()
             return r
-        except redis.exceptions.ConnectionError, err:
+        except redis.exceptions.ConnectionError:
             time.sleep(0.1)
 
 
 class RedisServerThread(threading.Thread):
+    """
+    Der Redis Server läuft in einem eigenen Thread
+    """
 
     def __init__(self):
 
@@ -61,7 +63,7 @@ class RedisServerThread(threading.Thread):
         if not os.path.isdir(DATABASEDIR):
             os.makedirs(DATABASEDIR)
 
-        self.daemonic = True
+        self.daemon = False
         self.stop_event = threading.Event()
 
 
@@ -102,29 +104,30 @@ class RedisServerThread(threading.Thread):
 
 def main():
 
-
     # Serverthread starten
     redis_thread = RedisServerThread()
     redis_thread.start()
 
+    # Getestete Connection
     r = get_redis_connection()
+
+    # Test 1
     r.set("a", "b")
     print r.get("a")
 
     time.sleep(1)
 
+    # Test 2
     r.set("b", "c")
     print r.get("b")
 
-
+    # Serverthread stoppen
     redis_thread.stop()
     redis_thread.join(timeout = 10000)
 
 
 if __name__ == "__main__":
     main()
-
-
 
 
 
