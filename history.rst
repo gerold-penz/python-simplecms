@@ -4,6 +4,15 @@ Simple Python CMS
 
 
 =============
+Version 0.0.4
+=============
+
+2013-02-19
+
+- Dokumentation: Featureliste erweitert
+
+
+=============
 Version 0.0.3
 =============
 

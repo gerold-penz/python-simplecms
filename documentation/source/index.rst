@@ -4,144 +4,53 @@ Simple Python CMS
 
 **Content Management System - Made Simple**
 
-Mein Ziel ist es, ein Content Management System (CMS) zu programmieren,
+Mit **Simple Python CMS** möchte ich ein einfach einzusetzendes
+Content Management System (CMS) auf Basis von Python und CherryPy
+erstellen, das ich für meine private Homepage verwenden kann.
+
+Mein Ziel ist es, ein Content Management System zu programmieren,
 das möglichst einfach (zumindest in meinen Augen) bedienbar ist.
+
 Bitte nicht falsch verstehen: Es ist nicht Teil des Ziels, ein einfach zu
 installierendes CMS zu erstellen. Die Installation hat es in sich.
 Das Ergebnis wird aber ein sehr einfach bedienbares CMS sein.
 
+Das CMS soll teilweise wie ein Wiki funktionieren. Verlinkt man auf eine
+nicht existierende Seite, kann man diese Seite erstellen und sofort mit
+dem Befüllen beginnen. Es soll aber eine Ordnerstruktur geben, die als
+Menüstruktur abgebildet wird. Ob ein Ordner im Menü auftauchen soll, kann
+eingestellt werden.
 
-**Das Projekt befindet sich momentan in der Planungsphase.**
+Texte sollen in mehreren Markup-Sprachen (z.B. *reStructuredText*,
+*Markdown*, *MediaWiki*, ...), oder mit einem WYSIWYG-Editor (z.B. TinyMCE)
+eingegeben oder geändert werden können.
 
+Mit Hilfe von **Textmakros** soll jede beliebige andere CMS-Seite in eine
+Seite importiert werden können. So dass man Teile einer Seite an
+verschiedenen Stellen editieren kann. So kann z.B. ein Tabellenlayout mit
+drei Spalten aufgebaut werden.
 
-=======
-Technik
-=======
+Seitenvorlagen beziehungsweise Seitenstrukturen sollen für jede Seite
+auswählbar sein. Z.B. "Einspaltig", "Zwei Spalten", "Drei Spalten". Bei so
+einem Dreispaltenlayout könnte der Inhalt der äußeren Spalten von zwei
+anderen Seiten kommen und der Inhalt der mittleren Spalte kommt von der
+Seite selbst.
 
-Als begeisterter Python_-Programmierer, der kleine und feine Tools schätzt,
-werde ich als Web-Framework CherryPy_ einsetzen.
-Als Vorlagensprache habe ich mich für Mako_ entschieden.
+Anleihe aus den WIKIs: Änderungen sollen alle gespeichert werden, so dass
+man zu jedem beliebigen Stand einer Seite zurückkehren kann.
 
-.. _Python: http://www.python.org/
-.. _CherryPy: http://www.cherrypy.org/
-.. _Mako: http://www.makotemplates.org/
-
-Das Datenbanksystem ist noch nicht entschieden...
-
-
-========
-Features
-========
-
-Das sind die Features die ich mir von *Simple Python CMS* erwarte.
-
-
------------------------
-Einfache Berechtigungen
------------------------
-
-- Nicht angemeldet
-
-  - Darf die Website sehen
-
-- Angemeldet
-
-  - Darf (vielleicht) Kommentare abgeben
-
-- Admin
-
-  - Darf die Site verändern
+Da alles *einfach* sein soll, werde ich nur **einfaches
+Berechtigungssystem** programmieren. Es gibt **nicht angemeldet**,
+**angemeldet** und **Admin**. Nicht am CMS angemeldete Personen dürfen nur
+lesen. Angemeldete Personen dürfen Kommentare schreiben und Admins haben
+vollen Schreibzugriff.
 
 
-----------
-Rückgängig
-----------
+======
+Status
+======
 
-Änderungen an einer Seite können rückgängig gemacht werden. Wie in einem Wiki
-soll es eine Auflistung der Änderungen geben. Und man soll jede Version
-wiederherstellen können.
-
-Eine wiederhergestellte Version wird als neue Version gespeichert, so dass man
-die Wiederherstellung selbst auch rückgängig machen kann.
-
-
------------------------
-Einfach Seite erstellen
------------------------
-
-Folgt ein Admin einem Link zu einer nicht existierenden Seite, dann wird eine
-Seite angezeigt, die es dem Admin ermöglicht die fehlende Seite zu erstellen.
-
-
-------------------------------------------
-Bilder und Dateien hochladen und verwalten
-------------------------------------------
-
-
---------------------------------
-Vorlagen für die gesamte Website
---------------------------------
-
-Mehrere Vorlagen sind möglich.
-Es handelt sich dabei um *globale Vorlagen* die für das Layout der gesamten
-Seite zuständig ist. Mehrere Spalten, Header und Footer möglich.
-
-Einige Vorlagen werden gleich mit *Simple Python CMS* ausgeliefert.
-
-Ich gehe vorerst mal davon aus, dass *Simple Python CMS* mit YAML_-Vorlagen
-umgehen können soll.
-
-.. _YAML: http://www.yaml.de/
-
-Die Standard-Vorlage wird einstellbar sein.
-
-Jede Seite kann die Standard-Vorlage oder eine andere Vorlage als
-*globale Vorlage* verwenden. Einfach per Combobox einstellbar.
-
-
-------------------------
-Vorlagen für den Content
-------------------------
-
-- Einspaltig
-
-- Zweispaltig
-
-Ob und wie ich das umsetzen werde, weiß ich noch nicht.
-
-
-------------
-Mehrsprachig
-------------
-
-Gleich von Beginn an soll auf Mehrsprachigen Content geachtet werden.
-
-Der Text der im CMS anfällt, wird mit Gettext übersetzt. Jede Seite wird
-mehrsprachig abgespeichert.
-
-Es wird eine Einstellung geben, die festlegt welche Sprachen im CMS möglich sind.
-
-
----------
-Hauptmenü
----------
-
-Das Hauptmenü ist eine UL-LI-Kombination, die automatisch aus der
-Verzeichnissstruktur erstellt wird.
-
-Jeder Ordner hat Metadaten, die bestimmen, ob ein Ordner im Hauptmenü
-ein- oder auszublenden ist. Die Ordner bekommen die Übersetzungen für
-das Hauptmenü gleich mitgeliefert.
-
-Das Hauptmenü (die UL-LI-Kombination) kann als Textmakro überall in der
-globalen Vorlage eingebunden werden.
-
-
--------------
-Planungsphase
--------------
-
-Es geht noch weiter ...
+Das Projekt befindet sich momentan in der Planungsphase.
 
 
 ======
@@ -151,6 +60,8 @@ Inhalt
 .. toctree::
    :maxdepth: 1
 
+   features/index.rst
+   technik/index.rst
    installation/index.rst
 
 

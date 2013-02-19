@@ -27,7 +27,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/translations.js"></script>
     <link rel="top" title="Simple Python Content Management System" href="#" />
-    <link rel="next" title="Installation" href="installation/index.html" /> 
+    <link rel="next" title="Features" href="features/index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,7 +37,7 @@
           <a href="genindex.html" title="Allgemeiner Index"
              accesskey="I">Index</a></li>
         <li class="right" >
-          <a href="installation/index.html" title="Installation"
+          <a href="features/index.html" title="Features"
              accesskey="N">weiter</a> |</li>
         <li><a href="#">Simple Python CMS</a> &raquo;</li> 
       </ul>
@@ -51,101 +51,48 @@
   <div class="section" id="simple-python-cms">
 <h1>Simple Python CMS<a class="headerlink" href="#simple-python-cms" title="Permalink zu dieser Überschrift">¶</a></h1>
 <p><strong>Content Management System - Made Simple</strong></p>
-<p>Mein Ziel ist es, ein Content Management System (CMS) zu programmieren,
-das möglichst einfach (zumindest in meinen Augen) bedienbar ist.
-Bitte nicht falsch verstehen: Es ist nicht Teil des Ziels, ein einfach zu
+<p>Mit <strong>Simple Python CMS</strong> möchte ich ein einfach einzusetzendes
+Content Management System (CMS) auf Basis von Python und CherryPy
+erstellen, das ich für meine private Homepage verwenden kann.</p>
+<p>Mein Ziel ist es, ein Content Management System zu programmieren,
+das möglichst einfach (zumindest in meinen Augen) bedienbar ist.</p>
+<p>Bitte nicht falsch verstehen: Es ist nicht Teil des Ziels, ein einfach zu
 installierendes CMS zu erstellen. Die Installation hat es in sich.
 Das Ergebnis wird aber ein sehr einfach bedienbares CMS sein.</p>
-<p><strong>Das Projekt befindet sich momentan in der Planungsphase.</strong></p>
-<div class="section" id="technik">
-<h2>Technik<a class="headerlink" href="#technik" title="Permalink zu dieser Überschrift">¶</a></h2>
-<p>Als begeisterter <a class="reference external" href="http://www.python.org/">Python</a>-Programmierer, der kleine und feine Tools schätzt,
-werde ich als Web-Framework <a class="reference external" href="http://www.cherrypy.org/">CherryPy</a> einsetzen.
-Als Vorlagensprache habe ich mich für <a class="reference external" href="http://www.makotemplates.org/">Mako</a> entschieden.</p>
-<p>Das Datenbanksystem ist noch nicht entschieden...</p>
-</div>
-<div class="section" id="features">
-<h2>Features<a class="headerlink" href="#features" title="Permalink zu dieser Überschrift">¶</a></h2>
-<p>Das sind die Features die ich mir von <em>Simple Python CMS</em> erwarte.</p>
-<div class="section" id="einfache-berechtigungen">
-<h3>Einfache Berechtigungen<a class="headerlink" href="#einfache-berechtigungen" title="Permalink zu dieser Überschrift">¶</a></h3>
-<ul class="simple">
-<li>Nicht angemeldet<ul>
-<li>Darf die Website sehen</li>
-</ul>
-</li>
-<li>Angemeldet<ul>
-<li>Darf (vielleicht) Kommentare abgeben</li>
-</ul>
-</li>
-<li>Admin<ul>
-<li>Darf die Site verändern</li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="section" id="ruckgangig">
-<h3>Rückgängig<a class="headerlink" href="#ruckgangig" title="Permalink zu dieser Überschrift">¶</a></h3>
-<p>Änderungen an einer Seite können rückgängig gemacht werden. Wie in einem Wiki
-soll es eine Auflistung der Änderungen geben. Und man soll jede Version
-wiederherstellen können.</p>
-<p>Eine wiederhergestellte Version wird als neue Version gespeichert, so dass man
-die Wiederherstellung selbst auch rückgängig machen kann.</p>
-</div>
-<div class="section" id="einfach-seite-erstellen">
-<h3>Einfach Seite erstellen<a class="headerlink" href="#einfach-seite-erstellen" title="Permalink zu dieser Überschrift">¶</a></h3>
-<p>Folgt ein Admin einem Link zu einer nicht existierenden Seite, dann wird eine
-Seite angezeigt, die es dem Admin ermöglicht die fehlende Seite zu erstellen.</p>
-</div>
-<div class="section" id="bilder-und-dateien-hochladen-und-verwalten">
-<h3>Bilder und Dateien hochladen und verwalten<a class="headerlink" href="#bilder-und-dateien-hochladen-und-verwalten" title="Permalink zu dieser Überschrift">¶</a></h3>
-</div>
-<div class="section" id="vorlagen-fur-die-gesamte-website">
-<h3>Vorlagen für die gesamte Website<a class="headerlink" href="#vorlagen-fur-die-gesamte-website" title="Permalink zu dieser Überschrift">¶</a></h3>
-<p>Mehrere Vorlagen sind möglich.
-Es handelt sich dabei um <em>globale Vorlagen</em> die für das Layout der gesamten
-Seite zuständig ist. Mehrere Spalten, Header und Footer möglich.</p>
-<p>Einige Vorlagen werden gleich mit <em>Simple Python CMS</em> ausgeliefert.</p>
-<p>Ich gehe vorerst mal davon aus, dass <em>Simple Python CMS</em> mit <a class="reference external" href="http://www.yaml.de/">YAML</a>-Vorlagen
-umgehen können soll.</p>
-<p>Die Standard-Vorlage wird einstellbar sein.</p>
-<p>Jede Seite kann die Standard-Vorlage oder eine andere Vorlage als
-<em>globale Vorlage</em> verwenden. Einfach per Combobox einstellbar.</p>
-</div>
-<div class="section" id="vorlagen-fur-den-content">
-<h3>Vorlagen für den Content<a class="headerlink" href="#vorlagen-fur-den-content" title="Permalink zu dieser Überschrift">¶</a></h3>
-<ul class="simple">
-<li>Einspaltig</li>
-<li>Zweispaltig</li>
-</ul>
-<p>Ob und wie ich das umsetzen werde, weiß ich noch nicht.</p>
-</div>
-<div class="section" id="mehrsprachig">
-<h3>Mehrsprachig<a class="headerlink" href="#mehrsprachig" title="Permalink zu dieser Überschrift">¶</a></h3>
-<p>Gleich von Beginn an soll auf Mehrsprachigen Content geachtet werden.</p>
-<p>Der Text der im CMS anfällt, wird mit Gettext übersetzt. Jede Seite wird
-mehrsprachig abgespeichert.</p>
-<p>Es wird eine Einstellung geben, die festlegt welche Sprachen im CMS möglich sind.</p>
-</div>
-<div class="section" id="hauptmenu">
-<h3>Hauptmenü<a class="headerlink" href="#hauptmenu" title="Permalink zu dieser Überschrift">¶</a></h3>
-<p>Das Hauptmenü ist eine UL-LI-Kombination, die automatisch aus der
-Verzeichnissstruktur erstellt wird.</p>
-<p>Jeder Ordner hat Metadaten, die bestimmen, ob ein Ordner im Hauptmenü
-ein- oder auszublenden ist. Die Ordner bekommen die Übersetzungen für
-das Hauptmenü gleich mitgeliefert.</p>
-<p>Das Hauptmenü (die UL-LI-Kombination) kann als Textmakro überall in der
-globalen Vorlage eingebunden werden.</p>
-</div>
-<div class="section" id="planungsphase">
-<h3>Planungsphase<a class="headerlink" href="#planungsphase" title="Permalink zu dieser Überschrift">¶</a></h3>
-<p>Es geht noch weiter ...</p>
-</div>
+<p>Das CMS soll teilweise wie ein Wiki funktionieren. Verlinkt man auf eine
+nicht existierende Seite, kann man diese Seite erstellen und sofort mit
+dem Befüllen beginnen. Es soll aber eine Ordnerstruktur geben, die als
+Menüstruktur abgebildet wird. Ob ein Ordner im Menü auftauchen soll, kann
+eingestellt werden.</p>
+<p>Texte sollen in mehreren Markup-Sprachen (z.B. <em>reStructuredText</em>,
+<em>Markdown</em>, <em>MediaWiki</em>, ...), oder mit einem WYSIWYG-Editor (z.B. TinyMCE)
+eingegeben oder geändert werden können.</p>
+<p>Mit Hilfe von <strong>Textmakros</strong> soll jede beliebige andere CMS-Seite in eine
+Seite importiert werden können. So dass man Teile einer Seite an
+verschiedenen Stellen editieren kann. So kann z.B. ein Tabellenlayout mit
+drei Spalten aufgebaut werden.</p>
+<p>Seitenvorlagen beziehungsweise Seitenstrukturen sollen für jede Seite
+auswählbar sein. Z.B. &#8220;Einspaltig&#8221;, &#8220;Zwei Spalten&#8221;, &#8220;Drei Spalten&#8221;. Bei so
+einem Dreispaltenlayout könnte der Inhalt der äußeren Spalten von zwei
+anderen Seiten kommen und der Inhalt der mittleren Spalte kommt von der
+Seite selbst.</p>
+<p>Anleihe aus den WIKIs: Änderungen sollen alle gespeichert werden, so dass
+man zu jedem beliebigen Stand einer Seite zurückkehren kann.</p>
+<p>Da alles <em>einfach</em> sein soll, werde ich nur <strong>einfaches
+Berechtigungssystem</strong> programmieren. Es gibt <strong>nicht angemeldet</strong>,
+<strong>angemeldet</strong> und <strong>Admin</strong>. Nicht am CMS angemeldete Personen dürfen nur
+lesen. Angemeldete Personen dürfen Kommentare schreiben und Admins haben
+vollen Schreibzugriff.</p>
+<div class="section" id="status">
+<h2>Status<a class="headerlink" href="#status" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Das Projekt befindet sich momentan in der Planungsphase.</p>
 </div>
 <div class="section" id="inhalt">
 <h2>Inhalt<a class="headerlink" href="#inhalt" title="Permalink zu dieser Überschrift">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="features/index.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="technik/index.html">Technik</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation/index.html">Installation</a></li>
 </ul>
 </div>
@@ -164,19 +111,7 @@ globalen Vorlage eingebunden werden.</p>
   <h3><a href="#">Inhalt</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Simple Python CMS</a><ul>
-<li><a class="reference internal" href="#technik">Technik</a></li>
-<li><a class="reference internal" href="#features">Features</a><ul>
-<li><a class="reference internal" href="#einfache-berechtigungen">Einfache Berechtigungen</a></li>
-<li><a class="reference internal" href="#ruckgangig">Rückgängig</a></li>
-<li><a class="reference internal" href="#einfach-seite-erstellen">Einfach Seite erstellen</a></li>
-<li><a class="reference internal" href="#bilder-und-dateien-hochladen-und-verwalten">Bilder und Dateien hochladen und verwalten</a></li>
-<li><a class="reference internal" href="#vorlagen-fur-die-gesamte-website">Vorlagen für die gesamte Website</a></li>
-<li><a class="reference internal" href="#vorlagen-fur-den-content">Vorlagen für den Content</a></li>
-<li><a class="reference internal" href="#mehrsprachig">Mehrsprachig</a></li>
-<li><a class="reference internal" href="#hauptmenu">Hauptmenü</a></li>
-<li><a class="reference internal" href="#planungsphase">Planungsphase</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#status">Status</a></li>
 <li><a class="reference internal" href="#inhalt">Inhalt</a><ul>
 </ul>
 </li>
@@ -185,8 +120,8 @@ globalen Vorlage eingebunden werden.</p>
 </ul>
 
   <h4>Nächstes Thema</h4>
-  <p class="topless"><a href="installation/index.html"
-                        title="nächstes Kapitel">Installation</a></p>
+  <p class="topless"><a href="features/index.html"
+                        title="nächstes Kapitel">Features</a></p>
   <h3>Diese Seite</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/index.txt"
@@ -216,7 +151,7 @@ globalen Vorlage eingebunden werden.</p>
           <a href="genindex.html" title="Allgemeiner Index"
              >Index</a></li>
         <li class="right" >
-          <a href="installation/index.html" title="Installation"
+          <a href="features/index.html" title="Features"
              >weiter</a> |</li>
         <li><a href="#">Simple Python CMS</a> &raquo;</li> 
       </ul>

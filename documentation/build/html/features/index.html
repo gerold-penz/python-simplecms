@@ -1,0 +1,209 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Features &mdash; Simple Python Content Management System</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="top" title="Simple Python Content Management System" href="../index.html" />
+    <link rel="next" title="Technik" href="../technik/index.html" />
+    <link rel="prev" title="Simple Python CMS" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Allgemeiner Index"
+             accesskey="I">Index</a></li>
+        <li class="right" >
+          <a href="../technik/index.html" title="Technik"
+             accesskey="N">weiter</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Simple Python CMS"
+             accesskey="P">zurück</a> |</li>
+        <li><a href="../index.html">Simple Python CMS</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="features">
+<h1>Features<a class="headerlink" href="#features" title="Permalink zu dieser Überschrift">¶</a></h1>
+<div class="section" id="ahnlich-wie-ein-wiki">
+<h2>Ähnlich wie ein Wiki<a class="headerlink" href="#ahnlich-wie-ein-wiki" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Das CMS soll teilweise wie ein Wiki funktionieren. Verlinkt man auf eine
+nicht existierende Seite, kann man diese Seite erstellen und sofort mit
+dem Befüllen beginnen. Es soll aber eine Ordnerstruktur geben, die als
+Menüstruktur abgebildet wird. Ob ein Ordner im Menü auftauchen soll, kann
+eingestellt werden.</p>
+<p>Änderungen sollen alle gespeichert werden, so dass man zu jedem
+beliebigen Stand einer Seite zurückkehren kann. Wie in einem Wiki
+soll es eine Auflistung der Änderungen geben. Und man soll jede Version
+wiederherstellen können.</p>
+<p>Eine wiederhergestellte Version wird als neue Version gespeichert, so dass man
+die Wiederherstellung selbst auch rückgängig machen kann.</p>
+<p>Folgt man einem Link zu einer nicht existierenden Seite, dann wird eine
+Seite angezeigt, die es ermöglicht die fehlende Seite zu erstellen.</p>
+</div>
+<div class="section" id="mehrere-eingabemoglichkeiten">
+<h2>Mehrere Eingabemöglichkeiten<a class="headerlink" href="#mehrere-eingabemoglichkeiten" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Texte sollen in mehreren Markup-Sprachen (z.B. <em>reStructuredText</em>,
+<em>Markdown</em>, <em>MediaWiki</em>, ...), oder mit einem WYSIWYG-Editor (z.B. TinyMCE)
+eingegeben oder geändert werden können.</p>
+</div>
+<div class="section" id="vorlagen-und-textmakros">
+<h2>Vorlagen und Textmakros<a class="headerlink" href="#vorlagen-und-textmakros" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Mit Hilfe von <strong>Textmakros</strong> soll jede beliebige andere CMS-Seite in eine
+Seite importiert werden können. So dass man Teile einer Seite an
+verschiedenen Stellen editieren kann. So kann z.B. ein Tabellenlayout mit
+drei Spalten aufgebaut werden.</p>
+<p>Seitenvorlagen beziehungsweise Layouts sollen für jede Seite
+auswählbar sein. Z.B. &#8220;Einspaltig&#8221;, &#8220;Zwei Spalten&#8221;, &#8220;Drei Spalten&#8221;. Bei so
+einem Dreispaltenlayout könnte der Inhalt der äußeren Spalten von zwei
+anderen Seiten kommen und der Inhalt der mittleren Spalte kommt von der
+Seite selbst.</p>
+<p>Mehrere Vorlagen sind auswählbar. <em>Seitenvorlagen</em> sind für das Layout der
+gesamten Seite zuständig. Einige Vorlagen werden gleich mit <em>Simple Python CMS</em>
+ausgeliefert.</p>
+<p>Jede Seite kann die Standard-Vorlage oder eine andere Vorlage als
+<em>Seitenvorlage</em> verwenden. Einfach per Combobox einstellbar.</p>
+<p>Ich gehe vorerst mal davon aus, dass <em>Simple Python CMS</em> mit <a class="reference external" href="http://www.yaml.de/">YAML</a>-Vorlagen
+umgehen können soll.</p>
+<p>Die Standard-Vorlage wird einstellbar sein.</p>
+</div>
+<div class="section" id="einfache-berechtigungen">
+<h2>Einfache Berechtigungen<a class="headerlink" href="#einfache-berechtigungen" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Da alles <em>einfach</em> sein soll, werde ich nur ein
+<strong>einfaches Berechtigungssystem</strong> programmieren. Es gibt <strong>nicht angemeldet</strong>,
+<strong>angemeldet</strong> und <strong>Admin</strong>. Nicht am CMS angemeldete Personen dürfen nur
+lesen. Angemeldete Personen dürfen Kommentare schreiben und Admins haben
+vollen Schreibzugriff.</p>
+</div>
+<div class="section" id="bilder-und-dateien-hochladen-und-verwalten">
+<h2>Bilder und Dateien hochladen und verwalten<a class="headerlink" href="#bilder-und-dateien-hochladen-und-verwalten" title="Permalink zu dieser Überschrift">¶</a></h2>
+</div>
+<div class="section" id="vorlagen-fur-die-gesamte-website">
+<h2>Vorlagen für die gesamte Website<a class="headerlink" href="#vorlagen-fur-die-gesamte-website" title="Permalink zu dieser Überschrift">¶</a></h2>
+</div>
+<div class="section" id="mehrsprachig">
+<h2>Mehrsprachig<a class="headerlink" href="#mehrsprachig" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Gleich von Beginn an soll auf Mehrsprachigen Content geachtet werden.</p>
+<p>Der Text der im CMS anfällt, wird mit Gettext übersetzt. Jede Seite wird
+mehrsprachig abgespeichert.</p>
+<p>Es wird eine Einstellung geben, die festlegt welche Sprachen im CMS möglich sind.</p>
+</div>
+<div class="section" id="hauptmenu">
+<h2>Hauptmenü<a class="headerlink" href="#hauptmenu" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Das Hauptmenü ist eine UL-LI-Kombination, die automatisch aus der
+Verzeichnissstruktur erstellt wird.</p>
+<p>Jeder Ordner hat Metadaten, die bestimmen, ob ein Ordner im Hauptmenü
+ein- oder auszublenden ist. Die Ordner bekommen die Übersetzungen für
+das Hauptmenü gleich mitgeliefert.</p>
+<p>Das Hauptmenü (die UL-LI-Kombination) kann als Textmakro überall in der
+globalen Vorlage eingebunden werden.</p>
+</div>
+<div class="section" id="planungsphase">
+<h2>Planungsphase<a class="headerlink" href="#planungsphase" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Es geht noch weiter ...</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/simple-python-cms-logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Inhalt</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Features</a><ul>
+<li><a class="reference internal" href="#ahnlich-wie-ein-wiki">Ähnlich wie ein Wiki</a></li>
+<li><a class="reference internal" href="#mehrere-eingabemoglichkeiten">Mehrere Eingabemöglichkeiten</a></li>
+<li><a class="reference internal" href="#vorlagen-und-textmakros">Vorlagen und Textmakros</a></li>
+<li><a class="reference internal" href="#einfache-berechtigungen">Einfache Berechtigungen</a></li>
+<li><a class="reference internal" href="#bilder-und-dateien-hochladen-und-verwalten">Bilder und Dateien hochladen und verwalten</a></li>
+<li><a class="reference internal" href="#vorlagen-fur-die-gesamte-website">Vorlagen für die gesamte Website</a></li>
+<li><a class="reference internal" href="#mehrsprachig">Mehrsprachig</a></li>
+<li><a class="reference internal" href="#hauptmenu">Hauptmenü</a></li>
+<li><a class="reference internal" href="#planungsphase">Planungsphase</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Vorheriges Thema</h4>
+  <p class="topless"><a href="../index.html"
+                        title="vorheriges Kapitel">Simple Python CMS</a></p>
+  <h4>Nächstes Thema</h4>
+  <p class="topless"><a href="../technik/index.html"
+                        title="nächstes Kapitel">Technik</a></p>
+  <h3>Diese Seite</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/features/index.txt"
+           rel="nofollow">Quelltext anzeigen</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Schnellsuche</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Los" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Geben Sie Suchbegriffe oder einen Modul-, Klassen- oder Funktionsnamen ein.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Allgemeiner Index"
+             >Index</a></li>
+        <li class="right" >
+          <a href="../technik/index.html" title="Technik"
+             >weiter</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Simple Python CMS"
+             >zurück</a> |</li>
+        <li><a href="../index.html">Simple Python CMS</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Gerold Penz.
+      Mit <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3 erstellt.
+    </div>
+  </body>
+</html>
