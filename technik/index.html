@@ -83,12 +83,23 @@ mehrmaliges Verwenden von Variablen innerhalb der Vorlage meist unterbindet.
 So müsste man jede <em>Kleinigkeit</em> in den Programmcode verlagern, was ich nicht
 immer für die beste Lösung halte.</p>
 </div>
+<div class="section" id="css-framework">
+<span id="index-3"></span><h2>CSS Framework<a class="headerlink" href="#css-framework" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p><a class="reference external" href="http://www.yaml.de/">YAML</a> scheint für meine Zwecke ideal, da sich jeder selbst sein Layout
+damit gestalten kann. Und Platzhalter/Textmakros zeigen die Stellen an,
+die dynamisch mit Content befüllt werden sollen.
+Die Dokumentation zu YAML ist hervorragend.
+Ich habe noch keine Erfahrung mit YAML, aber ausprobieren werde ich es sicher.</p>
+<p>Mit <a class="reference external" href="http://www.thinkintags.com/">Thinkintags</a> gibt es ein aufstrebendes Werkzeug um HTML-Seiten
+zu designen. Vielleicht bringe ich es so hin, dass man die damit
+erstellte Struktur direkt in das CMS einbinden kann.</p>
+</div>
 <div class="section" id="datenbanksystem">
-<span id="index-3"></span><h2>Datenbanksystem<a class="headerlink" href="#datenbanksystem" title="Permalink zu dieser Überschrift">¶</a></h2>
+<span id="index-4"></span><h2>Datenbanksystem<a class="headerlink" href="#datenbanksystem" title="Permalink zu dieser Überschrift">¶</a></h2>
 <p>Das Datenbanksystem ist noch nicht entschieden...</p>
-<p>Eigentlich bräuchte ich so etwas Schnelles wie <a href="#id1"><span class="problematic" id="id2">Redis_</span></a>, einen einfachen
-Dokumentenspeicher wie <a href="#id3"><span class="problematic" id="id4">CouchDB_</span></a> und so etwas einfach zu verwendendes
-wie <a href="#id5"><span class="problematic" id="id6">SQLite_</span></a>.</p>
+<p>Eigentlich bräuchte ich so etwas Schnelles wie <a class="reference external" href="http://redis.io/">Redis</a>, einen einfachen
+Dokumentenspeicher wie <a class="reference external" href="http://couchdb.apache.org/">CouchDB</a> und so etwas einfach zu verwendendes
+wie <a class="reference external" href="http://www.sqlite.org/">SQLite</a>.</p>
 <p>Für Redis und CouchDB müssen TCP-Ports geöffnet werden. Redis lässt sich
 einfach installieren und ist superschnell. Wenn aber mehrere &#8220;Simple Python CMS&#8221;
 auf einem System betrieben werden sollen, muss man sich eine gute Trennung
@@ -108,9 +119,10 @@ sicher gut leben.</p>
 Entwicklung zu den Datenbank-Dokumenten hinzuzufügen, ohne dass man etwas
 an der Struktur der Datenbank ändern muss. Dafür ist die Abfrage der Daten
 nicht so einfach wie bei Redis oder SQLite.</p>
-<p>Redis bietet viele Möglichkeiten beziehungsweise Strukturen an umd die
+<p>Redis bietet viele Möglichkeiten beziehungsweise Strukturen an um die
 Daten zu speichern und wieder zu finden. Noch dazu ist Redis wirklich schnell
 und lässt sich von Python aus wunderbar einfach programmieren.</p>
+<p>Mal sehen, ob ich eine Möglichkeit finde, Redis trotzdem zu verwenden.</p>
 </div>
 </div>
 
