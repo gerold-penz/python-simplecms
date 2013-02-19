@@ -2,6 +2,11 @@
 Features
 ########
 
+
+.. index::
+  Wiki
+  Ordnerstruktur
+
 ====================
 Ähnlich wie ein Wiki
 ====================
@@ -12,6 +17,9 @@ dem Befüllen beginnen. Es soll aber eine Ordnerstruktur geben, die als
 Menüstruktur abgebildet wird. Ob ein Ordner im Menü auftauchen soll, kann
 eingestellt werden.
 
+.. index::
+  History
+
 Änderungen sollen alle gespeichert werden, so dass man zu jedem
 beliebigen Stand einer Seite zurückkehren kann. Wie in einem Wiki
 soll es eine Auflistung der Änderungen geben. Und man soll jede Version
@@ -20,9 +28,16 @@ wiederherstellen können.
 Eine wiederhergestellte Version wird als neue Version gespeichert, so dass man
 die Wiederherstellung selbst auch rückgängig machen kann.
 
-Folgt man einem Link zu einer nicht existierenden Seite, dann wird eine
-Seite angezeigt, die es ermöglicht die fehlende Seite zu erstellen.
 
+.. index::
+  Markdown
+  MediaWiki
+  reStructuredText
+  rest
+  rst
+  WYSIWYG-Editor
+  TinyMCE
+  Markupsprache
 
 ============================
 Mehrere Eingabemöglichkeiten
@@ -32,6 +47,18 @@ Texte sollen in mehreren Markup-Sprachen (z.B. *reStructuredText*,
 *Markdown*, *MediaWiki*, ...), oder mit einem WYSIWYG-Editor (z.B. TinyMCE)
 eingegeben oder geändert werden können.
 
+Nachteil: Hat man sich bei einer Seite einmal für eine Markupsprache
+entschieden, kann das nicht mehr geändert werden.
+
+
+.. index::
+  Vorlage
+  Textmakro
+  Layout
+  Tabellenlayout
+  Spalten
+  Seitenvorlage
+  YAML
 
 =======================
 Vorlagen und Textmakros
@@ -63,6 +90,13 @@ umgehen können soll.
 Die Standard-Vorlage wird einstellbar sein.
 
 
+.. index::
+  Berechtigungssystem
+  Admin
+  Anmeldung
+  Kommentar
+  Schreibzugriff
+
 =======================
 Einfache Berechtigungen
 =======================
@@ -74,15 +108,36 @@ lesen. Angemeldete Personen dürfen Kommentare schreiben und Admins haben
 vollen Schreibzugriff.
 
 
+.. index::
+  Bilder
+  Dateien
+  hochladen
+  Ordnerstruktur
+  WYSIWYG-Editor
+  Link zu Bildern
+  Link zu Dateien
+
 ==========================================
 Bilder und Dateien hochladen und verwalten
 ==========================================
 
+Bilder können überall in der gesamten Ordnerstruktur des CMS abgespeichert
+werden. Dafür wird eine Bild- und Dateiverwaltung geschrieben.
 
-================================
-Vorlagen für die gesamte Website
-================================
+Wird ein Bild über den WYSIWYG-Editor hochgeladen, landet das Bild im
+selben Ordner in dem sich auch die Seite befindet
 
+Das Hochladen von Bildern in einen Ordner soll in allen Editoren möglich sein.
+Je nach Markup-Sprache wird es eine Möglichkeit geben, ein Bild hochzuladen
+und den Link dazu sofort in den Text der Seite einzubetten.
+
+
+.. index::
+  Content
+  Sprache
+  Cookie
+  Gettext
+  Übersetzung
 
 ============
 Mehrsprachig
@@ -90,30 +145,36 @@ Mehrsprachig
 
 Gleich von Beginn an soll auf Mehrsprachigen Content geachtet werden.
 
-Der Text der im CMS anfällt, wird mit Gettext übersetzt. Jede Seite wird
-mehrsprachig abgespeichert.
+Automatische Erkennung der Browser-Sprache. Wurde eine Sprache ausgewählt,
+wird diese per Cookie fixiert.
+
+Der Stammtext des Programmes selbst, wird mit Gettext übersetzt.
+Jede Seite wird in mehreren Sprachen abgespeichert.
 
 Es wird eine Einstellung geben, die festlegt welche Sprachen im CMS möglich sind.
 
+
+.. index::
+  Menü
+  Verzeichnisstruktur
+  Metadaten
+  Übersetzung
+  Textmakro
 
 =========
 Hauptmenü
 =========
 
 Das Hauptmenü ist eine UL-LI-Kombination, die automatisch aus der
-Verzeichnissstruktur erstellt wird.
+Verzeichnisstruktur erstellt wird.
 
 Jeder Ordner hat Metadaten, die bestimmen, ob ein Ordner im Hauptmenü
 ein- oder auszublenden ist. Die Ordner bekommen die Übersetzungen für
 das Hauptmenü gleich mitgeliefert.
 
-Das Hauptmenü (die UL-LI-Kombination) kann als Textmakro überall in der
-globalen Vorlage eingebunden werden.
+Das Hauptmenü (die UL-LI-Kombination) kann als Textmakro überall in die
+Seitenvorlagen eingebunden werden.
 
 
-=============
-Planungsphase
-=============
 
-Es geht noch weiter ...
 

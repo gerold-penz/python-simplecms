@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.0.3',
+        VERSION:     '0.0.4',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -55,29 +55,29 @@
   <div class="section" id="features">
 <h1>Features<a class="headerlink" href="#features" title="Permalink zu dieser Überschrift">¶</a></h1>
 <div class="section" id="ahnlich-wie-ein-wiki">
-<h2>Ähnlich wie ein Wiki<a class="headerlink" href="#ahnlich-wie-ein-wiki" title="Permalink zu dieser Überschrift">¶</a></h2>
+<span id="index-0"></span><h2>Ähnlich wie ein Wiki<a class="headerlink" href="#ahnlich-wie-ein-wiki" title="Permalink zu dieser Überschrift">¶</a></h2>
 <p>Das CMS soll teilweise wie ein Wiki funktionieren. Verlinkt man auf eine
 nicht existierende Seite, kann man diese Seite erstellen und sofort mit
 dem Befüllen beginnen. Es soll aber eine Ordnerstruktur geben, die als
 Menüstruktur abgebildet wird. Ob ein Ordner im Menü auftauchen soll, kann
 eingestellt werden.</p>
-<p>Änderungen sollen alle gespeichert werden, so dass man zu jedem
+<p id="index-1">Änderungen sollen alle gespeichert werden, so dass man zu jedem
 beliebigen Stand einer Seite zurückkehren kann. Wie in einem Wiki
 soll es eine Auflistung der Änderungen geben. Und man soll jede Version
 wiederherstellen können.</p>
 <p>Eine wiederhergestellte Version wird als neue Version gespeichert, so dass man
 die Wiederherstellung selbst auch rückgängig machen kann.</p>
-<p>Folgt man einem Link zu einer nicht existierenden Seite, dann wird eine
-Seite angezeigt, die es ermöglicht die fehlende Seite zu erstellen.</p>
 </div>
 <div class="section" id="mehrere-eingabemoglichkeiten">
-<h2>Mehrere Eingabemöglichkeiten<a class="headerlink" href="#mehrere-eingabemoglichkeiten" title="Permalink zu dieser Überschrift">¶</a></h2>
+<span id="index-2"></span><h2>Mehrere Eingabemöglichkeiten<a class="headerlink" href="#mehrere-eingabemoglichkeiten" title="Permalink zu dieser Überschrift">¶</a></h2>
 <p>Texte sollen in mehreren Markup-Sprachen (z.B. <em>reStructuredText</em>,
 <em>Markdown</em>, <em>MediaWiki</em>, ...), oder mit einem WYSIWYG-Editor (z.B. TinyMCE)
 eingegeben oder geändert werden können.</p>
+<p>Nachteil: Hat man sich bei einer Seite einmal für eine Markupsprache
+entschieden, kann das nicht mehr geändert werden.</p>
 </div>
 <div class="section" id="vorlagen-und-textmakros">
-<h2>Vorlagen und Textmakros<a class="headerlink" href="#vorlagen-und-textmakros" title="Permalink zu dieser Überschrift">¶</a></h2>
+<span id="index-3"></span><h2>Vorlagen und Textmakros<a class="headerlink" href="#vorlagen-und-textmakros" title="Permalink zu dieser Überschrift">¶</a></h2>
 <p>Mit Hilfe von <strong>Textmakros</strong> soll jede beliebige andere CMS-Seite in eine
 Seite importiert werden können. So dass man Teile einer Seite an
 verschiedenen Stellen editieren kann. So kann z.B. ein Tabellenlayout mit
@@ -97,7 +97,7 @@ umgehen können soll.</p>
 <p>Die Standard-Vorlage wird einstellbar sein.</p>
 </div>
 <div class="section" id="einfache-berechtigungen">
-<h2>Einfache Berechtigungen<a class="headerlink" href="#einfache-berechtigungen" title="Permalink zu dieser Überschrift">¶</a></h2>
+<span id="index-4"></span><h2>Einfache Berechtigungen<a class="headerlink" href="#einfache-berechtigungen" title="Permalink zu dieser Überschrift">¶</a></h2>
 <p>Da alles <em>einfach</em> sein soll, werde ich nur ein
 <strong>einfaches Berechtigungssystem</strong> programmieren. Es gibt <strong>nicht angemeldet</strong>,
 <strong>angemeldet</strong> und <strong>Admin</strong>. Nicht am CMS angemeldete Personen dürfen nur
@@ -105,31 +105,33 @@ lesen. Angemeldete Personen dürfen Kommentare schreiben und Admins haben
 vollen Schreibzugriff.</p>
 </div>
 <div class="section" id="bilder-und-dateien-hochladen-und-verwalten">
-<h2>Bilder und Dateien hochladen und verwalten<a class="headerlink" href="#bilder-und-dateien-hochladen-und-verwalten" title="Permalink zu dieser Überschrift">¶</a></h2>
-</div>
-<div class="section" id="vorlagen-fur-die-gesamte-website">
-<h2>Vorlagen für die gesamte Website<a class="headerlink" href="#vorlagen-fur-die-gesamte-website" title="Permalink zu dieser Überschrift">¶</a></h2>
+<span id="index-5"></span><h2>Bilder und Dateien hochladen und verwalten<a class="headerlink" href="#bilder-und-dateien-hochladen-und-verwalten" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Bilder können überall in der gesamten Ordnerstruktur des CMS abgespeichert
+werden. Dafür wird eine Bild- und Dateiverwaltung geschrieben.</p>
+<p>Wird ein Bild über den WYSIWYG-Editor hochgeladen, landet das Bild im
+selben Ordner in dem sich auch die Seite befindet</p>
+<p>Das Hochladen von Bildern in einen Ordner soll in allen Editoren möglich sein.
+Je nach Markup-Sprache wird es eine Möglichkeit geben, ein Bild hochzuladen
+und den Link dazu sofort in den Text der Seite einzubetten.</p>
 </div>
 <div class="section" id="mehrsprachig">
-<h2>Mehrsprachig<a class="headerlink" href="#mehrsprachig" title="Permalink zu dieser Überschrift">¶</a></h2>
+<span id="index-6"></span><h2>Mehrsprachig<a class="headerlink" href="#mehrsprachig" title="Permalink zu dieser Überschrift">¶</a></h2>
 <p>Gleich von Beginn an soll auf Mehrsprachigen Content geachtet werden.</p>
-<p>Der Text der im CMS anfällt, wird mit Gettext übersetzt. Jede Seite wird
-mehrsprachig abgespeichert.</p>
+<p>Automatische Erkennung der Browser-Sprache. Wurde eine Sprache ausgewählt,
+wird diese per Cookie fixiert.</p>
+<p>Der Stammtext des Programmes selbst, wird mit Gettext übersetzt.
+Jede Seite wird in mehreren Sprachen abgespeichert.</p>
 <p>Es wird eine Einstellung geben, die festlegt welche Sprachen im CMS möglich sind.</p>
 </div>
 <div class="section" id="hauptmenu">
-<h2>Hauptmenü<a class="headerlink" href="#hauptmenu" title="Permalink zu dieser Überschrift">¶</a></h2>
+<span id="index-7"></span><h2>Hauptmenü<a class="headerlink" href="#hauptmenu" title="Permalink zu dieser Überschrift">¶</a></h2>
 <p>Das Hauptmenü ist eine UL-LI-Kombination, die automatisch aus der
-Verzeichnissstruktur erstellt wird.</p>
+Verzeichnisstruktur erstellt wird.</p>
 <p>Jeder Ordner hat Metadaten, die bestimmen, ob ein Ordner im Hauptmenü
 ein- oder auszublenden ist. Die Ordner bekommen die Übersetzungen für
 das Hauptmenü gleich mitgeliefert.</p>
-<p>Das Hauptmenü (die UL-LI-Kombination) kann als Textmakro überall in der
-globalen Vorlage eingebunden werden.</p>
-</div>
-<div class="section" id="planungsphase">
-<h2>Planungsphase<a class="headerlink" href="#planungsphase" title="Permalink zu dieser Überschrift">¶</a></h2>
-<p>Es geht noch weiter ...</p>
+<p>Das Hauptmenü (die UL-LI-Kombination) kann als Textmakro überall in die
+Seitenvorlagen eingebunden werden.</p>
 </div>
 </div>
 
@@ -142,20 +144,11 @@ globalen Vorlage eingebunden werden.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/simple-python-cms-logo.png" alt="Logo"/>
             </a></p>
-  <h3><a href="../index.html">Inhalt</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Features</a><ul>
-<li><a class="reference internal" href="#ahnlich-wie-ein-wiki">Ähnlich wie ein Wiki</a></li>
-<li><a class="reference internal" href="#mehrere-eingabemoglichkeiten">Mehrere Eingabemöglichkeiten</a></li>
-<li><a class="reference internal" href="#vorlagen-und-textmakros">Vorlagen und Textmakros</a></li>
-<li><a class="reference internal" href="#einfache-berechtigungen">Einfache Berechtigungen</a></li>
-<li><a class="reference internal" href="#bilder-und-dateien-hochladen-und-verwalten">Bilder und Dateien hochladen und verwalten</a></li>
-<li><a class="reference internal" href="#vorlagen-fur-die-gesamte-website">Vorlagen für die gesamte Website</a></li>
-<li><a class="reference internal" href="#mehrsprachig">Mehrsprachig</a></li>
-<li><a class="reference internal" href="#hauptmenu">Hauptmenü</a></li>
-<li><a class="reference internal" href="#planungsphase">Planungsphase</a></li>
-</ul>
-</li>
+<h3><a href="../index.html">Inhalt</a></h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technik/index.html">Technik</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
 </ul>
 
   <h4>Vorheriges Thema</h4>
