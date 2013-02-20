@@ -138,8 +138,8 @@ schneller als TCP und bietet eine einfache Möglichkeit, für jede
 "Simple Python CMS"-Instanz einen eigenen Socket im Datenbankordner der
 Instanz zu öffnen.
 
-Da es von "Simple Python CMS" normalerweise nur *einen Prozess* gibt, wird
-Redis nur einmal je "Simple Python CMS"-Instanz gestartet.
+Da es von jeder "Simple Python CMS"-Instanz normalerweise nur *einen Prozess*
+gibt, wird Redis nur einmal je "Simple Python CMS"-Instanz gestartet.
 Ich werde aber die Möglichkeit offen halten, dass Redis als eigenständiger
 Server läuft und eine "Simple Python CMS"-Instanz mehrmals
 gestartet werden kann. Das bedeutet aber mehr Aufwand für den Admin
