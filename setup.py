@@ -65,7 +65,8 @@ setup(
     # install_requires = [
     #     "distribute",
     #     "cherrypy",
-    #     "redis"
+    #     "redis",
+    #     "Mako"
     # ],
     cmdclass = {"upload": upload},
 )

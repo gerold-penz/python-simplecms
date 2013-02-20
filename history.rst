@@ -15,6 +15,8 @@ Version 0.0.6
     
     - Angefangen, die Installation zu beschreiben
 
+- Mako-Tests
+
 
 =============
 Version 0.0.5
