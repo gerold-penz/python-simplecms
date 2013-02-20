@@ -1,0 +1,185 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation - Ubuntu ab Version 12.4 &mdash; Simple Python Content Management System</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="top" title="Simple Python Content Management System" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Allgemeiner Index"
+             accesskey="I">Index</a></li>
+        <li><a href="../index.html">Simple Python CMS</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="installation-ubuntu-ab-version-12-4">
+<h1>Installation - Ubuntu ab Version 12.4<a class="headerlink" href="#installation-ubuntu-ab-version-12-4" title="Permalink zu dieser Überschrift">¶</a></h1>
+<p>Ab Ubuntu 12.4 lassen sich die wenigen notwendigen Pakete sehr einfach
+installieren. Und Ubuntu-Upstart ist ideal dafür geeignet, eine
+&#8220;Simple Python CMS&#8221;-Instanz mit wenig Aufwand als Dienst laufen zu lassen.</p>
+<div class="section" id="kurzanleitung">
+<h2>Kurzanleitung<a class="headerlink" href="#kurzanleitung" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Die benötigten Programmpakete werden mit folgenden Befehlen auf der
+Kommandozeile installiert:</p>
+<div class="highlight-python"><pre>sudo apt-get install python-dev build-essential python-pip redis-server python-cherrypy3
+sudo pip install redis
+sudo pip install Mako
+sudo pip install python-simplecms</pre>
+</div>
+<p>Die Details der Installation und die Erstellung einer &#8220;Simple Python CMS&#8221;-Instanz
+werden in den nächsten Kapiteln erklärt.</p>
+</div>
+<div class="section" id="python-2-x">
+<h2>Python 2.x<a class="headerlink" href="#python-2-x" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Informationen zu Python: <a class="reference external" href="http://www.python.org/">http://www.python.org/</a></p>
+<p>Python 2.7 ist bei Ubuntu 12.4 und 12.10 bereits installiert. Es müssen nur noch
+die Entwicklerpakete (dev) installiert werden, damit Mako (siehe weiter unten)
+kompiliert werden kann.</p>
+<div class="highlight-python"><pre>sudo apt-get install python-dev build-essential</pre>
+</div>
+</div>
+<div class="section" id="python-pip">
+<h2>Python-Pip<a class="headerlink" href="#python-pip" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Informationen zu Pip: <a class="reference external" href="https://pypi.python.org/pypi/pip">https://pypi.python.org/pypi/pip</a></p>
+<div class="highlight-python"><pre>sudo apt-get install python-pip</pre>
+</div>
+</div>
+<div class="section" id="redis-datenbank">
+<h2>Redis Datenbank<a class="headerlink" href="#redis-datenbank" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Informationen zu Redis: <a class="reference external" href="http://redis.io/">http://redis.io/</a></p>
+<div class="highlight-python"><pre>sudo apt-get install redis-server</pre>
+</div>
+</div>
+<div class="section" id="redis-python">
+<h2>Redis Python<a class="headerlink" href="#redis-python" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Informationen zu redis-py: <a class="reference external" href="https://github.com/andymccurdy/redis-py">https://github.com/andymccurdy/redis-py</a></p>
+<div class="highlight-python"><pre>sudo pip install redis</pre>
+</div>
+</div>
+<div class="section" id="cherrypy-webframework">
+<h2>CherryPy Webframework<a class="headerlink" href="#cherrypy-webframework" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Informationen zu CherryPy: <a class="reference external" href="http://www.cherrypy.org/">http://www.cherrypy.org/</a></p>
+<div class="highlight-python"><pre>sudo apt-get install python-cherrypy3</pre>
+</div>
+</div>
+<div class="section" id="mako-vorlagen">
+<h2>Mako Vorlagen<a class="headerlink" href="#mako-vorlagen" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Informationen zu Mako: <a class="reference external" href="http://www.makotemplates.org/">http://www.makotemplates.org/</a></p>
+<p>Für die Installation von Mako müssen vorher die Pakte <cite>build-essential</cite> und
+<cite>python-dev</cite> installiert werden.</p>
+<div class="highlight-python"><pre>sudo pip install Mako</pre>
+</div>
+</div>
+<div class="section" id="simple-python-cms">
+<h2>Simple Python CMS<a class="headerlink" href="#simple-python-cms" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Die Installation von &#8220;Simple Python CMS&#8221; geht mit <cite>pip</cite> leicht von der Hand.</p>
+<div class="highlight-python"><pre>sudo pip install python-simplecms</pre>
+</div>
+</div>
+<div class="section" id="simple-python-cms-instanz-erstellen">
+<h2>&#8220;Simple Python CMS&#8221;-Instanz erstellen<a class="headerlink" href="#simple-python-cms-instanz-erstellen" title="Permalink zu dieser Überschrift">¶</a></h2>
+</div>
+<div class="section" id="ubuntu-upstart-skript">
+<h2>Ubuntu-Upstart-Skript<a class="headerlink" href="#ubuntu-upstart-skript" title="Permalink zu dieser Überschrift">¶</a></h2>
+</div>
+<div class="section" id="apache-reverse-proxy">
+<h2>Apache Reverse-Proxy<a class="headerlink" href="#apache-reverse-proxy" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Information über Apache: <a class="reference external" href="http://httpd.apache.org/docs/2.2/">http://httpd.apache.org/docs/2.2/</a></p>
+<p>Falls bereits Apache als Webserver auf dem Computer eingesetzt wird, kann man
+den Apachen dazu verwenden, die Requests der Browser zur
+&#8220;Simple Python CMS&#8221;-Instanz weiterzuleiten. Dazu muss das Apache-Modul
+&#8220;proxy_http&#8221; aktiviert werden.</p>
+<div class="highlight-python"><pre>a2enmod proxy_http</pre>
+</div>
+</div>
+<div class="section" id="pound-reverse-proxy">
+<h2>Pound Reverse-Proxy<a class="headerlink" href="#pound-reverse-proxy" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Informationen über Pound: <a class="reference external" href="http://www.apsis.ch/pound">http://www.apsis.ch/pound</a></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/simple-python-cms-logo.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../index.html">Inhalt</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/index.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technik/index.html">Technik</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Installation</a></li>
+</ul>
+
+  <h3>Diese Seite</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/installation/ubuntu.txt"
+           rel="nofollow">Quelltext anzeigen</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Schnellsuche</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Los" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Geben Sie Suchbegriffe oder einen Modul-, Klassen- oder Funktionsnamen ein.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Allgemeiner Index"
+             >Index</a></li>
+        <li><a href="../index.html">Simple Python CMS</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Gerold Penz.
+      Mit <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3 erstellt.
+    </div>
+  </body>
+</html>
