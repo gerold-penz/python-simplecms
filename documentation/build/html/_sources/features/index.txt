@@ -143,7 +143,7 @@ und den Link dazu sofort in den Text der Seite einzubetten.
 Mehrsprachig
 ============
 
-Gleich von Beginn an soll auf Mehrsprachigen Content geachtet werden.
+Gleich von Beginn an soll auf mehrsprachigen Content geachtet werden.
 
 Automatische Erkennung der Browser-Sprache. Wurde eine Sprache ausgewählt,
 wird diese per Cookie fixiert.

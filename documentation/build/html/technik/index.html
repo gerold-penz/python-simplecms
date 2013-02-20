@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.0.5',
+        VERSION:     '0.0.6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -72,14 +72,14 @@ Frage kommt.</p>
 Deshalb werde ich diesmal nicht mehr auf <a class="reference external" href="http://www.cheetahtemplate.org/">CheetahTemplate</a> zurückgreifen.
 Es ist zwar schade, denn CheetahTemplate bietet mir die volle Flexibilität
 von Python, ohne kompliziert zu wirken, was ich sehr schätze.</p>
-<p>Da sich <a class="reference external" href="http://www.makotemplates.org/">Mako</a> sehr ähnlich wie CheetahTemplate anfühlt, aber auch mit Python 3.x
-funktioniert, habe ich mich für Mako entschieden. Weiters kommt dazu, dass
-Mako ausgeklügelte Caching-Mechanismen anbietet und Mako-Vorlagen nicht wie
+<p>Da sich <a class="reference external" href="http://www.makotemplates.org/">Mako</a> sehr ähnlich wie CheetahTemplate anfühlt, aber auch mit
+Python 3.x funktioniert, habe ich mich für Mako entschieden. Weiters kommt dazu,
+dass Mako ausgeklügelte Caching-Mechanismen anbietet und Mako-Vorlagen nicht wie
 ein <em>Klammerngewitter</em> ({{ }}) ;-) aussehen.
-Ich mag es, dass Mako <em>nicht versucht</em>, die Möglichkeiten von Python zu beschneiden.
-Andere Vorlagensprachen tun ja alles um komplett anders als die gewohnte
-Programmiersprache auszusehen. Was aber ein einfaches Zusammensetzen und
-mehrmaliges Verwenden von Variablen innerhalb der Vorlage meist unterbindet.
+Ich mag es, dass Mako <em>nicht versucht</em>, die Möglichkeiten von Python zu
+beschneiden. Andere Vorlagensprachen tun ja alles um komplett anders als die
+gewohnte Programmiersprache auszusehen. Was aber ein einfaches Zusammensetzen
+und mehrmaliges Verwenden von Variablen innerhalb der Vorlage meist unterbindet.
 So müsste man jede <em>Kleinigkeit</em> in den Programmcode verlagern, was ich nicht
 immer für die beste Lösung halte.</p>
 </div>
@@ -92,37 +92,57 @@ Die Dokumentation zu YAML ist hervorragend.
 Ich habe noch keine Erfahrung mit YAML, aber ausprobieren werde ich es sicher.</p>
 <p>Mit <a class="reference external" href="http://www.thinkintags.com/">Thinkintags</a> gibt es ein aufstrebendes Werkzeug um HTML-Seiten
 zu designen. Vielleicht bringe ich es so hin, dass man die damit
-erstellte Struktur direkt in das CMS einbinden kann.</p>
+erstellte Struktur direkt in das CMS einbinden kann. Unbedingt ausprobieren.</p>
 </div>
 <div class="section" id="datenbanksystem">
 <span id="index-4"></span><h2>Datenbanksystem<a class="headerlink" href="#datenbanksystem" title="Permalink zu dieser Überschrift">¶</a></h2>
-<p>Das Datenbanksystem ist noch nicht entschieden...</p>
-<p>Eigentlich bräuchte ich so etwas Schnelles wie <a class="reference external" href="http://redis.io/">Redis</a>, einen einfachen
-Dokumentenspeicher wie <a class="reference external" href="http://couchdb.apache.org/">CouchDB</a> und so etwas einfach zu verwendendes
+<p>Das Datenbanksystem ist noch nicht entschieden... [Korrektur, ein paar Stunden
+später] Das Datenbanksystem ist entschieden!</p>
+<p>Eigentlich bräuchte ich so etwas schnelles wie <a class="reference external" href="http://redis.io/">Redis</a>, einen einfachen
+Dokumentenspeicher wie <a class="reference external" href="http://couchdb.apache.org/">CouchDB</a> und eine einfach einzubauende Datenbank
 wie <a class="reference external" href="http://www.sqlite.org/">SQLite</a>.</p>
-<p>Für Redis und CouchDB müssen TCP-Ports geöffnet werden. Redis lässt sich
-einfach installieren und ist superschnell. Wenn aber mehrere &#8220;Simple Python CMS&#8221;
-auf einem System betrieben werden sollen, muss man sich eine gute Trennung
-zwischen den einzelnen Datenbanken überlegen oder man lässt Redis für jede
-&#8220;Simple Python CMS&#8221;-Instanz als eigenständiges Programm laufen. Dann ist aber
-noch zu bedenken, dass einzelne Instanzen gezielt gestartet und gestoppt werden
-müssen. Was wieder einen erhöhten Aufwand beim Installieren bringt, den nicht
-jeder schaffen wird. Ähnliches gilt für CouchDB. Eigener TCP-Port.
-Mehrere Instanzen nur umständlich.</p>
-<p>SQLite ist ein &#8220;Relationales Datenbanksystem&#8221;, das die Daten in <em>einer</em> Datei
-hält. Mehrere Programme können gleichzeitig lesend auf die Datenbankdatei
-zugreifen. Beim Schreiben wird die Datenbank kurzfristig für die anderen
-zugreifenden Programme gesperrt.
+<p>Für Redis und CouchDB müssen TCP-Ports geöffnet werden. Redis lässt sich unter
+Linux einfach installieren und ist superschnell. Wenn aber mehrere
+&#8220;Simple Python CMS&#8221; auf einem System betrieben werden sollen,
+muss man sich eine gute Trennung zwischen den einzelnen Datenbanken
+überlegen oder man lässt Redis für jede &#8220;Simple Python CMS&#8221;-Instanz
+als eigenständiges Programm laufen.
+Dann ist aber noch zu bedenken, dass einzelne Instanzen gezielt gestartet
+und gestoppt werden müssen. Was wieder einen erhöhten Aufwand beim
+Installieren bringt, den nicht jeder schaffen wird. Ähnliches gilt für
+CouchDB. Eigener TCP-Port. Mehrere Instanzen nur umständlich.</p>
+<p>SQLite ist ein &#8220;Relationales Datenbanksystem&#8221;, das die Daten in nur <em>einer</em>
+Datei hält. Mehrere Programme/Prozesse können gleichzeitig lesend auf die
+Datenbankdatei zugreifen.
+Beim Schreiben wird die Datenbank kurzfristig für die anderen zugreifenden
+Programme gesperrt.
 Damit kann man bei kleinen bis mittleren Content Management Systemen
 sicher gut leben.</p>
 <p>Bei CouchDB ist es problemlos möglich, weitere Datenfelder im Laufe der
 Entwicklung zu den Datenbank-Dokumenten hinzuzufügen, ohne dass man etwas
 an der Struktur der Datenbank ändern muss. Dafür ist die Abfrage der Daten
 nicht so einfach wie bei Redis oder SQLite.</p>
-<p>Redis bietet viele Möglichkeiten beziehungsweise Strukturen an um die
-Daten zu speichern und wieder zu finden. Noch dazu ist Redis wirklich schnell
-und lässt sich von Python aus wunderbar einfach programmieren.</p>
-<p>Mal sehen, ob ich eine Möglichkeit finde, Redis trotzdem zu verwenden.</p>
+<p>Redis bietet vielfältige Möglichkeiten und interessante Datenstrukturen an um
+die Daten zu speichern und schnell wieder zu finden.
+Noch dazu ist Redis wirklich schnell und lässt sich von Python aus wunderbar
+einfach programmieren. Wie bei CouchDB lassen sich problemlos weitere
+Datenfelder im Laufe der Entwicklung hinzufügen, ohne die Datenbank-Strukturen
+aller &#8220;Simple Python CMS&#8221;-Instanzen ständig aktuell halten zu müssen. Diese
+aktualisieren sich sozusagen von selst, wenn man nicht zu chaotisch programmiert.</p>
+<p>Mal sehen, ob ich eine Möglichkeit finde, Redis zu verwenden...</p>
+<p>[ein paar Stunden später]</p>
+<p>Ja, ich habe eine Möglichkeit gefunden. :-)</p>
+<p>Redis wird per <cite>subprocess.Popen</cite> in einem eigenen Thread gestartet. Statt
+einer TCP-Verbindung wird die Kommunikation per Unix-Socket aufgebaut. Das ist
+schneller als TCP und bietet eine einfache Möglichkeit, für jede
+&#8220;Simple Python CMS&#8221;-Instanz einen eigenen Socket im Datenbankordner der
+Instanz zu öffnen.</p>
+<p>Da es von &#8220;Simple Python CMS&#8221; normalerweise nur <em>einen Prozess</em> gibt, wird
+Redis nur einmal je &#8220;Simple Python CMS&#8221;-Instanz gestartet.
+Ich werde aber die Möglichkeit offen halten, dass Redis als eigenständiger
+Server läuft und eine &#8220;Simple Python CMS&#8221;-Instanz mehrmals
+gestartet werden kann. Das bedeutet aber mehr Aufwand für den Admin
+und soll nicht der Normalfall werden.</p>
 </div>
 </div>
 

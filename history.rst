@@ -4,6 +4,19 @@ Simple Python CMS
 
 
 =============
+Version 0.0.6
+=============
+
+2013-02-20
+
+- Dokumentation
+    
+    - Als Datenbank wird Redis eingesetzt
+    
+    - Angefangen, die Installation zu beschreiben
+
+
+=============
 Version 0.0.5
 =============
 
