@@ -11,7 +11,11 @@ Version 0.0.7
 
 Die James Bond-Version :-)
 
+- Mit den Einstellungen Tests durchgeführt
 
+- *lib.config* ist der direkte Zugang zu *cherrypy.config*. Zusätzlich werden
+  die Konfigurationen beschrieben. Das dient später dem Erstellen der 
+  Dokumentation der Konfiguration einer CMS-Instanz.
 
 
 =============

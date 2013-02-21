@@ -5,6 +5,11 @@ Simple Python CMS
 """
 
 import lib.constants
-import lib.datadir
 import lib.settings
+import lib.config
+
+datadir = lib.config.DATADIR()
+
+print datadir
+
 

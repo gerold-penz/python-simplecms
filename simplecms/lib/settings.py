@@ -8,8 +8,6 @@ Einstellungen
 Created 2013-02-21 by Gerold - http://halvar.at/
 """
 
-import sys
-
 
 # Alle Einstellungen in einem globalen Dictionary
 _global_all_settings = {}
@@ -81,23 +79,7 @@ class Setting(object):
     __call__ = value
 
 
-    # Die Properties *val* und *value* geben den Wert zurück oder setzen ihn
-    #val = property(get, set)
-    #value = val
 
 
-
-
-#
-# Alle Einstellungen als Setting-Instanzen
-#
-DATADIR = Setting(
-    u"DATADIR",
-    datasources = [Setting.DATASOURCE_MEMORY],
-    short_description = u"",
-    long_description = (
-        u""
-    )
-)
 
 
