@@ -17,6 +17,16 @@ Die James Bond-Version :-)
   die Konfigurationen beschrieben. Das dient später dem Erstellen der 
   Dokumentation der Konfiguration einer CMS-Instanz.
 
+- Minimale *http_root*-Ordnerstruktur (css, js, interface) erstellt.
+
+- Beim Starten der Anwendung werden die Datenordner erstellt, falls diese
+  noch nicht existieren.
+
+- *lib.constants* um die Konstante HTTPROOTDIR erweitert
+
+- Die Konfigurationen DATAJSDIR, DATACSSDIR und DATATREEDIR werden beim
+  ersten schreiben der Konfiguration DATADIR automatisch eingestellt.
+
 
 =============
 Version 0.0.6

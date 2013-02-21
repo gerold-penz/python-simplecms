@@ -1,27 +1,30 @@
 #!/usr/bin/env python
 # coding: utf-8
 """
-Konfigurationen
+Grundkonfigurationen des Programmes lesen und initialisieren
 
-Über dieses Modul werden alle Grundkonfigurationen des Programmes gelesen
-
-Die Grundkonfiguration ist in `cherrypy.config` gespeichert und darf nur
-ausgelesen werden.
+Die Grundkonfiguration ist in `cherrypy.config` gespeichert.
+Die Grundeinstellungen werden beim Start der Anwendung eingestellt und dürfen
+im laufenden Betrieb nicht mehr verändert werden.
 
 Created 2013-02-21 by Gerold - http://halvar.at/
 """
 
+import os
 import cherrypy
 
 
-# ACHTUNG! Globales Dictionary mit allen Einstellungen
-_global_all_configurations = {}
+# Dictionary mit allen Einstellungen
+all_configurations = {}
 
 
 class Config(object):
     """
     Repräsentiert eine Konfiguration
     """
+
+    locked = True
+
 
     def __init__(
         self,
@@ -31,15 +34,13 @@ class Config(object):
         default = None
     ):
 
-        global _global_all_configurations
-
         self.name = unicode(name)
         self.short_description = unicode(short_description)
         self.long_description = unicode(long_description) if long_description else None
         self.default = default
 
         # Einstellung in das globale Dict legen
-        _global_all_configurations[name] = self
+        all_configurations[name] = self
 
 
     def __str__(self):
@@ -66,15 +67,59 @@ class Config(object):
         return cherrypy.config.get(self.name, self.default)
 
 
-    __call__ = get
-    value = property(get)
+    def set(self, value):
+        """
+        Schreibt die Konfiguration nach *cherrypy.config*
+        """
 
+        if self.locked:
+            raise RuntimeError("Changing %s is not allowed" % self.name)
+        cherrypy.config[self.name] = value
+
+
+    value = property(get, set)
+
+
+class ConfigDataDir(Config):
+    """
+    Datenordner
+    """
+
+    locked = False
+
+
+    def set(self, value):
+        """
+        Schreibt die Datenordner-Konfiguration und alle davon abhängigen
+        Konfigurationen nach *cherrypy.config*.
+        Danach wird diese Einstellung für Änderungen gesperrt
+        """
+
+        # Keine Änderung erlaubt, wenn bereits gesperrt
+        if self.locked:
+            raise RuntimeError("Changing %s is not allowed" % self.name)
+
+        # DATADIR
+        cherrypy.config["DATADIR"] = value
+        self.locked = True
+
+        # DATAJSDIR
+        cherrypy.config["DATAJSDIR"] = os.path.join(value, "js")
+
+        # DATACSSDIR
+        cherrypy.config["DATACSSDIR"] = os.path.join(value, "css")
+
+        # DATATREEDIR
+        cherrypy.config["DATATREEDIR"] = os.path.join(value, "tree")
+
+
+    value = property(Config.get, set)
 
 
 #
 # Auflistung aller Konfigurationen
 #
-DATADIR = Config(
+DATADIR = ConfigDataDir(
     u"DATADIR",
     u"Pfad zum Datenordner",
     (
@@ -83,8 +128,24 @@ DATADIR = Config(
         u"übergeben werden."
     )
 )
-
-
-
+DATAJSDIR = Config(
+    u"DATAJSDIR",
+    u"Pfad zum JavaScript-Ordner innerhalb des Datenordners",
+    u"In diesem Ordner befinden sich benutzerdefinierte JavaScript-Dateien."
+)
+DATACSSDIR = Config(
+    u"DATACSSDIR",
+    u"Pfad zum CSS-Ordner innerhalb des Datenordners",
+    u"In diesem Ordner befinden sich benutzerdefinierte CSS-Dateien."
+)
+DATATREEDIR = Config(
+    u"DATATREEDIR",
+    u"Pfad zum Baum-Ordner innerhalb des Datenordners",
+    (
+        u"Innerhalb dieses Ordners wird die gesamte Struktur des CMS abgebildet. "
+        u"Jede Seite, jedes Bild und jeder Ordner der im CMS angezeigt wird, "
+        u"befindet sich unterhalb dieses Ordners."
+    )
+)
 
 

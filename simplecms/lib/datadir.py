@@ -7,21 +7,44 @@ Created 2013-02-21 by Gerold - http://halvar.at/
 """
 
 import os
-import shutil
+import config
 
 
-
-_global_data_directory = None
-
-
-def init(data_directory):
+def init(datadir):
+    """
+    Initialisiert den Datenordner
     """
 
+    # Datenordner-Konfiguration setzen
+    config.DATADIR.value = datadir
+
+    # Benötigte Ordner erstellen
+    create_dirs()
+
+
+def create_dirs():
+    """
+    Erstellt den Datenordner und die benötigten Unterordner,
+    falls diese noch nicht existieren.
     """
 
-    global _global_data_directory
+    # Hauptordner
+    datadir = config.DATADIR.value
+    assert datadir
+    if not os.path.isdir(datadir):
+        os.makedirs(datadir)
 
+    # JavaScript-Ordner
+    datajsdir = config.DATAJSDIR.value
+    if not os.path.isdir(datajsdir):
+        os.makedirs(datajsdir)
 
-    # # Datenbankordner erstellen, falls dieser noch nicht existiert
-    # if not os.path.isdir(DATABASEDIR):
-    #     os.makedirs(DATABASEDIR)
+    # CSS-Ordner
+    datacssdir = config.DATACSSDIR.value
+    if not os.path.isdir(datacssdir):
+        os.makedirs(datacssdir)
+
+    # Datenbaum-Ordner
+    datatreedir = config.DATATREEDIR.value
+    if not os.path.isdir(datatreedir):
+        os.makedirs(datatreedir)
