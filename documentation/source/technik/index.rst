@@ -87,8 +87,9 @@ erstellte Struktur direkt in das CMS einbinden kann. Unbedingt ausprobieren.
 Datenbanksystem
 ===============
 
-Das Datenbanksystem ist noch nicht entschieden... [Korrektur, ein paar Stunden
-später] Das Datenbanksystem ist entschieden!
+----------------------------------------
+Überlegungen die wieder verworfen wurden
+----------------------------------------
 
 Eigentlich bräuchte ich so etwas schnelles wie Redis_, einen einfachen
 Dokumentenspeicher wie CouchDB_ und eine einfach einzubauende Datenbank
@@ -124,13 +125,13 @@ Noch dazu ist Redis wirklich schnell und lässt sich von Python aus wunderbar
 einfach programmieren. Wie bei CouchDB lassen sich problemlos weitere
 Datenfelder im Laufe der Entwicklung hinzufügen, ohne die Datenbank-Strukturen
 aller "Simple Python CMS"-Instanzen ständig aktuell halten zu müssen. Diese
-aktualisieren sich sozusagen von selst, wenn man nicht zu chaotisch programmiert.
+aktualisieren sich sozusagen von selbst, wenn man nicht zu chaotisch programmiert.
 
 Mal sehen, ob ich eine Möglichkeit finde, Redis zu verwenden...
 
-[ein paar Stunden später]
-
-Ja, ich habe eine Möglichkeit gefunden. :-)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Überlegungen, wie Redis verwendet werden könnte
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Redis wird per `subprocess.Popen` in einem eigenen Thread gestartet. Statt
 einer TCP-Verbindung wird die Kommunikation per Unix-Socket aufgebaut. Das ist
@@ -144,6 +145,19 @@ Ich werde aber die Möglichkeit offen halten, dass Redis als eigenständiger
 Server läuft und eine "Simple Python CMS"-Instanz mehrmals
 gestartet werden kann. Das bedeutet aber mehr Aufwand für den Admin
 und soll nicht der Normalfall werden.
+
+
+-----
+Fazit
+-----
+
+Nach vielen, vielen Stunden in denen ich über die perfekte Datenbanklösung
+nachgedacht habe -- bin ich zu dem Schluss gekommen,
+die Daten in das Dateisystem und nicht in eine Datenbank zu schreiben.
+
+
+
+
 
 
 
