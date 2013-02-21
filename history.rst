@@ -4,6 +4,17 @@ Simple Python CMS
 
 
 =============
+Version 0.0.7
+=============
+
+2013-02-21
+
+Die James Bond-Version :-)
+
+
+
+
+=============
 Version 0.0.6
 =============
 
