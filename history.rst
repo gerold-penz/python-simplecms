@@ -4,6 +4,19 @@ Simple Python CMS
 
 
 =============
+Version 0.1.1
+=============
+
+2013-02-22
+
+- Die Grundüberlegungen zur Struktur sind abgeschlossen.
+
+- Mit der Datenordner-Verwaltung begonnen. Die Meisten Änderungen befinden sich
+  in *lib.datadir*. Über *lib.datadir.tree* kann auf den kompletten
+  DATATREEDIR zugegriffen werden.
+
+
+=============
 Version 0.0.7
 =============
 

@@ -8,10 +8,13 @@ Hauptmodul
 Created by Gerold - http://halvar.at/
 """
 
+import os
+import sys
 import cherrypy
-import http_root
+import lib.constants
 import lib.config
 import lib.datadir
+import http_root
 
 
 class SimpleCms(cherrypy.Application):
@@ -28,7 +31,12 @@ class SimpleCms(cherrypy.Application):
         host,
         port,
         datadir,
-        script_name = ""
+        script_name = "",
+        additional_global_config = None,
+        global_staticdir_match = (
+            r"(?i)(gif|jpg|png|jpeg|js|7z|pdf|zip|svg|"
+            r"emf|avi|ods|css|ico|html|htm|p3p|swf|htc)$"
+        )
     ):
         """
         :param host: Hostname oder IP-Adresse an die der Server auf Anfragen
@@ -39,20 +47,58 @@ class SimpleCms(cherrypy.Application):
         :param datadir: Absoluter Pfad zum Ordner in dem sich alle Daten der
             "Simple Python CMS"-Instanz befinden. Existiert dieser Ordner nicht,
             wird er automatisch erstellt.
+
+        :param additional_global_config: Zusätzlich zu den direkt übergebbaren
+            Konfigurationsparametern, kann man ein Dictionary mit
+            Konfigurationen für den globalen Bereich der CherryPy-Konfiguration
+            übergeben. Details: siehe CherryPy-Hilfe
+
+        :param global_staticdir_match: Sollte man Dateien mit Endungen ausliefern
+            müssen, die nicht mit der vorgegebenen "Regular Expression"
+            zu erfassen sind, kann man diesen Parameter überschreiben.
+            Standard: (
+                r"(?i)(gif|jpg|png|jpeg|js|7z|pdf|zip|svg|"
+                r"emf|avi|ods|css|ico|html|htm|p3p|swf|htc)$"
+            )
+
         """
 
         # Globale Konfiguration zusammensetzen
         self.global_config = {
             "global": {
-                # Server settings
+                # Einstellungen für den CherryPy-Standalone-Server
                 "server.socket_host": host,
                 "server.socket_port": port,
+                # Produktivumgebung
+                "environment": "production",
+                "log.screen": False,
+                "request.show_tracebacks": False,
+                "request.show_mismatched_params": False,
+                # Staticdir
+                "tools.staticdir.root": lib.constants.HTTPROOTDIR,
+                # Gzip
+                "tools.gzip.on": True,
+                # Encoding der auszuliefernden HTML-Seiten
+                "tools.encode.on": True,
+                "tools.encode.encoding": "utf-8",
+                "tools.decode.on": True,
+                # URL Anpassung
+                "tools.trailing_slash.on": True,
                 # Datenordner
-                "DATADIR": datadir
+                "DATADIR": datadir,
             },
+            "/": {
+                # Staticdir
+                "tools.staticdir.on": True,
+                "tools.staticdir.dir": ".",
+                "tools.staticdir.match": global_staticdir_match,
+            }
         }
 
-        # Anwendung initialisieren
+        self.global_config["global"].update(additional_global_config)
+
+        # Anwendung initialisieren und zusätzlichen
+        # Konfigurationsparameter übernehmen.
         cherrypy.Application.__init__(
             self, http_root, script_name, self.global_config
         )
