@@ -136,7 +136,7 @@ und den Link dazu sofort in den Text der Seite einzubetten.
   Content
   Sprache
   Cookie
-  Gettext
+  Babel
   Übersetzung
 
 ============
@@ -148,8 +148,10 @@ Gleich von Beginn an soll auf mehrsprachigen Content geachtet werden.
 Automatische Erkennung der Browser-Sprache. Wurde eine Sprache ausgewählt,
 wird diese per Cookie fixiert.
 
-Der Stammtext des Programmes selbst, wird mit Gettext übersetzt.
-Jede Seite wird in mehreren Sprachen abgespeichert.
+Der Stammtext des Programmes selbst, wird mit Babel_ übersetzt.
+Jede Content-Seite wird von Anfang an in mehreren Sprachen abgespeichert.
+
+.. _Babel: http://babel.edgewall.org/
 
 Es wird eine Einstellung geben, die festlegt welche Sprachen im CMS möglich sind.
 
