@@ -11,12 +11,39 @@ import string
 import config
 
 
-NOT_ALLOWED_FOLDERNAMES = {"js", "css", "interface", "tree"}
-ALLOWED_FOLDERNAME_CHARS = string.ascii_letters + string.digits + "_-"
+NOT_ALLOWED_FOLDERNAMES = {
+    "interface",
+}
+NOT_ALLOWED_FILENAMES = NOT_ALLOWED_FOLDERNAMES.union({
+    "settings.json"
+})
+ALLOWED_FOLDERNAME_CHARS = string.ascii_lowercase + string.digits + "_-"
+NEW_DIR_MODE = 0777
+NEW_FILE_MODE = 0666
 
 
-# ACHTUNG! Globale Variable mit der Instanz des Datenbaumes
+# ToDo: Methode zum Löschen eines Ordners
+
+# ToDo: Einstellungen eines Ordners per JSON-Datei speichern
+
+# ToDo: History der Einstellungs-Änderungen speichern
+
+# ToDo: Liste mit der Änderungshistorie eines Ordners zurück geben
+
+# ToDo: Änderungen rückgängig machbar
+
+
+# Globale Variable mit der Instanz des Datenbaumes; wird später befüllt;
 tree = None
+
+
+# Fehlerklassen
+class DatadirError(RuntimeError): pass
+class EmptyFoldername(DatadirError): pass
+class NotAllowedCharInFoldername(DatadirError): pass
+class NotAllowedFoldername(DatadirError): pass
+class FolderAlreadyExists(DatadirError): pass
+class FileAlreadyExists(DatadirError): pass
 
 
 def init(datadir):
@@ -30,13 +57,13 @@ def init(datadir):
     config.DATADIR.value = datadir
 
     # Benötigte Ordner erstellen
-    create_dirs()
+    create_main_dirs()
 
     # Oberste Ebene des Datenbaums laden
     tree = Folder(None, "")
 
 
-def create_dirs():
+def create_main_dirs():
     """
     Erstellt den Datenordner und die benötigten Unterordner,
     falls diese noch nicht existieren.
@@ -58,15 +85,11 @@ def create_dirs():
     if not os.path.isdir(datacssdir):
         os.makedirs(datacssdir)
 
-    # Datenbaum-Ordner
-    datatreedir = config.DATATREEDIR.value
-    if not os.path.isdir(datatreedir):
-        os.makedirs(datatreedir)
-
 
 class Folder(object):
     """
-    Stellt einen Datenordner innerhalb von DATATREEDIR dar
+    Stellt den Datenordner dar, in dem alle Daten der CMS-Instanz abgelegt
+    werden.
 
     Die Daten liegen in einem Dictionary. Ein Folder-Objekt besitzt ähnliche
     Methoden wie ein Dictionary. Die Rückgabe von Listen oder Iteratoren
@@ -92,7 +115,7 @@ class Folder(object):
         if self.parent:
             self.path = os.path.join(self.parent.path, self.name)
         else:
-            self.path = config.DATATREEDIR.value
+            self.path = config.DATADIR.value
         self.children_loaded = False
         self.sorted_keys = []
 
@@ -124,8 +147,8 @@ class Folder(object):
                 self.data[dirname] = Folder(parent = self, name = dirname)
             break
 
-        # Sorted Keys
-        self.sorted_keys = sorted(self.data)
+        # Schlüssel sortieren
+        self.sort_keys()
 
         # Fertig
         self.children_loaded = True
@@ -135,6 +158,8 @@ class Folder(object):
         """
         __getitem__ wird überschrieben, um vorher die Unterordner
         einlesen zu können.
+
+        :rtype: Folder
         """
 
         # Unterordner einlesen falls noch nicht geladen
@@ -172,8 +197,7 @@ class Folder(object):
         self.load_children()
 
         # Rückgabe
-        for key in self.sorted_keys:
-            yield key
+        return self.sorted_keys.__iter__()
 
 
     def __contains__(self, key):
@@ -186,7 +210,7 @@ class Folder(object):
         self.load_children()
 
         # Rückgabe
-        return key in self.data
+        return self.data.__contains__(key)
 
 
     def has_key(self, key):
@@ -228,6 +252,8 @@ class Folder(object):
     def keys(self):
         """
         Gibt die Namen der Unterordner zurück
+
+        :rtype: list
         """
 
         # Unterordner einlesen falls noch nicht geladen
@@ -240,6 +266,8 @@ class Folder(object):
     def items(self):
         """
         Items
+
+        :rtype: list
         """
 
         # Unterordner einlesen falls noch nicht geladen
@@ -274,8 +302,7 @@ class Folder(object):
         self.load_children()
 
         # Fertig
-        for key in self.sorted_keys:
-            yield key
+        return self.sorted_keys.__iter__()
 
 
     def itervalues(self):
@@ -294,6 +321,8 @@ class Folder(object):
     def values(self):
         """
         Values
+
+        :rtype: list
         """
 
         # Unterordner einlesen falls noch nicht geladen
@@ -309,6 +338,8 @@ class Folder(object):
     def get(self, key, failobj = None):
         """
         Get
+
+        :rtype: Folder
         """
 
         # Unterordner einlesen falls noch nicht geladen
@@ -318,6 +349,55 @@ class Folder(object):
         if key not in self.data:
             return failobj
         return self.data[key]
+
+
+    def sort_keys(self):
+        """
+        Schlüssel neu sortieren
+        """
+
+        self.sorted_keys = sorted(self.data)
+
+
+    def new_item(self, name):
+        """
+        Erstellt einen neuen Unterordner und fügt diesen dem Dictionary
+        hinzu.
+
+        :return: Pfad zum neu erstellten Unterordner
+        """
+
+        # Name übernehmen, prüfen und Pfad zusammensetzen
+        name = name.strip()
+        if not name:
+            raise EmptyFoldername()
+        for char in name:
+            if not char in ALLOWED_FOLDERNAME_CHARS:
+                raise NotAllowedCharInFoldername(char)
+        if name in NOT_ALLOWED_FOLDERNAMES:
+            raise NotAllowedFoldername(name)
+        path = os.path.join(self.path, name)
+
+        # Prüfen ob der Ordner bereits existiert
+        if os.path.isdir(path):
+            raise FolderAlreadyExists(path)
+
+        # Prüfen ob der Name als Datei bereits existiert
+        if os.path.exists(path):
+            raise FileAlreadyExists(path)
+
+        # Ordner erstellen
+        os.mkdir(path, NEW_DIR_MODE)
+
+        # Neuen Ordner einlesen und Schlüssel sortieren
+        self.data[name] = Folder(self, name)
+        self.sort_keys()
+
+        # Fertig
+        return path
+
+
+
 
 
 # def get_tree():

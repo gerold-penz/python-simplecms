@@ -31,7 +31,20 @@ def default(*args, **kwargs):
 
 
 
-    # ToDo: Zuerst im Datenordner nachsehen, ob es den zugehörigen Ordner gibt.
+
+
+    # ToDo: Zuerst im Datenbaum nachsehen, ob es den zugehörigen Ordner gibt.
+
+
+    # ToDo: Danach im http_root nachsehen, ob es den zugehörigen Ordner gibt.
+
+
+    # ToDo: Prüfen ob es Content gibt, der angezeigt werden kann.
+
+
+
+
+
 
 
 
@@ -50,3 +63,29 @@ def default(*args, **kwargs):
 
 default.exposed = True
 
+
+def testseite(*args, **kwargs):
+    """
+    Testseite
+
+    Wird zum Entwickeln benötigt um ab und zu eine Funktion zu testen
+    """
+
+    tree = datadir.tree
+    assert isinstance(tree, datadir.Folder)
+
+    for key, value in tree.iteritems():
+        print key
+        for subkey, subvalue in value.items():
+            print "  ", subkey
+
+
+    for key in tree.iterkeys():
+        print key
+
+
+
+    # Fertig
+    return u"TESTSEITE"
+
+testseite.exposed = True

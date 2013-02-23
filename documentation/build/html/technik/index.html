@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.0.6',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -96,8 +96,8 @@ erstellte Struktur direkt in das CMS einbinden kann. Unbedingt ausprobieren.</p>
 </div>
 <div class="section" id="datenbanksystem">
 <span id="index-4"></span><h2>Datenbanksystem<a class="headerlink" href="#datenbanksystem" title="Permalink zu dieser Überschrift">¶</a></h2>
-<p>Das Datenbanksystem ist noch nicht entschieden... [Korrektur, ein paar Stunden
-später] Das Datenbanksystem ist entschieden!</p>
+<div class="section" id="uberlegungen-die-wieder-verworfen-wurden">
+<h3>Überlegungen die wieder verworfen wurden<a class="headerlink" href="#uberlegungen-die-wieder-verworfen-wurden" title="Permalink zu dieser Überschrift">¶</a></h3>
 <p>Eigentlich bräuchte ich so etwas schnelles wie <a class="reference external" href="http://redis.io/">Redis</a>, einen einfachen
 Dokumentenspeicher wie <a class="reference external" href="http://couchdb.apache.org/">CouchDB</a> und eine einfach einzubauende Datenbank
 wie <a class="reference external" href="http://www.sqlite.org/">SQLite</a>.</p>
@@ -128,21 +128,29 @@ Noch dazu ist Redis wirklich schnell und lässt sich von Python aus wunderbar
 einfach programmieren. Wie bei CouchDB lassen sich problemlos weitere
 Datenfelder im Laufe der Entwicklung hinzufügen, ohne die Datenbank-Strukturen
 aller &#8220;Simple Python CMS&#8221;-Instanzen ständig aktuell halten zu müssen. Diese
-aktualisieren sich sozusagen von selst, wenn man nicht zu chaotisch programmiert.</p>
+aktualisieren sich sozusagen von selbst, wenn man nicht zu chaotisch programmiert.</p>
 <p>Mal sehen, ob ich eine Möglichkeit finde, Redis zu verwenden...</p>
-<p>[ein paar Stunden später]</p>
-<p>Ja, ich habe eine Möglichkeit gefunden. :-)</p>
+<div class="section" id="uberlegungen-wie-redis-verwendet-werden-konnte">
+<h4>Überlegungen, wie Redis verwendet werden könnte<a class="headerlink" href="#uberlegungen-wie-redis-verwendet-werden-konnte" title="Permalink zu dieser Überschrift">¶</a></h4>
 <p>Redis wird per <cite>subprocess.Popen</cite> in einem eigenen Thread gestartet. Statt
 einer TCP-Verbindung wird die Kommunikation per Unix-Socket aufgebaut. Das ist
 schneller als TCP und bietet eine einfache Möglichkeit, für jede
 &#8220;Simple Python CMS&#8221;-Instanz einen eigenen Socket im Datenbankordner der
 Instanz zu öffnen.</p>
-<p>Da es von &#8220;Simple Python CMS&#8221; normalerweise nur <em>einen Prozess</em> gibt, wird
-Redis nur einmal je &#8220;Simple Python CMS&#8221;-Instanz gestartet.
+<p>Da es von jeder &#8220;Simple Python CMS&#8221;-Instanz normalerweise nur <em>einen Prozess</em>
+gibt, wird Redis nur einmal je &#8220;Simple Python CMS&#8221;-Instanz gestartet.
 Ich werde aber die Möglichkeit offen halten, dass Redis als eigenständiger
 Server läuft und eine &#8220;Simple Python CMS&#8221;-Instanz mehrmals
 gestartet werden kann. Das bedeutet aber mehr Aufwand für den Admin
 und soll nicht der Normalfall werden.</p>
+</div>
+</div>
+<div class="section" id="fazit">
+<h3>Fazit<a class="headerlink" href="#fazit" title="Permalink zu dieser Überschrift">¶</a></h3>
+<p>Nach vielen, vielen Stunden in denen ich über die perfekte Datenbanklösung
+nachgedacht habe &#8211; bin ich zu dem Schluss gekommen,
+die Daten in das Dateisystem und nicht in eine Datenbank zu schreiben.</p>
+</div>
 </div>
 </div>
 

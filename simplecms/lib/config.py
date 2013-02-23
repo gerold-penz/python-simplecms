@@ -109,9 +109,6 @@ class ConfigDataDir(Config):
         # DATACSSDIR
         cherrypy.config["DATACSSDIR"] = os.path.join(value, "css")
 
-        # DATATREEDIR
-        cherrypy.config["DATATREEDIR"] = os.path.join(value, "tree")
-
 
     value = property(Config.get, set)
 
@@ -125,7 +122,10 @@ DATADIR = ConfigDataDir(
     (
         u"Vollständiger Pfad zum Ordner in dem alle Daten der CMS-Instanz "
         u"abgelegt sind. Diese Einstellung muss beim Start der Instanz "
-        u"übergeben werden."
+        u"übergeben werden. "
+        u"Innerhalb dieses Ordners wird die gesamte Struktur des CMS abgebildet. "
+        u"Jede Seite, jedes Bild und jeder Ordner der im CMS angezeigt wird, "
+        u"befindet sich unterhalb dieses Ordners."
     )
 )
 DATAJSDIR = Config(
@@ -137,15 +137,6 @@ DATACSSDIR = Config(
     u"DATACSSDIR",
     u"Pfad zum CSS-Ordner innerhalb des Datenordners",
     u"In diesem Ordner befinden sich benutzerdefinierte CSS-Dateien."
-)
-DATATREEDIR = Config(
-    u"DATATREEDIR",
-    u"Pfad zum Baum-Ordner innerhalb des Datenordners",
-    (
-        u"Innerhalb dieses Ordners wird die gesamte Struktur des CMS abgebildet. "
-        u"Jede Seite, jedes Bild und jeder Ordner der im CMS angezeigt wird, "
-        u"befindet sich unterhalb dieses Ordners."
-    )
 )
 
 
