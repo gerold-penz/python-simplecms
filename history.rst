@@ -13,6 +13,8 @@ Version 0.1.2
 
 - Erstellen eines Unterordners im Datenordner und zugehörige Tests
 
+- Kleine Nachbearbeitungen von *lib.datadir*
+
 
 =============
 Version 0.1.1

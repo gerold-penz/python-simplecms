@@ -11,12 +11,8 @@ import string
 import config
 
 
-NOT_ALLOWED_FOLDERNAMES = {
-    "interface",
-}
-NOT_ALLOWED_FILENAMES = NOT_ALLOWED_FOLDERNAMES.union({
-    "settings.json"
-})
+NOT_ALLOWED_FOLDERNAMES = {"interface"}
+NOT_ALLOWED_FILENAMES = NOT_ALLOWED_FOLDERNAMES.union({"settings.json"})
 ALLOWED_FOLDERNAME_CHARS = string.ascii_lowercase + string.digits + "_-"
 NEW_DIR_MODE = 0777
 NEW_FILE_MODE = 0666
@@ -88,8 +84,7 @@ def create_main_dirs():
 
 class Folder(object):
     """
-    Stellt den Datenordner dar, in dem alle Daten der CMS-Instanz abgelegt
-    werden.
+    Stellt einen Datenordner dar.
 
     Die Daten liegen in einem Dictionary. Ein Folder-Objekt besitzt ähnliche
     Methoden wie ein Dictionary. Die Rückgabe von Listen oder Iteratoren
@@ -101,7 +96,7 @@ class Folder(object):
         Initialisiert den Datenordner
 
         :param parent: Eltern-Ordner als DataFolder-Objekt
-            Wird `None` übergeben, dann gibt es keinen übergeordneten Ordner
+            Wird `None` übergeben, dann gibt es keinen übergeordneten Datenordner
 
         :param name: Name des Ordners. Wird ein leerer String übergeben, dann
             handelt es sich um den obersten Datenordner
@@ -127,7 +122,9 @@ class Folder(object):
         Die Unterordner werden erst dann geladen, wenn sie benötigt werden.
 
         :param force: Wenn `True`, dann werden die Unterordner nochmal geladen,
-            auch wenn diese bereits geladen wurden.
+            auch wenn diese bereits geladen wurden. Normalerweise werden
+            die Unterordner nur ein einziges mal geladen. Egal wie oft diese
+            Methode aufgerufen wird.
         """
 
         # Erzwungenes Neuladen der Unterordner
@@ -156,8 +153,7 @@ class Folder(object):
 
     def __getitem__(self, key):
         """
-        __getitem__ wird überschrieben, um vorher die Unterordner
-        einlesen zu können.
+        Gibt den gewünschten Unterordner zurück
 
         :rtype: Folder
         """
@@ -169,29 +165,25 @@ class Folder(object):
         return self.data.__getitem__(key)
 
 
-    def __setitem__(self, key, value):
-        """
-        __setitem__ wird überschrieben, da ein direktes Befüllen der
-        Unterordner nicht erlaub ist.
-        """
+    # def __setitem__(self, key, value):
+    #     """
+    #     __setitem__ wird überschrieben, da ein direktes Befüllen der
+    #     Unterordner nicht erlaub ist.
+    #     """
+    #
+    #     raise RuntimeError("__setitem__ not allowed")
 
-        raise RuntimeError("__setitem__ not allowed")
 
-
-    def __delitem__(self, key):
-        """
-        __delitem__ wird überschrieben, da ein direktes Löschen der
-        Unterordner nicht erlaubt ist.
-        """
-
-        raise RuntimeError("__delitem__ not allowed")
+    # def __delitem__(self, key):
+    #     """
+    #     __delitem__ wird überschrieben, da ein direktes Löschen der
+    #     Unterordner nicht erlaubt ist.
+    #     """
+    #
+    #     raise RuntimeError("__delitem__ not allowed")
 
 
     def __iter__(self):
-        """
-        __iter__ wird überschrieben, um vorher die Unterordner
-        einlesen zu können.
-        """
 
         # Unterordner einlesen falls noch nicht geladen
         self.load_children()
@@ -201,10 +193,6 @@ class Folder(object):
 
 
     def __contains__(self, key):
-        """
-        __contains__ wird überschrieben, um vorher die Unterordner
-        einlesen zu können.
-        """
 
         # Unterordner einlesen falls noch nicht geladen
         self.load_children()
@@ -214,10 +202,6 @@ class Folder(object):
 
 
     def has_key(self, key):
-        """
-        *has_key* wird überschrieben, um vorher die Unterordner
-        einlesen zu können.
-        """
 
         # Unterordner einlesen falls noch nicht geladen
         self.load_children()
@@ -227,17 +211,11 @@ class Folder(object):
 
 
     def __repr__(self):
-        """
-        Gibt die String-Repräsentation des Folder-Objektes zurück
-        """
 
         return "Folder('%s')" % self.name
 
 
     def __cmp__(self, folder):
-        """
-        Vergleich
-        """
 
         # Unterordner einlesen falls noch nicht geladen
         self.load_children()
@@ -265,7 +243,7 @@ class Folder(object):
 
     def items(self):
         """
-        Items
+        Gibt die Unterordner-Namen und -Objekte zurück
 
         :rtype: list
         """
@@ -282,7 +260,7 @@ class Folder(object):
 
     def iteritems(self):
         """
-        Iteritems
+        Gibt die Unterordner-Namen und -Objekte zurück
         """
 
         # Unterordner einlesen falls noch nicht geladen
@@ -295,7 +273,7 @@ class Folder(object):
 
     def iterkeys(self):
         """
-        Iterkeys
+        Gibt die Namen der Unterordner zurück
         """
 
         # Unterordner einlesen falls noch nicht geladen
@@ -307,7 +285,7 @@ class Folder(object):
 
     def itervalues(self):
         """
-        Itervalues
+        Gibt die Unterordner-Objekte zurück
         """
 
         # Unterordner einlesen falls noch nicht geladen
@@ -320,7 +298,7 @@ class Folder(object):
 
     def values(self):
         """
-        Values
+        Gibt die Unterordner-Objekte zurück
 
         :rtype: list
         """
@@ -337,7 +315,7 @@ class Folder(object):
 
     def get(self, key, failobj = None):
         """
-        Get
+        Gibt den gewünschten Unterordner zurück
 
         :rtype: Folder
         """
