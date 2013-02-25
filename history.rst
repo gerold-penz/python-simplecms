@@ -17,6 +17,19 @@ Version 0.1.3
   auch wieder ein *Node*. Die Metadaten werden direkt an das Node-Objekt
   gebunden, was bei *Folder* als Name etwas merkwürdig erscheinen würde.
 
+- Installationsanleitung ergänzt
+
+- Fehlerklassen im *datadir*-Modul umbenannt
+
+- Beim Initialisieren eines Nodes werden gleich auch die Metadaten des Nodes
+  geladen und an die Node-Instanz gebunden. Z.B. "title", "visible", ...
+
+- Für das Parsen der JSON-Dateien ist standardmäßig *jsonlib2* zuständig.
+  Kann *jsonlib2* nicht gefunden werden, übernimmt das Standardmodul *json*
+  die Arbeit.
+
+- Tests mit *Property* für die Metadaten
+
 
 =============
 Version 0.1.2

@@ -7,26 +7,32 @@ Created 2013-02-21 by Gerold - http://halvar.at/
 """
 
 import os
+import io
 import string
 import config
+try:
+    import jsonlib2 as json
+except ImportError:
+    import json
 
 
+# Regeln für neue Nodes bzw. Dateien
 NOT_ALLOWED_NODENAMES = {"interface"}
-NOT_ALLOWED_FILENAMES = NOT_ALLOWED_NODENAMES.union({"settings.json"})
+NOT_ALLOWED_FILENAMES = NOT_ALLOWED_NODENAMES.union({"metadata.json"})
 ALLOWED_NODENAME_CHARS = string.ascii_lowercase + string.digits + "_-"
-NEW_DIR_MODE = 0777
-NEW_FILE_MODE = 0666
+NEW_DIR_MODE = 0770
+NEW_FILE_MODE = 0660
 
 
-# ToDo: Methode zum Löschen eines Ordners
-
-# ToDo: Einstellungen eines Ordners per JSON-Datei speichern
+# ToDo: Content eines Nodes in den verschiedenen Sprachen mit Snappy komprimiert speichern
 
 # ToDo: History der Einstellungs-Änderungen speichern
 
 # ToDo: Liste mit der Änderungshistorie eines Ordners zurück geben
 
 # ToDo: Änderungen rückgängig machbar
+
+# ToDo: Methode zum Löschen eines Ordners
 
 
 # Globale Variable mit der Instanz des Datenbaumes; wird später befüllt;
@@ -40,6 +46,26 @@ class NotAllowedCharInNodeName(DatadirError): pass
 class NotAllowedNodeName(DatadirError): pass
 class NodeAlreadyExists(DatadirError): pass
 class FileAlreadyExists(DatadirError): pass
+
+
+# Globale Liste mit den Metadaten
+all_metadata_names = set()
+
+
+class Metadata(property):
+    """
+    Metadaten Property-Klasse
+    """
+
+    def __init__(self, *args, **kwargs):
+        """
+        Sammelt die Liste aller Metadaten
+        """
+
+        property.__init__(self, *args, **kwargs)
+
+        # Namen der Getter-Funktion zur Liste der Metadaten hinzufügen
+        all_metadata_names.add(args[0].__name__)
 
 
 def init(data_root_dir):
@@ -111,8 +137,41 @@ class Node(object):
             self.path = os.path.join(self.parent.path, self.name)
         else:
             self.path = config.DATAROOTDIR.value
+        self.metadata_path = os.path.join(self.path, "metadata.json")
         self.children_loaded = False
         self.sorted_keys = []
+        self.metadata_items = {}
+
+
+        # Metadaten laden
+        self.load_metadata()
+
+
+    def load_metadata(self):
+        """
+        Läd die Metadaten und bindet sie an den Node
+
+        Die Metadaten selbst sind Attribute dieser Klasse.
+        """
+
+        metadata = {}
+        if os.path.isfile(self.metadata_path):
+            with io.open(self.metadata_path, "rb") as metadata_file:
+                metadata = json.loads(metadata_file.read()) or {}
+        for metadata_key in all_metadata_names:
+            self.metadata_items[metadata_key] = metadata.get(metadata_key)
+
+
+    def save_metadata(self):
+        """
+        Speichert die Metadaten
+        """
+
+        metadata = {}
+        for metadata_key in all_metadata_names:
+            metadata[metadata_key] = getattr(self, metadata_key, None)
+        with io.open(self.metadata_path, "wb") as metadata_file:
+            json.dump(metadata, metadata_file, indent = 0)
 
 
     def load_children(self, force = False):
@@ -373,4 +432,29 @@ class Node(object):
 
         # Fertig
         return path
+
+
+    @Metadata
+    def title(self):
+        return self.metadata_items.get("title")
+
+
+    @title.setter
+    def title(self, value):
+        self.metadata_items["title"] = value
+        # Speichern
+        self.save_metadata()
+
+
+    @Metadata
+    def visible(self):
+        return self.metadata_items.get("visible")
+
+
+    @visible.setter
+    def visible(self, value):
+        self.metadata_items["visible"] = value
+        # Speichern
+        self.save_metadata()
+
 

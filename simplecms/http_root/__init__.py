@@ -72,17 +72,24 @@ def testseite(*args, **kwargs):
     """
 
     tree = datadir.tree
-    assert isinstance(tree, datadir.Folder)
+    assert isinstance(tree, datadir.Node)
 
-    for key, value in tree.iteritems():
-        print key
-        for subkey, subvalue in value.items():
-            print "  ", subkey
+    # for key, value in tree.iteritems():
+    #     print key
+    #     for subkey, subvalue in value.items():
+    #         print "  ", subkey
+    #
+    #
+    # for key in tree.iterkeys():
+    #     print key
 
 
-    for key in tree.iterkeys():
-        print key
+    print
+    print tree.title
+    print
 
+
+    tree.title = u"Wir sind gekommen um zu bleiben"
 
 
     # Fertig
