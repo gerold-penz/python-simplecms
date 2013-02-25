@@ -6,7 +6,7 @@ Simple Python CMS - Öffentlicher Root-Ordner
 Created by Gerold 2013-02-21 http://halvar.at/
 """
 
-from simplecms.lib import datadir
+from simplecms import datadir
 
 
 def default(*args, **kwargs):
@@ -15,7 +15,7 @@ def default(*args, **kwargs):
     den Request beantworten kann.
 
     Damit ist *default* die Funktion, über die fast jeder Seitenaufruf erfolgt.
-    Zuerst wird versucht, den angeforderten Content aus dem DATATREEDIR
+    Zuerst wird versucht, den angeforderten Content aus dem DATAROOTDIR
     zu holen. Wird dieser dort nicht gefunden, wird der angeforderte Content
     aus dem HTTPROOTDIR gelesen.
 
@@ -26,7 +26,7 @@ def default(*args, **kwargs):
 
     # Datenbaum
     tree = datadir.tree
-    assert isinstance(tree, datadir.Folder)
+    assert isinstance(tree, datadir.Node)
 
 
 

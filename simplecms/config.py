@@ -80,7 +80,7 @@ class Config(object):
     value = property(get, set)
 
 
-class ConfigDataDir(Config):
+class ConfigDataRootDir(Config):
     """
     Datenordner
     """
@@ -99,8 +99,8 @@ class ConfigDataDir(Config):
         if self.locked:
             raise RuntimeError("Changing %s is not allowed" % self.name)
 
-        # DATADIR
-        cherrypy.config["DATADIR"] = value
+        # DATAROOTDIR
+        cherrypy.config["DATAROOTDIR"] = value
         self.locked = True
 
         # DATAJSDIR
@@ -116,8 +116,8 @@ class ConfigDataDir(Config):
 #
 # Auflistung aller Konfigurationen
 #
-DATADIR = ConfigDataDir(
-    u"DATADIR",
+DATAROOTDIR = ConfigDataRootDir(
+    u"DATAROOTDIR",
     u"Pfad zum Datenordner",
     (
         u"Vollständiger Pfad zum Ordner in dem alle Daten der CMS-Instanz "

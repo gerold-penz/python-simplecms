@@ -11,9 +11,9 @@ Created by Gerold - http://halvar.at/
 import os
 import sys
 import cherrypy
-import lib.constants
-import lib.config
-import lib.datadir
+import constants
+import config
+import datadir
 import http_root
 
 
@@ -30,7 +30,7 @@ class SimpleCms(cherrypy.Application):
         self,
         host,
         port,
-        datadir,
+        data_root_dir,
         script_name = "",
         additional_global_config = None,
         global_staticdir_match = (
@@ -44,7 +44,7 @@ class SimpleCms(cherrypy.Application):
 
         :param port: Port-Nummer an der der Server auf Anfragen hochen soll.
 
-        :param datadir: Absoluter Pfad zum Ordner in dem sich alle Daten der
+        :param data_root_dir: Absoluter Pfad zum Ordner in dem sich alle Daten der
             "Simple Python CMS"-Instanz befinden. Existiert dieser Ordner nicht,
             wird er automatisch erstellt.
 
@@ -75,7 +75,7 @@ class SimpleCms(cherrypy.Application):
                 "request.show_tracebacks": False,
                 "request.show_mismatched_params": False,
                 # Staticdir
-                "tools.staticdir.root": lib.constants.HTTPROOTDIR,
+                "tools.staticdir.root": constants.HTTPROOTDIR,
                 # Gzip
                 "tools.gzip.on": True,
                 # Encoding der auszuliefernden HTML-Seiten
@@ -85,7 +85,7 @@ class SimpleCms(cherrypy.Application):
                 # URL Anpassung
                 "tools.trailing_slash.on": True,
                 # Datenordner
-                "DATADIR": datadir,
+                "DATAROOTDIR": data_root_dir,
             },
             "/": {
                 # Staticdir
@@ -104,7 +104,7 @@ class SimpleCms(cherrypy.Application):
         )
 
         # Datenordner initialisieren
-        lib.datadir.init(datadir)
+        datadir.init(data_root_dir)
 
 
     def start(self):

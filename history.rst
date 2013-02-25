@@ -4,6 +4,21 @@ Simple Python CMS
 
 
 =============
+Version 0.1.3
+=============
+
+2013-02-25
+
+- Struktur etwas angepasst. *lib*-Ordner wurde entfernt. Die Module des
+  *lib*-Ordners sind jetzt direkt im *simplecms*-Ordner zu finden.
+
+- *Folder*-Objekte sind jetzt *Node*-Objekte. Das liegt daran, dass ich
+  entschieden habe, dass jede Seite ein *Node* ist und und jede Unterseite
+  auch wieder ein *Node*. Die Metadaten werden direkt an das Node-Objekt
+  gebunden, was bei *Folder* als Name etwas merkwürdig erscheinen würde.
+
+
+=============
 Version 0.1.2
 =============
 

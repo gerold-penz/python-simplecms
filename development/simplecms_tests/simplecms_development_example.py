@@ -25,7 +25,7 @@ import simplecms
 simplecms.SimpleCms(
     host = "127.0.0.1",
     port = 8080,
-    datadir = os.path.join(THISDIR, "test_instance_data"),
+    data_root_dir = os.path.join(THISDIR, "test_instance_data"),
     additional_global_config = {
         # Testumgebung aktivieren
         "environment": None,

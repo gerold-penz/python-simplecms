@@ -11,9 +11,9 @@ import string
 import config
 
 
-NOT_ALLOWED_FOLDERNAMES = {"interface"}
-NOT_ALLOWED_FILENAMES = NOT_ALLOWED_FOLDERNAMES.union({"settings.json"})
-ALLOWED_FOLDERNAME_CHARS = string.ascii_lowercase + string.digits + "_-"
+NOT_ALLOWED_NODENAMES = {"interface"}
+NOT_ALLOWED_FILENAMES = NOT_ALLOWED_NODENAMES.union({"settings.json"})
+ALLOWED_NODENAME_CHARS = string.ascii_lowercase + string.digits + "_-"
 NEW_DIR_MODE = 0777
 NEW_FILE_MODE = 0666
 
@@ -35,14 +35,14 @@ tree = None
 
 # Fehlerklassen
 class DatadirError(RuntimeError): pass
-class EmptyFoldername(DatadirError): pass
-class NotAllowedCharInFoldername(DatadirError): pass
-class NotAllowedFoldername(DatadirError): pass
-class FolderAlreadyExists(DatadirError): pass
+class EmptyNodeName(DatadirError): pass
+class NotAllowedCharInNodeName(DatadirError): pass
+class NotAllowedNodeName(DatadirError): pass
+class NodeAlreadyExists(DatadirError): pass
 class FileAlreadyExists(DatadirError): pass
 
 
-def init(datadir):
+def init(data_root_dir):
     """
     Initialisiert den Datenordner
     """
@@ -50,13 +50,13 @@ def init(datadir):
     global tree
 
     # Datenordner-Konfiguration setzen
-    config.DATADIR.value = datadir
+    config.DATAROOTDIR.value = data_root_dir
 
     # Benötigte Ordner erstellen
     create_main_dirs()
 
     # Oberste Ebene des Datenbaums laden
-    tree = Folder(None, "")
+    tree = Node(None, "")
 
 
 def create_main_dirs():
@@ -66,10 +66,10 @@ def create_main_dirs():
     """
 
     # Hauptordner
-    datadir = config.DATADIR.value
-    assert datadir
-    if not os.path.isdir(datadir):
-        os.makedirs(datadir)
+    data_root_dir = config.DATAROOTDIR.value
+    assert data_root_dir
+    if not os.path.isdir(data_root_dir):
+        os.makedirs(data_root_dir)
 
     # JavaScript-Ordner
     datajsdir = config.DATAJSDIR.value
@@ -82,52 +82,52 @@ def create_main_dirs():
         os.makedirs(datacssdir)
 
 
-class Folder(object):
+class Node(object):
     """
-    Stellt einen Datenordner dar.
+    Stellt einen Datenordner-Knoten dar.
 
-    Die Daten liegen in einem Dictionary. Ein Folder-Objekt besitzt ähnliche
+    Die Daten liegen in einem Dictionary. Ein Node-Objekt besitzt ähnliche
     Methoden wie ein Dictionary. Die Rückgabe von Listen oder Iteratoren
     wird vorher alphabetisch sortiert.
     """
 
     def __init__(self, parent, name):
         """
-        Initialisiert den Datenordner
+        Initialisiert den Datenknoten
 
-        :param parent: Eltern-Ordner als DataFolder-Objekt
-            Wird `None` übergeben, dann gibt es keinen übergeordneten Datenordner
+        :param parent: Eltern-Knoten als Node-Objekt
+            Wird `None` übergeben, dann gibt es keinen übergeordneten Datenknoten
 
-        :param name: Name des Ordners. Wird ein leerer String übergeben, dann
-            handelt es sich um den obersten Datenordner
+        :param name: Name des Knotens. Wird ein leerer String übergeben, dann
+            handelt es sich um den obersten Datenknoten
         """
 
         assert (not parent and not name) or (not parent is None and name)
 
-        self.data = {}
+        self.children = {}
         self.parent = parent
         self.name = name
         if self.parent:
             self.path = os.path.join(self.parent.path, self.name)
         else:
-            self.path = config.DATADIR.value
+            self.path = config.DATAROOTDIR.value
         self.children_loaded = False
         self.sorted_keys = []
 
 
     def load_children(self, force = False):
         """
-        Läd die Unterordner nach.
+        Läd die Unterknoten nach.
 
-        Die Unterordner werden erst dann geladen, wenn sie benötigt werden.
+        Die Unterknoten werden erst dann geladen, wenn sie benötigt werden.
 
-        :param force: Wenn `True`, dann werden die Unterordner nochmal geladen,
+        :param force: Wenn `True`, dann werden die Unterknoten nochmal geladen,
             auch wenn diese bereits geladen wurden. Normalerweise werden
-            die Unterordner nur ein einziges mal geladen. Egal wie oft diese
+            die Unterknoten nur ein einziges mal geladen. Egal wie oft diese
             Methode aufgerufen wird.
         """
 
-        # Erzwungenes Neuladen der Unterordner
+        # Erzwungenes Neuladen der Unterknoten
         if force:
             self.children_loaded = False
 
@@ -136,12 +136,12 @@ class Folder(object):
             return
 
         # Alle Kindelemente löschen
-        self.data.clear()
+        self.children.clear()
 
-        # Alle Unterordner in das Dictionary legen
+        # Alle Unterknoten in das Dictionary legen
         for dirpath, dirnames, filenames in os.walk(self.path):
             for dirname in dirnames:
-                self.data[dirname] = Folder(parent = self, name = dirname)
+                self.children[dirname] = Node(parent = self, name = dirname)
             break
 
         # Schlüssel sortieren
@@ -153,22 +153,22 @@ class Folder(object):
 
     def __getitem__(self, key):
         """
-        Gibt den gewünschten Unterordner zurück
+        Gibt den gewünschten Unterknoten zurück
 
-        :rtype: Folder
+        :rtype: Node
         """
 
-        # Unterordner einlesen falls noch nicht geladen
+        # Unterknoten einlesen falls noch nicht geladen
         self.load_children()
 
         # Rückgabe
-        return self.data.__getitem__(key)
+        return self.children.__getitem__(key)
 
 
     # def __setitem__(self, key, value):
     #     """
     #     __setitem__ wird überschrieben, da ein direktes Befüllen der
-    #     Unterordner nicht erlaub ist.
+    #     Unterknoten nicht erlaub ist.
     #     """
     #
     #     raise RuntimeError("__setitem__ not allowed")
@@ -177,7 +177,7 @@ class Folder(object):
     # def __delitem__(self, key):
     #     """
     #     __delitem__ wird überschrieben, da ein direktes Löschen der
-    #     Unterordner nicht erlaubt ist.
+    #     Unterknoten nicht erlaubt ist.
     #     """
     #
     #     raise RuntimeError("__delitem__ not allowed")
@@ -185,7 +185,7 @@ class Folder(object):
 
     def __iter__(self):
 
-        # Unterordner einlesen falls noch nicht geladen
+        # Unterknoten einlesen falls noch nicht geladen
         self.load_children()
 
         # Rückgabe
@@ -194,47 +194,47 @@ class Folder(object):
 
     def __contains__(self, key):
 
-        # Unterordner einlesen falls noch nicht geladen
+        # Unterknoten einlesen falls noch nicht geladen
         self.load_children()
 
         # Rückgabe
-        return self.data.__contains__(key)
+        return self.children.__contains__(key)
 
 
     def has_key(self, key):
 
-        # Unterordner einlesen falls noch nicht geladen
+        # Unterknoten einlesen falls noch nicht geladen
         self.load_children()
 
         # Rückgabe
-        return self.data.has_key(key)
+        return self.children.has_key(key)
 
 
     def __repr__(self):
 
-        return "Folder('%s')" % self.name
+        return "Node('%s')" % self.name
 
 
-    def __cmp__(self, folder):
+    def __cmp__(self, node):
 
-        # Unterordner einlesen falls noch nicht geladen
+        # Unterknoten einlesen falls noch nicht geladen
         self.load_children()
 
         # Vergleichen und zurück geben
-        if isinstance(folder, Folder):
-            return cmp(self.data, folder.data)
+        if isinstance(node, Node):
+            return cmp(self.children, node.children)
         else:
-            return cmp(self.data, folder)
+            return cmp(self.children, node)
 
 
     def keys(self):
         """
-        Gibt die Namen der Unterordner zurück
+        Gibt die Namen der Unterknoten zurück
 
         :rtype: list
         """
 
-        # Unterordner einlesen falls noch nicht geladen
+        # Unterknoten einlesen falls noch nicht geladen
         self.load_children()
 
         # Fertig
@@ -243,40 +243,40 @@ class Folder(object):
 
     def items(self):
         """
-        Gibt die Unterordner-Namen und -Objekte zurück
+        Gibt die Unterknoten-Namen und -Objekte zurück
 
         :rtype: list
         """
 
-        # Unterordner einlesen falls noch nicht geladen
+        # Unterknoten einlesen falls noch nicht geladen
         self.load_children()
 
         # Fertig
         retlist = []
         for key in self.sorted_keys:
-            retlist.append((key, self.data[key]))
+            retlist.append((key, self.children[key]))
         return retlist
 
 
     def iteritems(self):
         """
-        Gibt die Unterordner-Namen und -Objekte zurück
+        Gibt die Unterknoten-Namen und -Objekte zurück
         """
 
-        # Unterordner einlesen falls noch nicht geladen
+        # Unterknoten einlesen falls noch nicht geladen
         self.load_children()
 
         # Fertig
         for key in self.sorted_keys:
-            yield (key, self.data[key])
+            yield (key, self.children[key])
 
 
     def iterkeys(self):
         """
-        Gibt die Namen der Unterordner zurück
+        Gibt die Namen der Unterknoten zurück
         """
 
-        # Unterordner einlesen falls noch nicht geladen
+        # Unterknoten einlesen falls noch nicht geladen
         self.load_children()
 
         # Fertig
@@ -285,80 +285,80 @@ class Folder(object):
 
     def itervalues(self):
         """
-        Gibt die Unterordner-Objekte zurück
+        Gibt die Unterknoten-Objekte zurück
         """
 
-        # Unterordner einlesen falls noch nicht geladen
+        # Unterknoten einlesen falls noch nicht geladen
         self.load_children()
 
         # Fertig
         for key in self.sorted_keys:
-            yield self.data[key]
+            yield self.children[key]
 
 
     def values(self):
         """
-        Gibt die Unterordner-Objekte zurück
+        Gibt die Unterknoten-Objekte zurück
 
         :rtype: list
         """
 
-        # Unterordner einlesen falls noch nicht geladen
+        # Unterknoten einlesen falls noch nicht geladen
         self.load_children()
 
         # Fertig
         retlist = []
         for key in self.sorted_keys:
-            retlist.append(self.data[key])
+            retlist.append(self.children[key])
         return retlist
 
 
     def get(self, key, failobj = None):
         """
-        Gibt den gewünschten Unterordner zurück
+        Gibt den gewünschten Unterknoten zurück
 
-        :rtype: Folder
+        :rtype: Node
         """
 
-        # Unterordner einlesen falls noch nicht geladen
+        # Unterknoten einlesen falls noch nicht geladen
         self.load_children()
 
         # Fertig
-        if key not in self.data:
+        if key not in self.children:
             return failobj
-        return self.data[key]
+        return self.children[key]
 
 
     def sort_keys(self):
         """
-        Schlüssel neu sortieren
+        Schlüssel der Unterknoten neu sortieren
         """
 
-        self.sorted_keys = sorted(self.data)
+        self.sorted_keys = sorted(self.children)
 
 
     def new_item(self, name):
         """
-        Erstellt einen neuen Unterordner und fügt diesen dem Dictionary
-        hinzu.
+        Erstellt einen neuen Unterordner im Dateisystem und fügt diesen dem
+        Dictionary mit den Unterknoten hinzu.
 
-        :return: Pfad zum neu erstellten Unterordner
+        :return: Pfad zum neu erstellten Unterknoten
         """
 
         # Name übernehmen, prüfen und Pfad zusammensetzen
         name = name.strip()
         if not name:
-            raise EmptyFoldername()
+            raise EmptyNodeName()
         for char in name:
-            if not char in ALLOWED_FOLDERNAME_CHARS:
-                raise NotAllowedCharInFoldername(char)
-        if name in NOT_ALLOWED_FOLDERNAMES:
-            raise NotAllowedFoldername(name)
+            if not char in ALLOWED_NODENAME_CHARS:
+                raise NotAllowedCharInNodeName(char)
+        if name in NOT_ALLOWED_NODENAMES:
+            raise NotAllowedNodeName(name)
         path = os.path.join(self.path, name)
 
         # Prüfen ob der Ordner bereits existiert
         if os.path.isdir(path):
-            raise FolderAlreadyExists(path)
+            raise NodeAlreadyExists(path)
 
         # Prüfen ob der Name als Datei bereits existiert
         if os.path.exists(path):
@@ -368,29 +368,9 @@ class Folder(object):
         os.mkdir(path, NEW_DIR_MODE)
 
         # Neuen Ordner einlesen und Schlüssel sortieren
-        self.data[name] = Folder(self, name)
+        self.children[name] = Node(self, name)
         self.sort_keys()
 
         # Fertig
         return path
-
-
-
-
-
-# def get_tree():
-#     """
-#     Gibt das Tree-Objekt zurück.
-#
-#     Helferlein für PyCharm, damit die Code-Vervollständigung funktioniert
-#
-#     :rtype: Folder
-#     """
-#
-#     return tree
-
-
-
-
-
 
