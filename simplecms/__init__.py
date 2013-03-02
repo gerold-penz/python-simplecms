@@ -54,8 +54,8 @@ class SimpleCms(cherrypy.Application):
 
         :param additional_global_config: Zusätzlich zu den direkt übergebbaren
             Konfigurationsparametern, kann man ein Dictionary mit
-            Konfigurationen für den globalen Bereich der CherryPy-Konfiguration
-            übergeben. Details: siehe CherryPy-Hilfe
+            CherryPy-Konfigurationen für den "global"-Bereich übergeben.
+            Details: siehe CherryPy-Hilfe
 
         :param global_staticdir_match: Sollte man Dateien mit Endungen ausliefern
             müssen, die nicht mit der vorgegebenen "Regular Expression"
@@ -67,8 +67,16 @@ class SimpleCms(cherrypy.Application):
 
         """
 
-        # Globale Konfiguration zusammensetzen
-        self.global_config = {
+        # Globale Konfigurationsparameter übernehmen
+        config.DATAROOTDIR.value = data_root_dir
+        config.DATABLOBSDIR.value = os.path.join(data_root_dir, "_blobs")
+        config.DATACSSDIR.value = os.path.join(data_root_dir, "css")
+        config.DATAJSDIR.value = os.path.join(data_root_dir, "js")
+        config.DATATRASHDIR.value = os.path.join(data_root_dir, "_trash")
+        config.LANGUAGES.value = languages
+
+        # Globale CherryPy-Konfiguration
+        self.cherrypy_config = {
             "global": {
                 # Einstellungen für den CherryPy-Standalone-Server
                 "server.socket_host": host,
@@ -88,10 +96,6 @@ class SimpleCms(cherrypy.Application):
                 "tools.decode.on": True,
                 # URL Anpassung
                 "tools.trailing_slash.on": True,
-                # Datenordner
-                "DATAROOTDIR": data_root_dir,
-                # Sprachen
-                "LANGUAGES": languages
             },
             "/": {
                 # Staticdir
@@ -100,17 +104,16 @@ class SimpleCms(cherrypy.Application):
                 "tools.staticdir.match": global_staticdir_match,
             }
         }
+        if additional_global_config:
+            self.cherrypy_config["global"].update(additional_global_config)
 
-        self.global_config["global"].update(additional_global_config)
-
-        # Anwendung initialisieren und zusätzlichen
-        # Konfigurationsparameter übernehmen.
+        # CherryPy-Anwendung initialisieren
         cherrypy.Application.__init__(
-            self, http_root, script_name, self.global_config
+            self, http_root, script_name, self.cherrypy_config
         )
 
         # Datenordner initialisieren
-        datadir.init(data_root_dir)
+        datadir.init()
 
 
     def start(self):
@@ -119,7 +122,7 @@ class SimpleCms(cherrypy.Application):
         """
 
         # Web-Server starten
-        cherrypy.quickstart(self, config = self.global_config)
+        cherrypy.quickstart(self, config = self.cherrypy_config)
 
 
 

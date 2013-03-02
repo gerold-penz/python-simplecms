@@ -3,16 +3,11 @@
 """
 Grundkonfigurationen des Programmes lesen und initialisieren
 
-Die Grundkonfiguration ist in `cherrypy.config` gespeichert.
-Die Grundeinstellungen werden beim Start der Anwendung eingestellt und dürfen
+Die Grundeinstellungen werden beim Start der Anwendung ermittelt und dürfen
 im laufenden Betrieb nicht mehr verändert werden.
 
 Created 2013-02-21 by Gerold - http://halvar.at/
 """
-
-import os
-import cherrypy
-
 
 # Dictionary mit allen Einstellungen
 all_configurations = {}
@@ -23,7 +18,8 @@ class Config(object):
     Repräsentiert eine Konfiguration
     """
 
-    locked = True
+    locked = False
+    _value = None
 
 
     def __init__(
@@ -61,68 +57,33 @@ class Config(object):
 
     def get(self):
         """
-        Gibt den Wert der Einstellung zurück
+        Gibt den Wert der Konfiguration zurück
         """
 
-        return cherrypy.config.get(self.name, self.default)
+        if self._value is None:
+            return self.default
+        else:
+            return self._value
 
 
     def set(self, value):
         """
-        Schreibt die Konfiguration nach *cherrypy.config*
+        Setzt den Wert der Konfiguration
         """
 
         if self.locked:
             raise RuntimeError("Changing %s is not allowed" % self.name)
-        cherrypy.config[self.name] = value
+        self._value = value
+        self.locked = True
 
 
     value = property(get, set)
 
 
-class ConfigDataRootDir(Config):
-    """
-    Datenordner
-    """
-
-    locked = False
-
-
-    def set(self, value):
-        """
-        Schreibt die Datenordner-Konfiguration und alle davon abhängigen
-        Konfigurationen nach *cherrypy.config*.
-        Danach wird diese Einstellung für Änderungen gesperrt
-        """
-
-        # Keine Änderung erlaubt, wenn bereits gesperrt
-        if self.locked:
-            raise RuntimeError("Changing %s is not allowed" % self.name)
-
-        # DATAROOTDIR
-        cherrypy.config["DATAROOTDIR"] = value
-        self.locked = True
-
-        # DATAJSDIR
-        cherrypy.config["DATAJSDIR"] = os.path.join(value, "js")
-
-        # DATACSSDIR
-        cherrypy.config["DATACSSDIR"] = os.path.join(value, "css")
-
-        # DATABLOBSDIR
-        cherrypy.config["DATABLOBSDIR"] = os.path.join(value, "_blobs")
-
-        # DATATRASHDIR
-        cherrypy.config["DATATRASHDIR"] = os.path.join(value, "_trash")
-
-
-    value = property(Config.get, set)
-
-
 #
 # Auflistung aller Konfigurationen
 #
-DATAROOTDIR = ConfigDataRootDir(
+DATAROOTDIR = Config(
     u"DATAROOTDIR",
     u"Pfad zum Datenordner",
     (

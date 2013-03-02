@@ -49,15 +49,12 @@ class NodeAlreadyExists(DatadirError): pass
 class FileAlreadyExists(DatadirError): pass
 
 
-def init(data_root_dir):
+def init():
     """
     Initialisiert den Datenordner
     """
 
     global tree
-
-    # Datenordner-Konfiguration setzen
-    config.DATAROOTDIR.value = data_root_dir
 
     # Benötigte Ordner erstellen
     create_main_dirs()
@@ -83,11 +80,6 @@ def create_main_dirs():
     if not os.path.isdir(datablobsdir):
         os.makedirs(datablobsdir)
 
-    # Trash-Ordner
-    datatrashdir = config.DATATRASHDIR.value
-    if not os.path.isdir(datatrashdir):
-        os.makedirs(datatrashdir)
-
     # CSS-Ordner
     datacssdir = config.DATACSSDIR.value
     if not os.path.isdir(datacssdir):
@@ -97,6 +89,11 @@ def create_main_dirs():
     datajsdir = config.DATAJSDIR.value
     if not os.path.isdir(datajsdir):
         os.makedirs(datajsdir)
+
+    # Trash-Ordner
+    datatrashdir = config.DATATRASHDIR.value
+    if not os.path.isdir(datatrashdir):
+        os.makedirs(datatrashdir)
 
 
 class Node(dict):
