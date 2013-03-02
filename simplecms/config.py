@@ -109,6 +109,12 @@ class ConfigDataRootDir(Config):
         # DATACSSDIR
         cherrypy.config["DATACSSDIR"] = os.path.join(value, "css")
 
+        # DATABLOBSDIR
+        cherrypy.config["DATABLOBSDIR"] = os.path.join(value, "_blobs")
+
+        # DATATRASHDIR
+        cherrypy.config["DATATRASHDIR"] = os.path.join(value, "_trash")
+
 
     value = property(Config.get, set)
 
@@ -138,5 +144,20 @@ DATACSSDIR = Config(
     u"Pfad zum CSS-Ordner innerhalb des Datenordners",
     u"In diesem Ordner befinden sich benutzerdefinierte CSS-Dateien."
 )
-
+DATABLOBSDIR = Config(
+    u"DATABLOBSDIR",
+    u"Pfad zum Blobs-Ordner innerhalb des Datenordners",
+    u"In diesem Ordner befinden sich die mit Snappy komprimierten BLOB-Dateien."
+)
+DATATRASHDIR = Config(
+    u"DATATRASHDIR",
+    u"Pfad zum Trash-Ordner innerhalb des Datenordners",
+    u"In diesem Ordner befinden sich die gelöschten Nodes."
+)
+LANGUAGES = Config(
+    u"LANGUAGES",
+    u"Sprachen",
+    u"Liste mit den Sprachen in denen das CMS die Inhalte zeigt",
+    default = ["de"]
+)
 

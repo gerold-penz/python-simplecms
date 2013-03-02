@@ -2,6 +2,16 @@
 Simple Python CMS
 #################
 
+=============
+Version 0.1.4
+=============
+
+2013-03-02
+
+- Die beste Struktur des Datenordners durch Versuche herausgefunden.
+
+- Die beste *datadir*-Objektstruktur herausgefunden
+
 
 =============
 Version 0.1.3

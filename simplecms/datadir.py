@@ -17,8 +17,8 @@ except ImportError:
 
 
 # Regeln für neue Nodes bzw. Dateien
-NOT_ALLOWED_NODENAMES = {"interface"}
-NOT_ALLOWED_FILENAMES = NOT_ALLOWED_NODENAMES.union({"metadata.json"})
+NOT_ALLOWED_NODENAMES = {"interface", "_blobs", "_trash"}
+# NOT_ALLOWED_FILENAMES = NOT_ALLOWED_NODENAMES.union({"metadata.json"})
 ALLOWED_NODENAME_CHARS = string.ascii_lowercase + string.digits + "_-"
 NEW_DIR_MODE = 0770
 NEW_FILE_MODE = 0660
@@ -32,7 +32,7 @@ NEW_FILE_MODE = 0660
 
 # ToDo: Änderungen rückgängig machbar
 
-# ToDo: Methode zum Löschen eines Ordners
+# ToDo: Methode zum Löschen eines Ordners --> in den *_trash_*-Ordner
 
 
 # Globale Variable mit der Instanz des Datenbaumes; wird später befüllt;
@@ -46,26 +46,6 @@ class NotAllowedCharInNodeName(DatadirError): pass
 class NotAllowedNodeName(DatadirError): pass
 class NodeAlreadyExists(DatadirError): pass
 class FileAlreadyExists(DatadirError): pass
-
-
-# Globale Liste mit den Metadaten
-all_metadata_names = set()
-
-
-class Metadata(property):
-    """
-    Metadaten Property-Klasse
-    """
-
-    def __init__(self, *args, **kwargs):
-        """
-        Sammelt die Liste aller Metadaten
-        """
-
-        property.__init__(self, *args, **kwargs)
-
-        # Namen der Getter-Funktion zur Liste der Metadaten hinzufügen
-        all_metadata_names.add(args[0].__name__)
 
 
 def init(data_root_dir):
@@ -97,15 +77,106 @@ def create_main_dirs():
     if not os.path.isdir(data_root_dir):
         os.makedirs(data_root_dir)
 
-    # JavaScript-Ordner
-    datajsdir = config.DATAJSDIR.value
-    if not os.path.isdir(datajsdir):
-        os.makedirs(datajsdir)
+    # Blobs-Ordner
+    datablobsdir = config.DATABLOBSDIR.value
+    if not os.path.isdir(datablobsdir):
+        os.makedirs(datablobsdir)
+
+    # Trash-Ordner
+    datatrashdir = config.DATATRASHDIR.value
+    if not os.path.isdir(datatrashdir):
+        os.makedirs(datatrashdir)
 
     # CSS-Ordner
     datacssdir = config.DATACSSDIR.value
     if not os.path.isdir(datacssdir):
         os.makedirs(datacssdir)
+
+    # JavaScript-Ordner
+    datajsdir = config.DATAJSDIR.value
+    if not os.path.isdir(datajsdir):
+        os.makedirs(datajsdir)
+
+
+class Data(dict):
+    """
+    Repräsentiert alle Daten eines Nodes.
+
+    Die Sprachabhängigen Daten sind im Dictionary hinterlegt
+    """
+
+    # Daten
+    visible = False
+
+
+    class LangData(object):
+        """
+        Repräsentiert die sprachabhängigen Daten eines Nodes
+        """
+
+        # Sprachabhängige Daten
+        title = None
+        menu = None
+        description = None
+        keywords = None
+        html = None
+
+
+    def __init__(self, nodedir_path):
+        """
+        Init
+        """
+
+        dict.__init__()
+
+        # Pfade festlegen
+        self.nodedir_path = nodedir_path
+        self.datadir_path = os.path.join(self.nodedir_path, "_data")
+        self.datadir_current_path = os.path.join(self.datadir_path, "current")
+        self.datadir_archive_path = os.path.join(self.datadir_path, "archive")
+
+        # Daten je Sprache
+        for language in config.LANGUAGES.value:
+            self[language] = self.LangData()
+
+
+    def __getitem__(self, language):
+        """
+        Gibt die Daten der gewünschten Sprache zurück
+
+        :rtype: LangData
+        """
+
+        return self[language]
+
+
+    def load(self):
+        """
+        Läd die Daten aus dem Dateisystem
+        """
+
+        # if os.path.isfile(self.metadata_path):
+        #     with io.open(self.metadata_path, "rb") as metadata_file:
+        #         metadata = json.loads(metadata_file.read()) or {}
+        # for metadata_key in all_metadata_names:
+        #     self.metadata_items[metadata_key] = metadata.get(metadata_key)
+
+
+    def save(self):
+        """
+        Speichert die Daten ins Dateisystem
+        """
+
+        # metadata = {}
+        # for metadata_key in all_metadata_names:
+        #     metadata[metadata_key] = getattr(self, metadata_key, None)
+        # with io.open(self.metadata_path, "wb") as metadata_file:
+        #     json.dump(metadata, metadata_file, indent = 0)
+
+
+
+
+
 
 
 class Node(object):
@@ -137,41 +208,9 @@ class Node(object):
             self.path = os.path.join(self.parent.path, self.name)
         else:
             self.path = config.DATAROOTDIR.value
-        self.metadata_path = os.path.join(self.path, "metadata.json")
         self.children_loaded = False
         self.sorted_keys = []
-        self.metadata_items = {}
-
-
-        # Metadaten laden
-        self.load_metadata()
-
-
-    def load_metadata(self):
-        """
-        Läd die Metadaten und bindet sie an den Node
-
-        Die Metadaten selbst sind Attribute dieser Klasse.
-        """
-
-        metadata = {}
-        if os.path.isfile(self.metadata_path):
-            with io.open(self.metadata_path, "rb") as metadata_file:
-                metadata = json.loads(metadata_file.read()) or {}
-        for metadata_key in all_metadata_names:
-            self.metadata_items[metadata_key] = metadata.get(metadata_key)
-
-
-    def save_metadata(self):
-        """
-        Speichert die Metadaten
-        """
-
-        metadata = {}
-        for metadata_key in all_metadata_names:
-            metadata[metadata_key] = getattr(self, metadata_key, None)
-        with io.open(self.metadata_path, "wb") as metadata_file:
-            json.dump(metadata, metadata_file, indent = 0)
+        self.data = Data(nodedir_path = self.path)
 
 
     def load_children(self, force = False):
@@ -432,29 +471,4 @@ class Node(object):
 
         # Fertig
         return path
-
-
-    @Metadata
-    def title(self):
-        return self.metadata_items.get("title")
-
-
-    @title.setter
-    def title(self, value):
-        self.metadata_items["title"] = value
-        # Speichern
-        self.save_metadata()
-
-
-    @Metadata
-    def visible(self):
-        return self.metadata_items.get("visible")
-
-
-    @visible.setter
-    def visible(self, value):
-        self.metadata_items["visible"] = value
-        # Speichern
-        self.save_metadata()
-
 

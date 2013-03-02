@@ -31,6 +31,7 @@ class SimpleCms(cherrypy.Application):
         host,
         port,
         data_root_dir,
+        languages = None,
         script_name = "",
         additional_global_config = None,
         global_staticdir_match = (
@@ -47,6 +48,9 @@ class SimpleCms(cherrypy.Application):
         :param data_root_dir: Absoluter Pfad zum Ordner in dem sich alle Daten der
             "Simple Python CMS"-Instanz befinden. Existiert dieser Ordner nicht,
             wird er automatisch erstellt.
+
+        :param languages: Liste mit den Sprachen in denen das CMS angezeigt
+            werden soll. Standard: ["de"]
 
         :param additional_global_config: Zusätzlich zu den direkt übergebbaren
             Konfigurationsparametern, kann man ein Dictionary mit
@@ -86,6 +90,8 @@ class SimpleCms(cherrypy.Application):
                 "tools.trailing_slash.on": True,
                 # Datenordner
                 "DATAROOTDIR": data_root_dir,
+                # Sprachen
+                "LANGUAGES": languages
             },
             "/": {
                 # Staticdir
