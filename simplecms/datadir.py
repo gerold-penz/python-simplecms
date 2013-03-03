@@ -25,7 +25,7 @@ NEW_DIR_MODE = 0770
 NEW_FILE_MODE = 0660
 
 
-# ToDo: Content eines Nodes in den verschiedenen Sprachen mit Snappy komprimiert speichern
+# ToDo: Blobs mit Snappy komprimiert speichern
 
 # ToDo: History der Einstellungs-Änderungen speichern
 
@@ -60,7 +60,7 @@ def init():
     create_main_dirs()
 
     # Oberste Ebene des Datenbaums laden
-    tree = Node(None, "")
+    tree = Node()
 
 
 def create_main_dirs():
@@ -148,7 +148,7 @@ class Node(dict):
         ]
 
 
-    def __init__(self, parent, name):
+    def __init__(self, parent = None, name = ""):
         """
         Initialisiert den Datenknoten
 
@@ -168,7 +168,7 @@ class Node(dict):
 
         # Pfade festlegen
         if self.parent:
-            self.nodedir_path = os.path.join(self.parent.path, self.name)
+            self.nodedir_path = os.path.join(self.parent.nodedir_path, self.name)
         else:
             self.nodedir_path = config.DATAROOTDIR.value
         self.datadir_path = os.path.join(self.nodedir_path, "_data")
@@ -190,7 +190,7 @@ class Node(dict):
         :rtype: LangData
         """
 
-        return self[language]
+        return dict.__getitem__(self, language)
 
 
     def load(self):
@@ -212,7 +212,11 @@ class Node(dict):
 
         # Sprachunabhängige Daten aus der JSON-Datei zur Klasseninstanz hinzufügen
         for data_key in self.all_data_keys:
-            setattr(self, data_key, loaded_data.get(data_key))
+            setattr(
+                self,
+                data_key,
+                loaded_data.get(data_key, getattr(self, data_key))
+            )
 
         # Sprachabhängige Daten aus der JSON-Datei zu den
         # sprachabhängigen Klasseninstanzen hinzufügen
@@ -222,7 +226,10 @@ class Node(dict):
                 setattr(
                     language_data,
                     data_key,
-                    loaded_data.get(data_key, {}).get(language_id)
+                    loaded_data.get(data_key, {}).get(
+                        language_id,
+                        getattr(language_data, data_key)
+                    )
                 )
 
 

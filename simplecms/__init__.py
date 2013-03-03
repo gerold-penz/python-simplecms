@@ -116,6 +116,30 @@ class SimpleCms(cherrypy.Application):
         datadir.init()
 
 
+
+
+        # # TESTS
+        # basenode = datadir.Node.search("/")
+        #
+        # basenode = datadir.get_node()
+        # basenode.find("/asdf/asdf")
+        #
+        # tree = datadir.tree
+        # assert isinstance(tree, datadir.Node)
+        #
+        # print
+        # print tree.visible
+        # print tree["de"].title
+        # print tree["en"].title
+        # print tree["de"].description
+        #
+        # # tree.child("hallo").child("servus").child("test")
+        # # tree.children["hallo"].children[""]
+        # # node = datadir.search("/") tree.query("/")
+
+
+
+
     def start(self):
         """
         Startet den Webserver der Anwendung

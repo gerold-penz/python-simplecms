@@ -12,6 +12,8 @@ Version 0.1.4
 
 - Die beste *datadir*-Objektstruktur herausgefunden
 
+- Weitere Tests mit verschieden aufgebauten Datenstrukturen
+
 
 =============
 Version 0.1.3
