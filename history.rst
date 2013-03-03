@@ -2,6 +2,20 @@
 Simple Python CMS
 #################
 
+
+=============
+Version 0.1.5
+=============
+
+2013-03-03
+
+- *datadir.Node* um *children* erweitert. Somit ist es jetzt möglich, vom 
+  Knoten aus die Unterknoten abzufragen.
+
+- Die Funktion *datadir.get_url* gibt den Knoten zurück dem die URL entspricht.
+  Damit kann man sehr schnell einen Knoten auswählen.
+
+
 =============
 Version 0.1.4
 =============

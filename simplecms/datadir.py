@@ -8,6 +8,7 @@ Created 2013-02-21 by Gerold - http://halvar.at/
 
 import os
 import io
+import re
 import string
 import glob
 import config
@@ -18,7 +19,7 @@ except ImportError:
 
 
 # Regeln für neue Nodes bzw. Dateien
-NOT_ALLOWED_NODENAMES = {"interface", "_blobs", "_trash"}
+NOT_ALLOWED_NODENAMES = {"interface", "_data", "_blobs", "_trash"}
 # NOT_ALLOWED_FILENAMES = NOT_ALLOWED_NODENAMES.union({"metadata.json"})
 ALLOWED_NODENAME_CHARS = string.ascii_lowercase + string.digits + "_-"
 NEW_DIR_MODE = 0770
@@ -36,8 +37,8 @@ NEW_FILE_MODE = 0660
 # ToDo: Methode zum Löschen eines Ordners --> in den *_trash_*-Ordner
 
 
-# Globale Variable mit der Instanz des Datenbaumes; wird später befüllt;
-tree = None
+# Globale Variable mit der Instanz des obesten Nodes; wird später befüllt;
+basenode = None
 
 
 # Fehlerklassen
@@ -54,13 +55,13 @@ def init():
     Initialisiert den Datenordner
     """
 
-    global tree
+    global basenode
 
     # Benötigte Ordner erstellen
     create_main_dirs()
 
     # Oberste Ebene des Datenbaums laden
-    tree = Node()
+    basenode = Node()
 
 
 def create_main_dirs():
@@ -96,6 +97,37 @@ def create_main_dirs():
         os.makedirs(datatrashdir)
 
 
+def find_url(url):
+    """
+    Gibt den Knoten zurück, der der übergebenen URL entspricht
+
+    :param url: URL zum Datenknoten. Dieser muss *immer* mit einem "/"
+        beginnen.
+
+    :rtype: Node
+    """
+
+    # Parameter
+    url = url.strip()
+    assert url.startswith("/")
+    url = url.rstrip("/")
+
+    # Schnelle Rückgabe, wenn es sich um den obersten Knoten handelt
+    if url == "":
+        return basenode
+
+    # Suche
+    current_node = basenode
+    for urlpart in url.split("/")[1:]:
+        assert isinstance(current_node, Node)
+        current_node = current_node.children.get(urlpart)
+        if not current_node:
+            return
+
+    # Rückgabe
+    return current_node or None
+
+
 class Node(dict):
     """
     Repräsentiert einen Datenordner/Knoten
@@ -107,6 +139,9 @@ class Node(dict):
     mitzuführen. Das ist der IDE (PyCharm) geschuldet, damit die
     Codevervollständigung dabei hilft Fehler beim Programmieren zu vermeiden.
     """
+
+    # Children
+    _children = None
 
     # Daten-Attribute
     # (zusammenpassend zu den Datenschlüsseln)
@@ -148,23 +183,29 @@ class Node(dict):
         ]
 
 
-    def __init__(self, parent = None, name = ""):
+    def __init__(self, parent = None, name = "/"):
         """
         Initialisiert den Datenknoten
 
         :param parent: Eltern-Knoten als Node-Objekt
             Wird `None` übergeben, dann gibt es keinen übergeordneten Datenknoten
 
-        :param name: Name des Knotens. Wird ein leerer String übergeben, dann
-            handelt es sich um den obersten Datenknoten
+        :param name: Name des Knotens. Wird ein leerer String oder "/" übergeben,
+            dann handelt es sich um den obersten Datenknoten
         """
 
         dict.__init__(self)
 
-        assert (not parent and not name) or (not parent is None and name)
-
+        # Parameter
+        self.name = name = name or "/"
         self.parent = parent
-        self.name = name
+        assert (not parent and name == "/") or (not parent is None and name != "/")
+
+        # Url
+        if self.parent:
+            self.url = self.parent.url.rstrip("/") + "/" + self.name.rstrip("/")
+        else:
+            self.url = self.name
 
         # Pfade festlegen
         if self.parent:
@@ -238,6 +279,8 @@ class Node(dict):
         Speichert die Daten ins Dateisystem
         """
 
+        # ToDo:
+
         # metadata = {}
         # for metadata_key in all_metadata_names:
         #     metadata[metadata_key] = getattr(self, metadata_key, None)
@@ -245,250 +288,202 @@ class Node(dict):
         #     json.dump(metadata, metadata_file, indent = 0)
 
 
+    def __repr__(self):
+        """
+        __repr__
+        """
+
+        # Repräsentation der Node-Klasse auslesen
+        match = re.search(u"'(.*?)'", unicode(self.__class__), re.UNICODE)
+        if match:
+            class_repr = unicode(match.groups()[0])
+        else:
+            class_repr = "Node"
+
+        # Rückgabe des Klassennamens und des Node-Namens
+        return "<%s '%s'>" % (class_repr, self.url)
 
 
+    @property
+    def children(self):
+        """
+        Gibt ein Dictionary-artiges Objekt mit den Subnodes/Unterordnern zurück
+
+        Die Informationen über die Unterknoten werden beim ersten Zugriff
+        auf *Node.children* aus dem Dateisystem eingelesen.
+
+        :rtype: Children
+        """
+
+        # Unterordner einlesen, falls diese noch nicht eingelesen wurden
+        if self._children is None:
+            self._children = self.Children(self)
+
+        # Children zurück liefern
+        return self._children
+
+
+    class Children(dict):
+        """
+        Repräsentiert ein Dictionary-artiges Objekt mit den
+        Subnodes/Unterordnern eines Knotens
+        """
+
+        def __init__(self, parent):
+            """
+            Init
+            """
+
+            dict.__init__(self)
+            assert isinstance(parent, Node)
+            self.parent = parent
+            self.sorted_keys = []
+            self.load()
+
+
+        def load(self):
+            """
+            Läd die Unterknoten aus dem Dateisystem
+            """
+
+            # Alle Kindelemente löschen
+            dict.clear(self)
+
+            # Alle (erlaubten) Unterknoten in das Dictionary legen
+            for dirpath, dirnames, filenames in os.walk(self.parent.nodedir_path):
+                for dirname in dirnames:
+                    if dirname not in NOT_ALLOWED_NODENAMES:
+                        dict.__setitem__(
+                            self,
+                            dirname,
+                            Node(parent = self.parent, name = dirname)
+                        )
+                break
+
+            # Schlüssel sortieren
+            self.sort_keys()
+
+
+        def sort_keys(self):
+            """
+            Schlüssel der Unterknoten neu sortieren
+            """
+
+            self.sorted_keys = sorted(dict.keys(self))
+
+
+        def __getitem__(self, key):
+            """
+            Gibt den gewünschten Unterknoten zurück
+
+            :rtype: Node
+            """
+
+            return dict.__getitem__(self, key)
+
+
+        def __setitem__(self, key, value):
+            """
+            __setitem__ wird überschrieben, da ein direktes Befüllen der
+            Unterknoten nicht erlaub ist.
+            """
+
+            raise RuntimeError("__setitem__ not allowed")
+
+
+        def __delitem__(self, key):
+            """
+            __delitem__ wird überschrieben, da ein direktes Löschen der
+            Unterknoten nicht erlaubt ist.
+            """
+
+            raise RuntimeError("__delitem__ not allowed")
+
+
+        def __iter__(self):
+            """
+            __iter__
+            """
+
+            return self.sorted_keys.__iter__()
+
+
+        def keys(self):
+            """
+            Gibt die Namen der Unterknoten zurück
+
+            :rtype: list
+            """
+
+            return self.sorted_keys
+
+
+        def items(self):
+            """
+            Gibt die Unterknoten-Namen und -Objekte zurück
+
+            :rtype: list
+            """
+
+            retlist = []
+            for key in self.sorted_keys:
+                retlist.append((key, self[key]))
+            return retlist
+
+
+        def iteritems(self):
+            """
+            Gibt die Unterknoten-Namen und -Objekte zurück
+            """
+
+            for key in self.sorted_keys:
+                yield (key, self[key])
+
+
+        def iterkeys(self):
+            """
+            Gibt die Namen der Unterknoten zurück
+            """
+
+            return self.sorted_keys.__iter__()
+
+
+        def itervalues(self):
+            """
+            Gibt die Unterknoten-Objekte zurück
+            """
+
+            for key in self.sorted_keys:
+                yield self[key]
+
+
+        def values(self):
+            """
+            Gibt die Unterknoten-Objekte zurück
+            """
+
+            retlist = []
+            for key in self.sorted_keys:
+                retlist.append(self[key])
+            return retlist
+
+
+        def get(self, key, failobj = None):
+            """
+            Gibt den gewünschten Unterknoten zurück
+
+            :rtype: Node
+            """
+
+            return dict.get(self, key, failobj)
 
 
 
     # class SubNodes(object):
-    #     """
-    #     Repräsentiert ein Dictionary-artiges Objekt mit den
-    #     Unterordnern/Knoten eines Nodes
-    #     """
-    #
-    #     def __init__(self):
-    #         """
-    #         Init
-    #         """
-    #
-    #         # Unterordner
-    #         self.subnodes = {}
-    #         self.subnodes_loaded = False
-    #         self.sorted_keys = []
-    #
-    #
-    #     def load_subnodes(self, force = False):
-    #         """
-    #         Läd die Unterknoten nach.
-    #
-    #         Die Unterknoten werden erst dann geladen, wenn sie benötigt werden.
-    #
-    #         :param force: Wenn `True`, dann werden die Unterknoten nochmal geladen,
-    #             auch wenn diese bereits geladen wurden. Normalerweise werden
-    #             die Unterknoten nur ein einziges mal geladen. Egal wie oft diese
-    #             Methode aufgerufen wird.
-    #         """
-    #
-    #         # Erzwungenes Neuladen der Unterknoten
-    #         if force:
-    #             self.subnodes_loaded = False
-    #
-    #         # Abbrechen, wenn bereits geladen
-    #         if self.subnodes_loaded:
-    #             return
-    #
-    #         # Alle Kindelemente löschen
-    #         self.subnodes.clear()
-    #
-    #         # Alle Unterknoten in das Dictionary legen
-    #         for dirpath, dirnames, filenames in os.walk(self.path):
-    #             for dirname in dirnames:
-    #                 self.subnodes[dirname] = Node(parent = self, name = dirname)
-    #             break
-    #
-    #         # Schlüssel sortieren
-    #         self.sort_keys()
-    #
-    #         # Fertig
-    #         self.children_loaded = True
-    #
-    #
-    #     def __getitem__(self, key):
-    #         """
-    #         Gibt den gewünschten Unterknoten zurück
-    #
-    #         :rtype: Node
-    #         """
-    #
-    #         # Unterknoten einlesen falls noch nicht geladen
-    #         self.load_children()
-    #
-    #         # Rückgabe
-    #         return self.subnodes.__getitem__(key)
-    #
-    #
-    #     # def __setitem__(self, key, value):
-    #     #     """
-    #     #     __setitem__ wird überschrieben, da ein direktes Befüllen der
-    #     #     Unterknoten nicht erlaub ist.
-    #     #     """
-    #     #
-    #     #     raise RuntimeError("__setitem__ not allowed")
-    #
-    #
-    #     # def __delitem__(self, key):
-    #     #     """
-    #     #     __delitem__ wird überschrieben, da ein direktes Löschen der
-    #     #     Unterknoten nicht erlaubt ist.
-    #     #     """
-    #     #
-    #     #     raise RuntimeError("__delitem__ not allowed")
-    #
-    #
-    #     def __iter__(self):
-    #
-    #         # Unterknoten einlesen falls noch nicht geladen
-    #         self.load_children()
-    #
-    #         # Rückgabe
-    #         return self.sorted_keys.__iter__()
-    #
-    #
-    #     def __contains__(self, key):
-    #
-    #         # Unterknoten einlesen falls noch nicht geladen
-    #         self.load_children()
-    #
-    #         # Rückgabe
-    #         return self.subnodes.__contains__(key)
-    #
-    #
-    #     def has_key(self, key):
-    #
-    #         # Unterknoten einlesen falls noch nicht geladen
-    #         self.load_children()
-    #
-    #         # Rückgabe
-    #         return self.subnodes.has_key(key)
-    #
-    #
-    #     def __repr__(self):
-    #
-    #         return "Node('%s')" % self.name
-    #
-    #
-    #     def __cmp__(self, node):
-    #
-    #         # Unterknoten einlesen falls noch nicht geladen
-    #         self.load_children()
-    #
-    #         # Vergleichen und zurück geben
-    #         if isinstance(node, Node):
-    #             return cmp(self.subnodes, node.subnodes)
-    #         else:
-    #             return cmp(self.subnodes, node)
-    #
-    #
-    #     def keys(self):
-    #         """
-    #         Gibt die Namen der Unterknoten zurück
-    #
-    #         :rtype: list
-    #         """
-    #
-    #         # Unterknoten einlesen falls noch nicht geladen
-    #         self.load_children()
-    #
-    #         # Fertig
-    #         return self.sorted_keys
-    #
-    #
-    #     def items(self):
-    #         """
-    #         Gibt die Unterknoten-Namen und -Objekte zurück
-    #
-    #         :rtype: list
-    #         """
-    #
-    #         # Unterknoten einlesen falls noch nicht geladen
-    #         self.load_children()
-    #
-    #         # Fertig
-    #         retlist = []
-    #         for key in self.sorted_keys:
-    #             retlist.append((key, self.subnodes[key]))
-    #         return retlist
-    #
-    #
-    #     def iteritems(self):
-    #         """
-    #         Gibt die Unterknoten-Namen und -Objekte zurück
-    #         """
-    #
-    #         # Unterknoten einlesen falls noch nicht geladen
-    #         self.load_children()
-    #
-    #         # Fertig
-    #         for key in self.sorted_keys:
-    #             yield (key, self.subnodes[key])
-    #
-    #
-    #     def iterkeys(self):
-    #         """
-    #         Gibt die Namen der Unterknoten zurück
-    #         """
-    #
-    #         # Unterknoten einlesen falls noch nicht geladen
-    #         self.load_children()
-    #
-    #         # Fertig
-    #         return self.sorted_keys.__iter__()
-    #
-    #
-    #     def itervalues(self):
-    #         """
-    #         Gibt die Unterknoten-Objekte zurück
-    #         """
-    #
-    #         # Unterknoten einlesen falls noch nicht geladen
-    #         self.load_children()
-    #
-    #         # Fertig
-    #         for key in self.sorted_keys:
-    #             yield self.subnodes[key]
-    #
-    #
-    #     def values(self):
-    #         """
-    #         Gibt die Unterknoten-Objekte zurück
-    #
-    #         :rtype: list
-    #         """
-    #
-    #         # Unterknoten einlesen falls noch nicht geladen
-    #         self.load_children()
-    #
-    #         # Fertig
-    #         retlist = []
-    #         for key in self.sorted_keys:
-    #             retlist.append(self.subnodes[key])
-    #         return retlist
-    #
-    #
-    #     def get(self, key, failobj = None):
-    #         """
-    #         Gibt den gewünschten Unterknoten zurück
-    #
-    #         :rtype: Node
-    #         """
-    #
-    #         # Unterknoten einlesen falls noch nicht geladen
-    #         self.load_children()
-    #
-    #         # Fertig
-    #         if key not in self.subnodes:
-    #             return failobj
-    #         return self.subnodes[key]
-    #
-    #
-    #     def sort_keys(self):
-    #         """
-    #         Schlüssel der Unterknoten neu sortieren
-    #         """
-    #
-    #         self.sorted_keys = sorted(self.subnodes)
-    #
-    #
+
+
+
+
     #     def new_item(self, name):
     #         """
     #         Erstellt einen neuen Unterordner im Dateisystem und fügt diesen dem
@@ -525,21 +520,4 @@ class Node(dict):
     #
     #         # Fertig
     #         return path
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-
-
-
-
 

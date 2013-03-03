@@ -119,13 +119,11 @@ class SimpleCms(cherrypy.Application):
 
 
         # # TESTS
-        # basenode = datadir.Node.search("/")
-        #
-        # basenode = datadir.get_node()
+        # basenode = datadir.basenode
         # basenode.find("/asdf/asdf")
         #
-        # tree = datadir.tree
-        # assert isinstance(tree, datadir.Node)
+        # basenode = datadir.basenode
+        # assert isinstance(basenode, datadir.Node)
         #
         # print
         # print tree.visible
@@ -136,6 +134,21 @@ class SimpleCms(cherrypy.Application):
         # # tree.child("hallo").child("servus").child("test")
         # # tree.children["hallo"].children[""]
         # # node = datadir.search("/") tree.query("/")
+
+
+        basenode = datadir.basenode
+        assert isinstance(basenode, datadir.Node)
+
+        print
+        print basenode
+
+        for key, child in basenode.children.items():
+            assert isinstance(child, datadir.Node)
+            print child
+            for subchild in child.children.values():
+                print subchild
+
+        print
 
 
 
