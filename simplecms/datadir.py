@@ -20,10 +20,9 @@ except ImportError:
 
 # Regeln für neue Nodes bzw. Dateien
 NOT_ALLOWED_NODENAMES = {"interface", "_data", "_blobs", "_trash"}
-# NOT_ALLOWED_FILENAMES = NOT_ALLOWED_NODENAMES.union({"metadata.json"})
-ALLOWED_NODENAME_CHARS = string.ascii_lowercase + string.digits + "_-"
-NEW_DIR_MODE = 0770
-NEW_FILE_MODE = 0660
+#ALLOWED_NODENAME_CHARS = string.ascii_lowercase + string.digits + "_-"
+#NEW_DIR_MODE = 0770
+#NEW_FILE_MODE = 0660
 
 
 # ToDo: Blobs mit Snappy komprimiert speichern
@@ -39,6 +38,9 @@ NEW_FILE_MODE = 0660
 
 # Globale Variable mit der Instanz des obesten Nodes; wird später befüllt;
 basenode = None
+
+# Globales Dictionary mit allen eingelesenen Knoten
+_all_loaded_nodes = {}
 
 
 # Fehlerklassen
@@ -110,11 +112,11 @@ def find_url(url):
     # Parameter
     url = url.strip()
     assert url.startswith("/")
-    url = url.rstrip("/")
+    url = "/" + url.lstrip("/").rstrip("/")
 
-    # Schnelle Rückgabe, wenn es sich um den obersten Knoten handelt
-    if url == "":
-        return basenode
+    # Schnelle Rückgabe, falls der gewünschte Knoten bereits eingelesen wurde
+    if url in _all_loaded_nodes:
+        return _all_loaded_nodes[url]
 
     # Suche
     current_node = basenode
@@ -206,6 +208,9 @@ class Node(dict):
             self.url = self.parent.url.rstrip("/") + "/" + self.name.rstrip("/")
         else:
             self.url = self.name
+
+        # Klasseninstanz in das globale Dictionary legen
+        _all_loaded_nodes[self.url] = self
 
         # Pfade festlegen
         if self.parent:
@@ -520,4 +525,5 @@ class Node(dict):
     #
     #         # Fertig
     #         return path
+
 

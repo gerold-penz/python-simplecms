@@ -141,14 +141,17 @@ class SimpleCms(cherrypy.Application):
 
         print
         print basenode
+        print basenode.children["test1"]
 
-        for key, child in basenode.children.items():
-            assert isinstance(child, datadir.Node)
-            print child
-            for subchild in child.children.values():
-                print subchild
+        # for key, child in basenode.children.items():
+        #     assert isinstance(child, datadir.Node)
+        #     print child
+        #     for subchild in child.children.values():
+        #         print subchild
+        #
+        # print
 
-        print
+        print datadir.find_url("/test1/servus")
 
 
 
