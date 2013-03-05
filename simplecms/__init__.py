@@ -151,9 +151,6 @@ class SimpleCms(cherrypy.Application):
         #
         # print
 
-        print datadir.find_url("/test1/servus")
-
-
 
 
     def start(self):

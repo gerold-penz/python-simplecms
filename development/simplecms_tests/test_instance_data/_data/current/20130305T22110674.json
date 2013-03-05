@@ -1,0 +1,23 @@
+{
+ "description": {
+  "de": "Beschreibung",
+  "en": "A new description"
+ },
+ "title": {
+  "de": "Servus in Tirol",
+  "en": "Hello in Tyrol"
+ },
+ "menu": {
+  "de": "Servus",
+  "en": "Hello"
+ },
+ "visible": false,
+ "html": {
+  "de": "blob:93b885adfe0da089cdf634904fd59f71.snappy",
+  "en": "blob:93b885adfe0da089cdf634904fd59f71.snappy"
+ },
+ "keywords": {
+  "de": "Schl\u00fcsselwort1 Schl\u00fcsselwort2",
+  "en": "Keyword1 Keyword2"
+ }
+}

@@ -9,8 +9,9 @@ Created 2013-02-21 by Gerold - http://halvar.at/
 import os
 import io
 import re
-import string
 import glob
+import datetime
+import snappy
 import config
 try:
     import jsonlib2 as json
@@ -21,8 +22,8 @@ except ImportError:
 # Regeln für neue Nodes bzw. Dateien
 NOT_ALLOWED_NODENAMES = {"interface", "_data", "_blobs", "_trash"}
 #ALLOWED_NODENAME_CHARS = string.ascii_lowercase + string.digits + "_-"
-#NEW_DIR_MODE = 0770
-#NEW_FILE_MODE = 0660
+NEW_DIR_MODE = 0770
+NEW_FILE_MODE = 0660
 
 
 # ToDo: Blobs mit Snappy komprimiert speichern
@@ -284,13 +285,56 @@ class Node(dict):
         Speichert die Daten ins Dateisystem
         """
 
-        # ToDo:
+        data = {}
 
-        # metadata = {}
-        # for metadata_key in all_metadata_names:
-        #     metadata[metadata_key] = getattr(self, metadata_key, None)
-        # with io.open(self.metadata_path, "wb") as metadata_file:
-        #     json.dump(metadata, metadata_file, indent = 0)
+        # Sprachunabhängige Einstellungen ermitteln
+        for key in self.all_data_keys:
+            data[key] = getattr(self, key, None)
+
+        # Sprachabhängige Einstellungen ermitteln
+        for key in self.LangData.all_data_keys:
+            for lang in self.keys():
+                data.setdefault(key, {})[lang] = getattr(self[lang], key)
+
+        # Neuen Namen für JSON-Datei ermitteln
+        now = datetime.datetime.now()
+        new_json_filename = now.isoformat() \
+            .replace("-", "") \
+            .replace(":", "") \
+            .replace(".", "")[:17] \
+            + ".json"
+        new_json_path = os.path.join(self.datadir_current_path, new_json_filename)
+
+        # Neue JSON-Datei speichern
+        with io.open(new_json_path, "wb") as new_json_file:
+            os.fchmod(new_json_file.fileno(), NEW_FILE_MODE)
+            json.dump(data, new_json_file, indent = 1)
+
+        # Alte JSON-Dateien im Current-Ordner mit Snappy komprimieren
+        # und in den Archive-Ordner verschieben
+        for json_path in glob.glob(
+            os.path.join(self.datadir_current_path, "*.json")
+        ):
+            if json_path == new_json_path:
+                continue
+
+            # Archivordner ermitteln und erstellen
+            year_str = os.path.basename(json_path)[:4]
+            archivedir_path = os.path.join(self.datadir_archive_path, year_str)
+            if not os.path.isdir(archivedir_path):
+                os.makedirs(archivedir_path, NEW_DIR_MODE)
+
+            # Alte JSON-Datei mit Snappy in den Archivordner komprimieren
+            snappy_filename = os.path.basename(json_path) + ".snappy"
+            snappy_path = os.path.join(archivedir_path, snappy_filename)
+
+            with io.open(snappy_path, "wb") as snappy_file:
+                os.fchmod(snappy_file.fileno(), NEW_FILE_MODE)
+                with io.open(json_path, "rb") as old_json_file:
+                    snappy_file.write(snappy.compress(old_json_file.read()))
+
+            # Alte JSON-Datei löschen
+            os.remove(json_path)
 
 
     def __repr__(self):

@@ -13,6 +13,13 @@ Version 0.1.5
 
 - *datadir*: jedes Vorkommen von *url* nach *path* umbenannt.
 
+- Speichern der Daten eines Nodes in das Dateisystem.
+  Achtung! Noch ohne Berücksichtigung der Blobs.
+  Die Daten werden in JSON-Dateien gespeichert. Nach dem Speichern werden
+  alte JSON-Dateien, die sich noch im "current"-Ordner befinden, mit Snappy 
+  komprimiert und in den "archive"-Ordner verschoben. 
+  Die alten JSON-Dateien werden danach gelöscht.
+
 
 =============
 Version 0.1.5
