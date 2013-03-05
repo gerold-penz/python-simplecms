@@ -99,30 +99,30 @@ def create_main_dirs():
         os.makedirs(datatrashdir)
 
 
-def find_url(url):
+def find_path(path):
     """
-    Gibt den Knoten zurück, der der übergebenen URL entspricht
+    Gibt den Knoten zurück, der dem übergebenen Pfad entspricht
 
-    :param url: URL zum Datenknoten. Dieser muss *immer* mit einem "/"
+    :param path: Pfad zum Datenknoten. Dieser muss *immer* mit einem "/"
         beginnen.
 
     :rtype: Node
     """
 
     # Parameter
-    url = url.strip()
-    assert url.startswith("/")
-    url = "/" + url.lstrip("/").rstrip("/")
+    path = path.strip()
+    assert path.startswith("/")
+    path = "/" + path.lstrip("/").rstrip("/")
 
     # Schnelle Rückgabe, falls der gewünschte Knoten bereits eingelesen wurde
-    if url in _all_loaded_nodes:
-        return _all_loaded_nodes[url]
+    if path in _all_loaded_nodes:
+        return _all_loaded_nodes[path]
 
     # Suche
     current_node = basenode
-    for urlpart in url.split("/")[1:]:
+    for name in path.split("/")[1:]:
         assert isinstance(current_node, Node)
-        current_node = current_node.children.get(urlpart)
+        current_node = current_node.children.get(name)
         if not current_node:
             return
 
@@ -203,14 +203,14 @@ class Node(dict):
         self.parent = parent
         assert (not parent and name == "/") or (not parent is None and name != "/")
 
-        # Url
+        # Path
         if self.parent:
-            self.url = self.parent.url.rstrip("/") + "/" + self.name.rstrip("/")
+            self.path = self.parent.path.rstrip("/") + "/" + self.name.rstrip("/")
         else:
-            self.url = self.name
+            self.path = self.name
 
         # Klasseninstanz in das globale Dictionary legen
-        _all_loaded_nodes[self.url] = self
+        _all_loaded_nodes[self.path] = self
 
         # Pfade festlegen
         if self.parent:
@@ -306,7 +306,7 @@ class Node(dict):
             class_repr = "Node"
 
         # Rückgabe des Klassennamens und des Node-Namens
-        return "<%s '%s'>" % (class_repr, self.url)
+        return "<%s '%s'>" % (class_repr, self.path)
 
 
     @property

@@ -7,6 +7,17 @@ Simple Python CMS
 Version 0.1.5
 =============
 
+2013-03-05
+
+- *datadir.get_url* nach *datadir.get_path* umbenannt
+
+- *datadir*: jedes Vorkommen von *url* nach *path* umbenannt.
+
+
+=============
+Version 0.1.5
+=============
+
 2013-03-03
 
 - *datadir.Node* um *children* erweitert. Somit ist es jetzt möglich, vom 
