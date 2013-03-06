@@ -18,6 +18,13 @@ Version 0.1.7
 
 - Hinzufügen eines neuen Nodes
 
+- Das *content*-Attribut von *datadir.Node.LangData* wird jetzt als
+  komprimierter Blob gespeichert.
+  Bei jeder Anforderung von *content* wird der Blob aus dem Dateisystem
+  ausgelesen, dekomprimiert und zurück gegeben.
+  *content* bleibt also nicht im Speicher, da *content* beliebig groß sein
+  kann.
+
 
 =============
 Version 0.1.6
@@ -30,7 +37,6 @@ Version 0.1.6
 - *datadir*: jedes Vorkommen von *url* nach *path* umbenannt.
 
 - Speichern der Daten eines Nodes in das Dateisystem.
-  Achtung! Noch ohne Berücksichtigung der Blobs.
   Die Daten werden in JSON-Dateien gespeichert. Nach dem Speichern werden
   alte JSON-Dateien, die sich noch im "current"-Ordner befinden, mit Snappy 
   komprimiert und in den "archive"-Ordner verschoben. 

@@ -12,6 +12,7 @@ import re
 import glob
 import string
 import datetime
+import hashlib
 import snappy
 import isodate
 import config
@@ -30,11 +31,17 @@ NEW_FILE_MODE = 0660
 # Datentypen
 TYPE_UNICODE = "unicode"
 TYPE_BOOLEAN = "bool"
-TYPE_BLOB = "blob"
-TYPE_INTEGER = "int"
 TYPE_TIMESTAMP = "timestamp"
-TYPE_DATE = "date"
-TYPE_TIME = "time"
+TYPE_BLOB_NAME = "blob_name"
+#TYPE_INTEGER = "int"
+#TYPE_DATE = "date"
+#TYPE_TIME = "time"
+
+# Content-Typen mit Textinhalt
+TEXT_CONTENT_TYPES = {
+    "text/plain",
+    "text/html"
+}
 
 
 # ToDo: Blobs mit Snappy komprimiert speichern
@@ -162,6 +169,7 @@ class Node(dict):
     modified_timestamp = None
     created_by = None
     modified_by = None
+    content_type = None
 
     # Liste mit den Datenschlüsseln und den zugehörige Datentypen
     # (zusammenpassend mit den Daten-Attributen)
@@ -171,6 +179,7 @@ class Node(dict):
         {"name": "modified_timestamp", "type": TYPE_TIMESTAMP},
         {"name": "created_by", "type": TYPE_UNICODE},
         {"name": "modified_by", "type": TYPE_UNICODE},
+        {"name": "content_type", "type": TYPE_UNICODE},
     ]
 
 
@@ -190,8 +199,8 @@ class Node(dict):
         menu = None
         description = None
         keywords = None
-        content = None
-        content_rendered = None
+        _content = None # internal
+        content_blob_name = None
 
         # Liste mit den sprachabhängigen Datenschlüsseln
         # (zusammenpassend mit den Daten-Attributen)
@@ -200,9 +209,61 @@ class Node(dict):
             {"name": "menu", "type": TYPE_UNICODE},
             {"name": "description", "type": TYPE_UNICODE},
             {"name": "keywords", "type": TYPE_UNICODE},
-            {"name": "content", "type": TYPE_BLOB},
-            {"name": "content_rendered", "type": TYPE_BLOB},
+            {"name": "content_blob_name", "type": TYPE_BLOB_NAME},
         ]
+
+
+        def __init__(self, node):
+            """
+            Init
+            """
+
+            self.node = node
+
+
+        @property
+        def content(self):
+            """
+            Holt den Content aus dem *_content*-Attribut oder aus dem
+            *_blobs*-Ordner und gibt diesen entpackt zurück.
+            """
+
+            # Falls der Content noch nicht gespeichert wurde, befindet
+            # er sich noch in *self._content*.
+            if not self._content is None:
+                return self._content
+
+            # Nachsehen ob es einen Blob für den Content gibt
+            if not self.content_blob_name:
+                return None
+
+            # Blob laden, entpacken und zurück geben
+            blob_dir = os.path.join(config.DATABLOBSDIR.value, self.content_blob_name[0])
+            blob_path = os.path.join(blob_dir, self.content_blob_name)
+            with io.open(blob_path, "rb") as blob_file:
+                content = snappy.uncompress(blob_file.read())
+                if content and self.node.content_type in TEXT_CONTENT_TYPES:
+                    return content.decode("utf-8")
+                else:
+                    return content
+
+
+        @content.setter
+        def content(self, value):
+            """
+            Speichert den Content unkomprimiert in das *_content*-Attribut
+            """
+
+            # Es muss vorher der Content-Type angegeben werden
+            if not value is None:
+                assert self.node.content_type
+
+            # Zwischenspeichern
+            self._content = value
+
+            # Wenn None, dann muss der Blob-Name gelöscht werden
+            if value is None:
+                self.content_blob_name = None
 
 
     def __init__(self, parent = None, name = "/"):
@@ -243,7 +304,7 @@ class Node(dict):
 
         # Daten je Sprache
         for language_id in config.LANGUAGES.value:
-            self[language_id] = self.LangData()
+            self[language_id] = self.LangData(self)
 
         # Daten laden
         self.load()
@@ -280,7 +341,7 @@ class Node(dict):
         for data_key_item in self.all_data_keys:
             data_key_name = data_key_item["name"]
             data_key_type = data_key_item["type"]
-            if data_key_type == "timestamp":
+            if data_key_type == TYPE_TIMESTAMP:
                 timestamp_iso = loaded_data.get(data_key_name, None)
                 if timestamp_iso:
                     setattr(self, data_key_name, isodate.parse_datetime(timestamp_iso))
@@ -301,7 +362,7 @@ class Node(dict):
             for data_key_item in language_data.all_data_keys:
                 data_key_name = data_key_item["name"]
                 data_key_type = data_key_item["type"]
-                if data_key_type == "timestamp":
+                if data_key_type == TYPE_TIMESTAMP:
                     timestamp_iso = loaded_data.get(
                         data_key_name, {}
                     ).get(
@@ -347,7 +408,7 @@ class Node(dict):
         for data_key_item in self.all_data_keys:
             data_key_name = data_key_item["name"]
             data_key_type = data_key_item["type"]
-            if data_key_type == "timestamp":
+            if data_key_type == TYPE_TIMESTAMP:
                 timestamp = getattr(self, data_key_name, None)
                 if timestamp:
                     data[data_key_name] = timestamp.isoformat()
@@ -356,12 +417,47 @@ class Node(dict):
             else:
                 data[data_key_name] = getattr(self, data_key_name, None)
 
+        # Sprachabhängigen *content* in Blob speichern
+        for lang in self.keys():
+
+            # Zwischengespeicherten Content ermitteln
+            content = self[lang]._content
+            if content is None:
+                continue
+
+            # Falls es sich um Unicode handelt, wird dieser nach
+            # UTF-8 umgewandelt
+            if isinstance(content, unicode):
+                content = content.encode("utf-8")
+
+            # Blob komprimieren und speichern
+            content_compressed = snappy.compress(content)
+
+            # MD5-Hash erstellen und Blob-Namen zusammensetzen
+            md5hash = hashlib.md5(content_compressed).hexdigest()
+            blob_name = md5hash + ".snappy"
+            self[lang].content_blob_name = blob_name
+
+            # Ordner für den Blob erstellen
+            blob_dir = os.path.join(config.DATABLOBSDIR.value, blob_name[0])
+            if not os.path.isdir(blob_dir):
+                os.makedirs(blob_dir, NEW_DIR_MODE)
+
+            # Blob speichern
+            blob_path = os.path.join(blob_dir, blob_name)
+            if not os.path.isfile(blob_path):
+                with io.open(blob_path, "wb") as blob_file:
+                    blob_file.write(content_compressed)
+
+            # Temporären Content-Zwischenspeicher löschen
+            self[lang]._content = None
+
         # Sprachabhängige Einstellungen ermitteln
         for data_key_item in self.LangData.all_data_keys:
             data_key_name = data_key_item["name"]
             data_key_type = data_key_item["type"]
             for lang in self.keys():
-                if data_key_type == "timestamp":
+                if data_key_type == TYPE_TIMESTAMP:
                     timestamp = getattr(self[lang], data_key_name)
                     if timestamp:
                         data.setdefault(

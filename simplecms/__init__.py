@@ -139,10 +139,6 @@ class SimpleCms(cherrypy.Application):
         basenode = datadir.basenode
         assert isinstance(basenode, datadir.Node)
 
-        print
-        print basenode
-        print basenode.children["test1"]
-
         # for key, child in basenode.children.items():
         #     assert isinstance(child, datadir.Node)
         #     print child
@@ -152,8 +148,11 @@ class SimpleCms(cherrypy.Application):
         # print
 
 
-        print basenode.children.new("hallowelt")
+        #print basenode.children.new("hallowelt")
         hallowelt = datadir.find_path("/hallowelt")
+
+        print repr(hallowelt["de"].content)
+        print repr(hallowelt["en"].content)
 
 
 
