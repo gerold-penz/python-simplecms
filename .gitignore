@@ -20,3 +20,4 @@ dist
 *.aof
 *.sock
 *.rdb
+test_instance_data

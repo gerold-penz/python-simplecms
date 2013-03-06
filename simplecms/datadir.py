@@ -339,6 +339,10 @@ class Node(dict):
         if not self.created_timestamp:
             self.created_timestamp = now
 
+        # Datenordner erstellen, falls dieser noch nicht existiert
+        if not os.path.isdir(self.datadir_current_path):
+            os.makedirs(self.datadir_current_path, NEW_DIR_MODE)
+
         # Sprachunabhängige Einstellungen ermitteln
         for data_key_item in self.all_data_keys:
             data_key_name = data_key_item["name"]
@@ -602,47 +606,44 @@ class Node(dict):
             return dict.get(self, key, failobj)
 
 
+        def new(self, name):
+            """
+            Erstellt einen neuen Unterordner im Dateisystem und fügt diesen dem
+            Dictionary mit den Unterknoten hinzu.
 
-    # class SubNodes(object):
+            :return: Pfad zum neu erstellten Unterknoten
+            """
 
+            # Name übernehmen, prüfen und Pfad zum Ordner zusammensetzen
+            name = name.strip()
+            if not name:
+                raise EmptyNodeName()
+            for char in name:
+                if not char in ALLOWED_NODENAME_CHARS:
+                    raise NotAllowedCharInNodeName(char)
+            if name in NOT_ALLOWED_NODENAMES:
+                raise NotAllowedNodeName(name)
+            nodedir_path = os.path.join(self.parent.nodedir_path, name)
 
+            # Prüfen ob der Ordner bereits existiert
+            if os.path.isdir(nodedir_path):
+                raise NodeAlreadyExists(nodedir_path)
 
+            # Prüfen ob der Name als Datei bereits existiert
+            if os.path.exists(nodedir_path):
+                raise FileAlreadyExists(nodedir_path)
 
-    #     def new_item(self, name):
-    #         """
-    #         Erstellt einen neuen Unterordner im Dateisystem und fügt diesen dem
-    #         Dictionary mit den Unterknoten hinzu.
-    #
-    #         :return: Pfad zum neu erstellten Unterknoten
-    #         """
-    #
-    #         # Name übernehmen, prüfen und Pfad zusammensetzen
-    #         name = name.strip()
-    #         if not name:
-    #             raise EmptyNodeName()
-    #         for char in name:
-    #             if not char in ALLOWED_NODENAME_CHARS:
-    #                 raise NotAllowedCharInNodeName(char)
-    #         if name in NOT_ALLOWED_NODENAMES:
-    #             raise NotAllowedNodeName(name)
-    #         path = os.path.join(self.path, name)
-    #
-    #         # Prüfen ob der Ordner bereits existiert
-    #         if os.path.isdir(path):
-    #             raise NodeAlreadyExists(path)
-    #
-    #         # Prüfen ob der Name als Datei bereits existiert
-    #         if os.path.exists(path):
-    #             raise FileAlreadyExists(path)
-    #
-    #         # Ordner erstellen
-    #         os.mkdir(path, NEW_DIR_MODE)
-    #
-    #         # Neuen Ordner einlesen und Schlüssel sortieren
-    #         self.subnodes[name] = Node(self, name)
-    #         self.sort_keys()
-    #
-    #         # Fertig
-    #         return path
+            # Ordner erstellen
+            os.mkdir(nodedir_path, NEW_DIR_MODE)
 
+            # Neuen Ordner einlesen und Schlüssel sortieren
+            new_node = Node(self.parent, name)
+            dict.__setitem__(self, name, new_node)
+            self.sort_keys()
+
+            # Daten speichern
+            new_node.save()
+
+            # Fertig
+            return nodedir_path
 

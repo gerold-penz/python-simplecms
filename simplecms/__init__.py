@@ -152,7 +152,9 @@ class SimpleCms(cherrypy.Application):
         # print
 
 
-        basenode.save()
+        print basenode.children.new("hallowelt")
+        hallowelt = datadir.find_path("/hallowelt")
+
 
 
 

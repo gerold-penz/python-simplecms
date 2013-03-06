@@ -16,6 +16,8 @@ Version 0.1.7
   der beim Schreiben in die JSON-Datei nach ISO um gewandelt wird. Beim Lesen
   wird der ISO-String nach *datetime.datetime* umgewandelt.
 
+- Hinzufügen eines neuen Nodes
+
 
 =============
 Version 0.1.6
