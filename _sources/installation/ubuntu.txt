@@ -17,6 +17,7 @@ Kommandozeile installiert::
   sudo apt-get install python-dev build-essential python-pip python-cherrypy3 python-snappy
   sudo pip install jsonlib2
   sudo pip install Mako
+  sudo pip install isodate
   sudo pip install python-simplecms
 
 Die Details der Installation und die Erstellung einer "Simple Python CMS"-Instanz
@@ -83,6 +84,18 @@ Für die Installation von Mako müssen vorher die Pakte `build-essential` und
 ::
 
   sudo pip install Mako
+
+
+========
+ISO-Date
+========
+
+Python-Modul zum Parsen von Datum und Zeit im ISO 8601 Format.
+Informationen zu *isodate*: https://pypi.python.org/pypi/isodate
+
+::
+
+  sudo pip install isodate
 
 
 =======================
