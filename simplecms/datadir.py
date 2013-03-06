@@ -10,8 +10,10 @@ import os
 import io
 import re
 import glob
+import string
 import datetime
 import snappy
+import isodate
 import config
 try:
     import jsonlib2 as json
@@ -21,14 +23,21 @@ except ImportError:
 
 # Regeln für neue Nodes bzw. Dateien
 NOT_ALLOWED_NODENAMES = {"interface", "_data", "_blobs", "_trash"}
-#ALLOWED_NODENAME_CHARS = string.ascii_lowercase + string.digits + "_-"
+ALLOWED_NODENAME_CHARS = string.ascii_lowercase + string.digits + "_-."
 NEW_DIR_MODE = 0770
 NEW_FILE_MODE = 0660
 
+# Datentypen
+TYPE_UNICODE = "unicode"
+TYPE_BOOLEAN = "bool"
+TYPE_BLOB = "blob"
+TYPE_INTEGER = "int"
+TYPE_TIMESTAMP = "timestamp"
+TYPE_DATE = "date"
+TYPE_TIME = "time"
+
 
 # ToDo: Blobs mit Snappy komprimiert speichern
-
-# ToDo: History der Einstellungs-Änderungen speichern
 
 # ToDo: Liste mit der Änderungshistorie eines Ordners zurück geben
 
@@ -149,11 +158,19 @@ class Node(dict):
     # Daten-Attribute
     # (zusammenpassend zu den Datenschlüsseln)
     visible = False
+    created_timestamp = None
+    modified_timestamp = None
+    created_by = None
+    modified_by = None
 
-    # Liste mit den Datenschlüsseln
+    # Liste mit den Datenschlüsseln und den zugehörige Datentypen
     # (zusammenpassend mit den Daten-Attributen)
     all_data_keys = [
-        "visible",
+        {"name": "visible", "type": TYPE_BOOLEAN},
+        {"name": "created_timestamp", "type": TYPE_TIMESTAMP},
+        {"name": "modified_timestamp", "type": TYPE_TIMESTAMP},
+        {"name": "created_by", "type": TYPE_UNICODE},
+        {"name": "modified_by", "type": TYPE_UNICODE},
     ]
 
 
@@ -173,16 +190,18 @@ class Node(dict):
         menu = None
         description = None
         keywords = None
-        html = None
+        content = None
+        content_rendered = None
 
         # Liste mit den sprachabhängigen Datenschlüsseln
         # (zusammenpassend mit den Daten-Attributen)
         all_data_keys = [
-            "title",
-            "menu",
-            "description",
-            "keywords",
-            "html",
+            {"name": "title", "type": TYPE_UNICODE},
+            {"name": "menu", "type": TYPE_UNICODE},
+            {"name": "description", "type": TYPE_UNICODE},
+            {"name": "keywords", "type": TYPE_UNICODE},
+            {"name": "content", "type": TYPE_BLOB},
+            {"name": "content_rendered", "type": TYPE_BLOB},
         ]
 
 
@@ -258,26 +277,53 @@ class Node(dict):
             return
 
         # Sprachunabhängige Daten aus der JSON-Datei zur Klasseninstanz hinzufügen
-        for data_key in self.all_data_keys:
-            setattr(
-                self,
-                data_key,
-                loaded_data.get(data_key, getattr(self, data_key))
-            )
+        for data_key_item in self.all_data_keys:
+            data_key_name = data_key_item["name"]
+            data_key_type = data_key_item["type"]
+            if data_key_type == "timestamp":
+                timestamp_iso = loaded_data.get(data_key_name, None)
+                if timestamp_iso:
+                    setattr(self, data_key_name, isodate.parse_datetime(timestamp_iso))
+                else:
+                    setattr(self, data_key_name, getattr(self, data_key_name))
+            else:
+                setattr(
+                    self,
+                    data_key_name,
+                    loaded_data.get(data_key_name, getattr(self, data_key_name))
+                )
 
         # Sprachabhängige Daten aus der JSON-Datei zu den
         # sprachabhängigen Klasseninstanzen hinzufügen
         for language_id, language_data in self.items():
             assert isinstance(language_data, self.LangData)
-            for data_key in language_data.all_data_keys:
-                setattr(
-                    language_data,
-                    data_key,
-                    loaded_data.get(data_key, {}).get(
-                        language_id,
-                        getattr(language_data, data_key)
+
+            for data_key_item in language_data.all_data_keys:
+                data_key_name = data_key_item["name"]
+                data_key_type = data_key_item["type"]
+                if data_key_type == "timestamp":
+                    timestamp_iso = loaded_data.get(
+                        data_key_name, {}
+                    ).get(
+                        language_id, None
                     )
-                )
+                    if timestamp_iso:
+                        setattr(
+                            language_data,
+                            data_key_name,
+                            isodate.parse_datetime(timestamp_iso)
+                        )
+                    else:
+                        setattr(language_data, data_key_name, None)
+                else:
+                    setattr(
+                        language_data,
+                        data_key_name,
+                        loaded_data.get(data_key_name, {}).get(
+                            language_id,
+                            getattr(language_data, data_key_name)
+                        )
+                    )
 
 
     def save(self):
@@ -287,17 +333,46 @@ class Node(dict):
 
         data = {}
 
+        # Timestamp
+        now = datetime.datetime.now()
+        self.modified_timestamp = now
+        if not self.created_timestamp:
+            self.created_timestamp = now
+
         # Sprachunabhängige Einstellungen ermitteln
-        for key in self.all_data_keys:
-            data[key] = getattr(self, key, None)
+        for data_key_item in self.all_data_keys:
+            data_key_name = data_key_item["name"]
+            data_key_type = data_key_item["type"]
+            if data_key_type == "timestamp":
+                timestamp = getattr(self, data_key_name, None)
+                if timestamp:
+                    data[data_key_name] = timestamp.isoformat()
+                else:
+                    data[data_key_name] = None
+            else:
+                data[data_key_name] = getattr(self, data_key_name, None)
 
         # Sprachabhängige Einstellungen ermitteln
-        for key in self.LangData.all_data_keys:
+        for data_key_item in self.LangData.all_data_keys:
+            data_key_name = data_key_item["name"]
+            data_key_type = data_key_item["type"]
             for lang in self.keys():
-                data.setdefault(key, {})[lang] = getattr(self[lang], key)
+                if data_key_type == "timestamp":
+                    timestamp = getattr(self[lang], data_key_name)
+                    if timestamp:
+                        data.setdefault(
+                            data_key_name, {}
+                        )[lang] = timestamp.isoformat()
+                    else:
+                        data.setdefault(
+                            data_key_name, {}
+                        )[lang] = None
+                else:
+                    data.setdefault(
+                        data_key_name, {}
+                    )[lang] = getattr(self[lang], data_key_name)
 
         # Neuen Namen für JSON-Datei ermitteln
-        now = datetime.datetime.now()
         new_json_filename = now.isoformat() \
             .replace("-", "") \
             .replace(":", "") \
@@ -308,7 +383,7 @@ class Node(dict):
         # Neue JSON-Datei speichern
         with io.open(new_json_path, "wb") as new_json_file:
             os.fchmod(new_json_file.fileno(), NEW_FILE_MODE)
-            json.dump(data, new_json_file, indent = 1)
+            json.dump(data, new_json_file, indent = 2)
 
         # Alte JSON-Dateien im Current-Ordner mit Snappy komprimieren
         # und in den Archive-Ordner verschieben

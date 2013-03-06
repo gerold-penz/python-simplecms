@@ -152,6 +152,9 @@ class SimpleCms(cherrypy.Application):
         # print
 
 
+        basenode.save()
+
+
 
     def start(self):
         """

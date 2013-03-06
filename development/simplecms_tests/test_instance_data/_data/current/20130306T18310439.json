@@ -1,0 +1,31 @@
+{
+  "content_rendered": {
+    "de": null,
+    "en": null
+  },
+  "modified_timestamp": "2013-03-06T18:31:04.392620",
+  "modified_by": null,
+  "description": {
+    "de": "Beschreibung",
+    "en": "A new description"
+  },
+  "title": {
+    "de": "Servus in Tirol",
+    "en": "Hello in Tyrol"
+  },
+  "menu": {
+    "de": "Servus",
+    "en": "Hello"
+  },
+  "created_by": null,
+  "content": {
+    "de": null,
+    "en": null
+  },
+  "visible": false,
+  "keywords": {
+    "de": "Schl\u00fcsselwort1 Schl\u00fcsselwort2",
+    "en": "Keyword1 Keyword2"
+  },
+  "created_timestamp": "2013-03-06T18:15:38.697801"
+}

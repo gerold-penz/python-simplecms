@@ -182,9 +182,8 @@ generiert, der den Inhalt der Blob-Datei eindeutig kennzeichnet. Der MD5-Hash
 wird dann der Name der Blob-Datei. Ziel ist es, keine Daten doppelt
 abzuspeichern.
 
-Bilder und sonstige Mediadateien, die bereits komprimiert sind, werden nicht
-nochmal mit *Snappy* komprimiert. Dateien die mit Snappy komprimiert werden,
-bekommen als zusätzliche Dateiendung ".snappy" hinzugefügt.
+Dateien die mit Snappy komprimiert werden, bekommen als zusätzliche
+Dateiendung ".snappy" hinzugefügt.
 
 Es gibt einen Ordner mit dem Namen *_trash*, der sich direkt im Datenordner
 befindet. Dort werden alle gelöschten Elemente abgelegt. Somit können auch

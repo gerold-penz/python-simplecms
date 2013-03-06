@@ -11,6 +11,11 @@ Version 0.1.7
 
 - Beschreibung des *Datadir*-Systems in die Dokumentation geschrieben.
 
+- Beim Lesen und Schreiben der Daten aus den JSON-Dateien werden jetzt die
+  Datentypen berücksichtigt. Primär geht es hier um "timestamp" als Datentyp,
+  der beim Schreiben in die JSON-Datei nach ISO um gewandelt wird. Beim Lesen
+  wird der ISO-String nach *datetime.datetime* umgewandelt.
+
 
 =============
 Version 0.1.6
