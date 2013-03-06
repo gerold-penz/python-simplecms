@@ -4,7 +4,16 @@ Simple Python CMS
 
 
 =============
-Version 0.1.5
+Version 0.1.7
+=============
+
+2013-03-06
+
+- Beschreibung des *Datadir*-Systems in die Dokumentation geschrieben.
+
+
+=============
+Version 0.1.6
 =============
 
 2013-03-05
