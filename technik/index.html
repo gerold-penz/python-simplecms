@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1.1',
+        VERSION:     '0.1.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -151,6 +151,46 @@ und soll nicht der Normalfall werden.</p>
 nachgedacht habe &#8211; bin ich zu dem Schluss gekommen,
 die Daten in das Dateisystem und nicht in eine Datenbank zu schreiben.</p>
 </div>
+</div>
+<div class="section" id="datadir">
+<h2>Datadir<a class="headerlink" href="#datadir" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Anstatt die Daten alle in eine Datenbank zu schreiben, habe ich mich dazu
+entschlossen, diese direkt in das Dateisystem zu schreiben. Jede CMS-Seite
+bekommt einen eigenen Ordner im Dateisystem. Die Einstellungen einer Seite
+werden als JSON-Datei im jeweiligen <em>_data/current</em>-Ordner abgelegt.
+Ändert man eine Einstellung, wird eine neue JSON-Datei im
+<em>_data/current</em>-Ordner erstellt. Die alte JSON-Datei wird komprimiert in dem
+<em>_data/archive</em>-Ordner abgelegt.
+Mit diesem System kann ich jede Änderung wieder rückgängig machen.</p>
+<p>Beim Starten des Content Management Systems wird ein Datenordner bestimmt.
+In diesem Datenordner werden alle Daten des CMS abgelegt. Es wird einen
+eigenen Ordner für die Binärdaten geben. Dieser befindet sich direkt im
+Daten-Hauptordner und heißt <em>_blobs</em>.</p>
+<p>In den JSON-Dateien werden nur die Einstellungen einer Seite oder eines
+Bildes abgelegt. Der Content selbst, also der HTML-Text oder die Bilddaten
+werden im <em>_blobs</em>-Ordner abgelegt. Bevor die Datei in den <em>_blobs</em>-Ordner
+gespeichert wird, wird diese mit <em>Snappy</em> komprimiert und ein MD5-Hash
+generiert, der den Inhalt der Blob-Datei eindeutig kennzeichnet. Der MD5-Hash
+wird dann der Name der Blob-Datei. Ziel ist es, keine Daten doppelt
+abzuspeichern.</p>
+<p>Bilder und sonstige Mediadateien, die bereits komprimiert sind, werden nicht
+nochmal mit <em>Snappy</em> komprimiert. Dateien die mit Snappy komprimiert werden,
+bekommen als zusätzliche Dateiendung &#8221;.snappy&#8221; hinzugefügt.</p>
+<p>Es gibt einen Ordner mit dem Namen <em>_trash</em>, der sich direkt im Datenordner
+befindet. Dort werden alle gelöschten Elemente abgelegt. Somit können auch
+gesamte, gelöschte Ordner inklusive aller darin enthaltenen Unterordner
+wiederhergestellt werden. Die Blobs verbleiben im <em>_blobs</em>-Ordner, bis es
+keine Referenz mehr darauf gibt.</p>
+<p>Zusammenfassend: Jede CMS-Seite und jeder sonstige Inhalt des CM-Systems wird
+im Datenordner abgespeichert. Jedes Objekt, egal ob es sich um eine HTML-Seite
+oder um ein Bild handelt, wird durch einen <strong>Ordner</strong> unterhalb des
+Datenordners repräsentiert. Jeder Ordner im Datenordner kann natürlich auch
+Unterordner enthalten. Das bedeutet, dass sogar Bilder einen Unterordner
+haben können. Das kann z.B. dazu verwendet werden, verkleinerte Bilder
+(Thumbnails) unterhalb des Hauptbildes abzuspeichern. Das hochgeladene
+Bild könnte z.B. diesen Pfad haben: &#8220;/images/banner01.jpg&#8221;. Und das zugehörige
+Thumbnail könnte z.B. diesen Pfad haben: &#8220;/images/banner01.jpg/thumbnail&#8221;.
+Ob man das so verwendet oder nicht, steht jedem frei.</p>
 </div>
 </div>
 

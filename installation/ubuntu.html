@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1.1',
+        VERSION:     '0.1.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -53,8 +53,8 @@ installieren. Und Ubuntu-Upstart ist ideal dafür geeignet, eine
 <h2>Kurzanleitung<a class="headerlink" href="#kurzanleitung" title="Permalink zu dieser Überschrift">¶</a></h2>
 <p>Die benötigten Programmpakete werden mit folgenden Befehlen auf der
 Kommandozeile installiert:</p>
-<div class="highlight-python"><pre>sudo apt-get install python-dev build-essential python-pip redis-server python-cherrypy3
-sudo pip install redis
+<div class="highlight-python"><pre>sudo apt-get install python-dev build-essential python-pip python-cherrypy3 python-snappy
+sudo pip install jsonlib2
 sudo pip install Mako
 sudo pip install python-simplecms</pre>
 </div>
@@ -65,8 +65,8 @@ werden in den nächsten Kapiteln erklärt.</p>
 <h2>Python 2.x<a class="headerlink" href="#python-2-x" title="Permalink zu dieser Überschrift">¶</a></h2>
 <p>Informationen zu Python: <a class="reference external" href="http://www.python.org/">http://www.python.org/</a></p>
 <p>Python 2.7 ist bei Ubuntu 12.4 und 12.10 bereits installiert. Es müssen nur noch
-die Entwicklerpakete (dev) installiert werden, damit Mako (siehe weiter unten)
-kompiliert werden kann.</p>
+die Entwicklerpakete (dev) installiert werden, damit Mako und jsonlib2
+(siehe weiter unten) kompiliert werden können.</p>
 <div class="highlight-python"><pre>sudo apt-get install python-dev build-essential</pre>
 </div>
 </div>
@@ -76,16 +76,10 @@ kompiliert werden kann.</p>
 <div class="highlight-python"><pre>sudo apt-get install python-pip</pre>
 </div>
 </div>
-<div class="section" id="redis-datenbank">
-<h2>Redis Datenbank<a class="headerlink" href="#redis-datenbank" title="Permalink zu dieser Überschrift">¶</a></h2>
-<p>Informationen zu Redis: <a class="reference external" href="http://redis.io/">http://redis.io/</a></p>
-<div class="highlight-python"><pre>sudo apt-get install redis-server</pre>
-</div>
-</div>
-<div class="section" id="redis-python">
-<h2>Redis Python<a class="headerlink" href="#redis-python" title="Permalink zu dieser Überschrift">¶</a></h2>
-<p>Informationen zu redis-py: <a class="reference external" href="https://github.com/andymccurdy/redis-py">https://github.com/andymccurdy/redis-py</a></p>
-<div class="highlight-python"><pre>sudo pip install redis</pre>
+<div class="section" id="jsonlib2">
+<h2>Jsonlib2<a class="headerlink" href="#jsonlib2" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Informationen zu Jsonlib2: <a class="reference external" href="http://code.google.com/p/jsonlib2/">http://code.google.com/p/jsonlib2/</a></p>
+<div class="highlight-python"><pre>pip install jsonlib2</pre>
 </div>
 </div>
 <div class="section" id="cherrypy-webframework">
@@ -100,6 +94,12 @@ kompiliert werden kann.</p>
 <p>Für die Installation von Mako müssen vorher die Pakte <cite>build-essential</cite> und
 <cite>python-dev</cite> installiert werden.</p>
 <div class="highlight-python"><pre>sudo pip install Mako</pre>
+</div>
+</div>
+<div class="section" id="snappy-kompressionstool">
+<h2>Snappy Kompressionstool<a class="headerlink" href="#snappy-kompressionstool" title="Permalink zu dieser Überschrift">¶</a></h2>
+<p>Informationen zu Snappy: <a class="reference external" href="http://code.google.com/p/snappy/">http://code.google.com/p/snappy/</a></p>
+<div class="highlight-python"><pre>sudo apt-get install python-snappy</pre>
 </div>
 </div>
 <div class="section" id="simple-python-cms">

@@ -156,6 +156,55 @@ nachgedacht habe -- bin ich zu dem Schluss gekommen,
 die Daten in das Dateisystem und nicht in eine Datenbank zu schreiben.
 
 
+=======
+Datadir
+=======
+
+Anstatt die Daten alle in eine Datenbank zu schreiben, habe ich mich dazu
+entschlossen, diese direkt in das Dateisystem zu schreiben. Jede CMS-Seite
+bekommt einen eigenen Ordner im Dateisystem. Die Einstellungen einer Seite
+werden als JSON-Datei im jeweiligen *_data/current*-Ordner abgelegt.
+Ändert man eine Einstellung, wird eine neue JSON-Datei im
+*_data/current*-Ordner erstellt. Die alte JSON-Datei wird komprimiert in dem
+*_data/archive*-Ordner abgelegt.
+Mit diesem System kann ich jede Änderung wieder rückgängig machen.
+
+Beim Starten des Content Management Systems wird ein Datenordner bestimmt.
+In diesem Datenordner werden alle Daten des CMS abgelegt. Es wird einen
+eigenen Ordner für die Binärdaten geben. Dieser befindet sich direkt im
+Daten-Hauptordner und heißt *_blobs*.
+
+In den JSON-Dateien werden nur die Einstellungen einer Seite oder eines
+Bildes abgelegt. Der Content selbst, also der HTML-Text oder die Bilddaten
+werden im *_blobs*-Ordner abgelegt. Bevor die Datei in den *_blobs*-Ordner
+gespeichert wird, wird diese mit *Snappy* komprimiert und ein MD5-Hash
+generiert, der den Inhalt der Blob-Datei eindeutig kennzeichnet. Der MD5-Hash
+wird dann der Name der Blob-Datei. Ziel ist es, keine Daten doppelt
+abzuspeichern.
+
+Bilder und sonstige Mediadateien, die bereits komprimiert sind, werden nicht
+nochmal mit *Snappy* komprimiert. Dateien die mit Snappy komprimiert werden,
+bekommen als zusätzliche Dateiendung ".snappy" hinzugefügt.
+
+Es gibt einen Ordner mit dem Namen *_trash*, der sich direkt im Datenordner
+befindet. Dort werden alle gelöschten Elemente abgelegt. Somit können auch
+gesamte, gelöschte Ordner inklusive aller darin enthaltenen Unterordner
+wiederhergestellt werden. Die Blobs verbleiben im *_blobs*-Ordner, bis es
+keine Referenz mehr darauf gibt.
+
+Zusammenfassend: Jede CMS-Seite und jeder sonstige Inhalt des CM-Systems wird
+im Datenordner abgespeichert. Jedes Objekt, egal ob es sich um eine HTML-Seite
+oder um ein Bild handelt, wird durch einen **Ordner** unterhalb des
+Datenordners repräsentiert. Jeder Ordner im Datenordner kann natürlich auch
+Unterordner enthalten. Das bedeutet, dass sogar Bilder einen Unterordner
+haben können. Das kann z.B. dazu verwendet werden, verkleinerte Bilder
+(Thumbnails) unterhalb des Hauptbildes abzuspeichern. Das hochgeladene
+Bild könnte z.B. diesen Pfad haben: "/images/banner01.jpg". Und das zugehörige
+Thumbnail könnte z.B. diesen Pfad haben: "/images/banner01.jpg/thumbnail".
+Ob man das so verwendet oder nicht, steht jedem frei.
+
+
+
 
 
 

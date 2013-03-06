@@ -14,8 +14,8 @@ Kurzanleitung
 Die benötigten Programmpakete werden mit folgenden Befehlen auf der
 Kommandozeile installiert::
 
-  sudo apt-get install python-dev build-essential python-pip redis-server python-cherrypy3
-  sudo pip install redis
+  sudo apt-get install python-dev build-essential python-pip python-cherrypy3 python-snappy
+  sudo pip install jsonlib2
   sudo pip install Mako
   sudo pip install python-simplecms
 
@@ -30,8 +30,8 @@ Python 2.x
 Informationen zu Python: http://www.python.org/
 
 Python 2.7 ist bei Ubuntu 12.4 und 12.10 bereits installiert. Es müssen nur noch
-die Entwicklerpakete (dev) installiert werden, damit Mako (siehe weiter unten)
-kompiliert werden kann.
+die Entwicklerpakete (dev) installiert werden, damit Mako und jsonlib2
+(siehe weiter unten) kompiliert werden können.
 
 ::
 
@@ -49,26 +49,15 @@ Informationen zu Pip: https://pypi.python.org/pypi/pip
   sudo apt-get install python-pip
 
 
-===============
-Redis Datenbank
-===============
+========
+Jsonlib2
+========
 
-Informationen zu Redis: http://redis.io/
-
-::
-
-  sudo apt-get install redis-server
-
-
-============
-Redis Python
-============
-
-Informationen zu redis-py: https://github.com/andymccurdy/redis-py
+Informationen zu Jsonlib2: http://code.google.com/p/jsonlib2/
 
 ::
 
-  sudo pip install redis
+  pip install jsonlib2
 
 
 =====================
@@ -94,6 +83,17 @@ Für die Installation von Mako müssen vorher die Pakte `build-essential` und
 ::
 
   sudo pip install Mako
+
+
+=======================
+Snappy Kompressionstool
+=======================
+
+Informationen zu Snappy: http://code.google.com/p/snappy/
+
+::
+
+  sudo apt-get install python-snappy
 
 
 =================
