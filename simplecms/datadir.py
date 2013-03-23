@@ -241,7 +241,10 @@ class Node(dict):
             blob_dir = os.path.join(config.DATABLOBSDIR.value, self.content_blob_name[0])
             blob_path = os.path.join(blob_dir, self.content_blob_name)
             with io.open(blob_path, "rb") as blob_file:
-                content = snappy.uncompress(blob_file.read())
+                if self.content_blob_name.endswith(".snappy"):
+                    content = snappy.uncompress(blob_file.read())
+                else:
+                    content = blob_file.read()
                 if content and self.node.content_type in TEXT_CONTENT_TYPES:
                     return content.decode("utf-8")
                 else:

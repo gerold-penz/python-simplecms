@@ -4,6 +4,16 @@ Simple Python CMS
 
 
 =============
+Version 0.1.8
+=============
+
+2013-03-23
+
+- Beim Auslesen des Contents aus dem Blob-Ordner werden nur Dateien mit Snappy
+  dekomprimiert, die die Dateiendung ".snappy" haben.
+
+
+=============
 Version 0.1.7
 =============
 
