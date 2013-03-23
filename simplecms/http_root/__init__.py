@@ -25,8 +25,8 @@ def default(*args, **kwargs):
     """
 
     # Datenbaum
-    tree = datadir.tree
-    assert isinstance(tree, datadir.Node)
+    basenode = datadir.basenode
+    assert isinstance(basenode, datadir.Node)
 
 
 

@@ -15,6 +15,7 @@ import datetime
 import hashlib
 import snappy
 import isodate
+import constants
 import config
 try:
     import jsonlib2 as json
@@ -36,12 +37,6 @@ TYPE_BLOB_NAME = "blob_name"
 #TYPE_INTEGER = "int"
 #TYPE_DATE = "date"
 #TYPE_TIME = "time"
-
-# Content-Typen mit Textinhalt
-TEXT_CONTENT_TYPES = {
-    "text/plain",
-    "text/html"
-}
 
 
 # ToDo: Blobs mit Snappy komprimiert speichern
@@ -245,7 +240,7 @@ class Node(dict):
                     content = snappy.uncompress(blob_file.read())
                 else:
                     content = blob_file.read()
-                if content and self.node.content_type in TEXT_CONTENT_TYPES:
+                if content and self.node.content_type in constants.CONTENT_TYPES_TEXT:
                     return content.decode("utf-8")
                 else:
                     return content
@@ -433,12 +428,19 @@ class Node(dict):
             if isinstance(content, unicode):
                 content = content.encode("utf-8")
 
-            # Blob komprimieren und speichern
-            content_compressed = snappy.compress(content)
+            # Blob komprimieren und speichern, falls der Datentyp nicht
+            # in der Ausnahmsliste steht.
+            if self.content_type in constants.CONTENT_TYPES_NOT_COMPRESSIBLE:
+                content_data = content
+            else:
+                content_data = snappy.compress(content)
 
             # MD5-Hash erstellen und Blob-Namen zusammensetzen
-            md5hash = hashlib.md5(content_compressed).hexdigest()
-            blob_name = md5hash + ".snappy"
+            md5hash = hashlib.md5(content_data).hexdigest()
+            if self.content_type in constants.CONTENT_TYPES_NOT_COMPRESSIBLE:
+                blob_name = md5hash
+            else:
+                blob_name = md5hash + ".snappy"
             self[lang].content_blob_name = blob_name
 
             # Ordner für den Blob erstellen
@@ -450,7 +452,7 @@ class Node(dict):
             blob_path = os.path.join(blob_dir, blob_name)
             if not os.path.isfile(blob_path):
                 with io.open(blob_path, "wb") as blob_file:
-                    blob_file.write(content_compressed)
+                    blob_file.write(content_data)
 
             # Temporären Content-Zwischenspeicher löschen
             self[lang]._content = None

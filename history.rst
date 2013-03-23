@@ -12,6 +12,9 @@ Version 0.1.8
 - Beim Auslesen des Contents aus dem Blob-Ordner werden nur Dateien mit Snappy
   dekomprimiert, die die Dateiendung ".snappy" haben.
 
+- Set mit nicht gut komprimierbaren Mime-Typen zusammengestellt:
+  *constants.CONTENT_TYPES_NOT_COMPRESSIBLE*
+
 
 =============
 Version 0.1.7
