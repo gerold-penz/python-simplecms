@@ -17,6 +17,7 @@ import snappy
 import isodate
 import constants
 import config
+import language
 try:
     import jsonlib2 as json
 except ImportError:
@@ -140,6 +141,121 @@ def find_path(path):
     return current_node or None
 
 
+class LangData(object):
+    """
+    Repräsentiert die sprachabhängigen Daten eines Nodes
+
+    Hinweis für Programmierer: Es wäre normalerweise nicht notwendig,
+    die Attribute gemeinsam mit Datenschlüssel (all_data_keys) doppelt
+    mitzuführen. Das ist der IDE (PyCharm) geschuldet, damit die
+    Codevervollständigung dabei hilft Fehler beim Programmieren zu vermeiden.
+    """
+
+    # Sprachabhängige Daten-Attribute
+    # (zusammenpassend zu den Datenschlüsseln)
+    title = None
+    menu = None
+    description = None
+    keywords = None
+    _content = None
+    content_blob_name = None
+
+    # Liste mit den sprachabhängigen Datenschlüsseln
+    # (zusammenpassend mit den Daten-Attributen)
+    all_data_keys = [
+        {"name": "title", "type": TYPE_UNICODE},
+        {"name": "menu", "type": TYPE_UNICODE},
+        {"name": "description", "type": TYPE_UNICODE},
+        {"name": "keywords", "type": TYPE_UNICODE},
+        {"name": "content_blob_name", "type": TYPE_BLOB_NAME},
+    ]
+
+
+    def __init__(self, node):
+        """
+        Init
+        """
+
+        self.node = node
+
+
+    @property
+    def content(self):
+        """
+        Holt den Content aus dem *_content*-Attribut oder aus dem
+        *_blobs*-Ordner und gibt diesen entpackt zurück.
+        """
+
+        # Falls der Content noch nicht gespeichert wurde, befindet
+        # er sich noch in *self._content*.
+        if not self._content is None:
+            return self._content
+
+        # Nachsehen ob es einen Blob für den Content gibt
+        if not self.content_blob_name:
+            return None
+
+        # Blob laden, entpacken und zurück geben
+        blob_dir = os.path.join(config.DATABLOBSDIR.value, self.content_blob_name[0])
+        blob_path = os.path.join(blob_dir, self.content_blob_name)
+        with io.open(blob_path, "rb") as blob_file:
+            if self.content_blob_name.endswith(".snappy"):
+                content = snappy.uncompress(blob_file.read())
+            else:
+                content = blob_file.read()
+            if content and self.node.content_type in constants.CONTENT_TYPES_TEXT:
+                return content.decode("utf-8")
+            else:
+                return content
+
+
+    @content.setter
+    def content(self, value):
+        """
+        Legt den Content unkomprimiert in das *_content*-Attribut ab
+        """
+
+        # Es muss vorher der Content-Type angegeben werden
+        if not value is None:
+            assert self.node.content_type
+
+        # Zwischenspeichern
+        self._content = value
+
+        # Wenn None, dann muss der Blob-Name gelöscht werden
+        if value is None:
+            self.content_blob_name = None
+
+
+class LangDataAuto(LangData):
+    """
+    Sprachabhängigen Daten eines Nodes mit **automatischer Sprachauswahl**
+
+    Immer wenn ``node["auto"]`` verwendet wird, wird statt direkt auf
+    die Sprachdaten zuzugreifen, auf eine Instanz dieser Klasse zugegriffen.
+
+    Die verwendete Sprache wird automatisch ermittelt.
+    """
+
+    def __getattribute__(self, name):
+        """
+        Jeder Zugriff auf ein Attribut wird hier abgefangen
+        """
+
+        # Ausnahmen, die direkt von LangData ausgeliefert werden
+        if name in ["node"]:
+            return LangData.__getattribute__(self, name)
+
+        # Alle akzeptierten Sprachen durchlaufen, bis ein Ergebnis zurück kommt
+        for lang in language.get_accepted_language_codes():
+            value = getattr(self.node[lang], name)
+            if not value is None:
+                return value
+
+        # Fallback
+        return getattr(self.node[language.get_fallback_language()], name)
+
+
 class Node(dict):
     """
     Repräsentiert einen Datenordner/Knoten
@@ -174,92 +290,6 @@ class Node(dict):
         {"name": "modified_by", "type": TYPE_UNICODE},
         {"name": "content_type", "type": TYPE_UNICODE},
     ]
-
-
-    class LangData(object):
-        """
-        Repräsentiert die sprachabhängigen Daten eines Nodes
-
-        Hinweis für Programmierer: Es wäre normalerweise nicht notwendig,
-        die Attribute gemeinsam mit Datenschlüssel (all_data_keys) doppelt
-        mitzuführen. Das ist der IDE (PyCharm) geschuldet, damit die
-        Codevervollständigung dabei hilft Fehler beim Programmieren zu vermeiden.
-        """
-
-        # Sprachabhängige Daten-Attribute
-        # (zusammenpassend zu den Datenschlüsseln)
-        title = None
-        menu = None
-        description = None
-        keywords = None
-        _content = None # internal
-        content_blob_name = None
-
-        # Liste mit den sprachabhängigen Datenschlüsseln
-        # (zusammenpassend mit den Daten-Attributen)
-        all_data_keys = [
-            {"name": "title", "type": TYPE_UNICODE},
-            {"name": "menu", "type": TYPE_UNICODE},
-            {"name": "description", "type": TYPE_UNICODE},
-            {"name": "keywords", "type": TYPE_UNICODE},
-            {"name": "content_blob_name", "type": TYPE_BLOB_NAME},
-        ]
-
-
-        def __init__(self, node):
-            """
-            Init
-            """
-
-            self.node = node
-
-
-        @property
-        def content(self):
-            """
-            Holt den Content aus dem *_content*-Attribut oder aus dem
-            *_blobs*-Ordner und gibt diesen entpackt zurück.
-            """
-
-            # Falls der Content noch nicht gespeichert wurde, befindet
-            # er sich noch in *self._content*.
-            if not self._content is None:
-                return self._content
-
-            # Nachsehen ob es einen Blob für den Content gibt
-            if not self.content_blob_name:
-                return None
-
-            # Blob laden, entpacken und zurück geben
-            blob_dir = os.path.join(config.DATABLOBSDIR.value, self.content_blob_name[0])
-            blob_path = os.path.join(blob_dir, self.content_blob_name)
-            with io.open(blob_path, "rb") as blob_file:
-                if self.content_blob_name.endswith(".snappy"):
-                    content = snappy.uncompress(blob_file.read())
-                else:
-                    content = blob_file.read()
-                if content and self.node.content_type in constants.CONTENT_TYPES_TEXT:
-                    return content.decode("utf-8")
-                else:
-                    return content
-
-
-        @content.setter
-        def content(self, value):
-            """
-            Legt den Content unkomprimiert in das *_content*-Attribut ab
-            """
-
-            # Es muss vorher der Content-Type angegeben werden
-            if not value is None:
-                assert self.node.content_type
-
-            # Zwischenspeichern
-            self._content = value
-
-            # Wenn None, dann muss der Blob-Name gelöscht werden
-            if value is None:
-                self.content_blob_name = None
 
 
     def __init__(self, parent = None, name = "/"):
@@ -299,8 +329,9 @@ class Node(dict):
         self.datadir_archive_path = os.path.join(self.datadir_path, "archive")
 
         # Daten je Sprache
+        self["auto"] = LangDataAuto(self)
         for language_id in config.LANGUAGES.value:
-            self[language_id] = self.LangData(self)
+            self[language_id] = LangData(self)
 
         # Daten laden
         self.load()
@@ -314,6 +345,141 @@ class Node(dict):
         """
 
         return dict.__getitem__(self, language)
+
+
+    def __setitem__(self, key, value):
+        """
+        __setitem__ wird überschrieben, um ein direktes Befüllen der
+        "auto"-Sprache zu verhindern
+        """
+
+        assert language != "auto"
+        return dict.__setitem__(self, key, value)
+
+
+    def __delitem__(self, key):
+        """
+        __delitem__ wird überschrieben, da ein Löschen der "auto"-Sprache
+        nicht erlaubt ist.
+        """
+
+        if key == "auto":
+            raise RuntimeError("Deletion of 'auto'-language not allowed")
+        else:
+            return dict.__delitem__(self, key)
+
+
+    def __iter__(self):
+        """
+        __iter__ wird überschrieben, damit die "auto"-Sprache nicht beim
+        Iterieren über die Sprachen zurück gegeben wird.
+        """
+
+        for key in dict.__iter__(self):
+            if key != "auto":
+                yield key
+
+
+    def keys(self):
+        """
+        Gibt die Sprachkürzel zurück (ohne die "auto"-Sprache)
+
+        :rtype: list
+        """
+
+        return [ key for key in self if not key == "auto" ]
+
+
+    def items(self):
+        """
+        Gibt die Sprachkürzel und zugehörigen LangData-Objekte zurück
+
+        :rtype: list
+        """
+
+        retlist = []
+        for key in self:
+            if key != "auto":
+                retlist.append((key, self[key]))
+
+        return retlist
+
+
+    def iteritems(self):
+        """
+        Gibt die Sprachkürzel und zugehörigen LangData-Objekte zurück
+        """
+
+        for key in self:
+            if key != "auto":
+                yield (key, self[key])
+
+
+    def iterkeys(self):
+        """
+        Gibt die Sprachkürzel zurück
+        """
+
+        for key in self:
+            if key != "auto":
+                yield key
+
+
+    def itervalues(self):
+        """
+        Gibt die LangData-Objekte zurück
+        """
+
+        for key in self:
+            if key != "auto":
+                yield self[key]
+
+
+    def values(self):
+        """
+        Gibt die LangData-Objekte zurück
+        """
+
+        retlist = []
+        for key in self:
+            if key != "auto":
+                retlist.append(self[key])
+        return retlist
+
+
+    def get(self, key, failobj = None):
+        """
+        Gibt die Daten der übergebenen Sprache zurück
+
+        :rtype: LangData
+        """
+
+        return dict.get(self, key, failobj)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     def load(self):
@@ -353,7 +519,7 @@ class Node(dict):
         # Sprachabhängige Daten aus der JSON-Datei zu den
         # sprachabhängigen Klasseninstanzen hinzufügen
         for language_id, language_data in self.items():
-            assert isinstance(language_data, self.LangData)
+            assert isinstance(language_data, LangData)
 
             for data_key_item in language_data.all_data_keys:
                 data_key_name = data_key_item["name"]
@@ -457,7 +623,7 @@ class Node(dict):
             self[lang]._content = None
 
         # Sprachabhängige Einstellungen ermitteln
-        for data_key_item in self.LangData.all_data_keys:
+        for data_key_item in LangData.all_data_keys:
             data_key_name = data_key_item["name"]
             data_key_type = data_key_item["type"]
             for lang in self.keys():

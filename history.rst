@@ -12,6 +12,11 @@ Version 0.1.9
 - Es können jetzt auch fünfstellige Sprachkürzel zusätzlich zu den zweistelligen
   Sprachkürzeln verwendet werden. Z.B. ``["de", "de_AT", "de_DE"]``
 
+- ``node["auto"]`` gibt jetzt das *LangDataAuto*-Objekt zurück, das sich
+  automatisch um die Spracherkennung kümmert und alle bevorzugten Sprachen in
+  der vom Browser gewünschten Reihenfolge durchläuft und die Attribute des
+  *LangData*-Objektes in der best möglichen Sprache zurück gibt.
+
 
 =============
 Version 0.1.8

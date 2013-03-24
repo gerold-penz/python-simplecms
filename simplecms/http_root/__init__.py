@@ -6,7 +6,6 @@ Simple Python CMS - Öffentlicher Root-Ordner
 Created by Gerold 2013-02-21 http://halvar.at/
 """
 
-from simplecms import language
 from simplecms import datadir
 
 
@@ -25,17 +24,6 @@ def default(*args, **kwargs):
     :param kwargs: Benannte Parameter (Query-String) als Dictionary
     """
 
-    # Datenbaum
-    basenode = datadir.basenode
-    assert isinstance(basenode, datadir.Node)
-
-    # Sprache
-    accepted_language_codes = language.get_accepted_language_codes()
-
-    print
-    print repr(accepted_language_codes)
-    print
-
     # Pfad zusammensetzen
     path = "/" + "/".join(args)
 
@@ -43,38 +31,11 @@ def default(*args, **kwargs):
     node = datadir.find_path(path)
     if node:
         return repr((
-            node.content_type,
-            node["auto"].title,
-            node["auto"].menu,
-            node["auto"].description,
+            node["de_at"].content,
+            node["de_de"].content,
+            node["de"].content,
             node["auto"].content,
         ))
-
-
-            # node["auto"].content,
-            # node["auto"].menu,
-            #
-            # node["locale"].content,
-            # node["locale"].menu,
-            #
-            # node[""].content,
-            # node[""].menu,
-            #
-            # node[None].content,
-            # node[None].menu,
-            #
-            # node.locale.content,
-            # node.locale.menu,
-
-
-        # return repr((
-        #     node.content_type,
-        #     node[None].title,
-        #     node[None].menu,
-        #     node[None].keywords,
-        #     node[None].description,
-        #     node[None].content,
-        # ))
 
 
 
