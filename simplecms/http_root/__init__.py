@@ -43,14 +43,39 @@ def default(*args, **kwargs):
     node = datadir.find_path(path)
     if node:
         return repr((
-            node["de"].title,
-            node["de"].menu,
-            node["de"].keywords,
+            node.content_type,
+            node["de-at"].title,
+            node["de-de"].menu,
+            node["de-ch"].keywords,
             node["de"].description,
             node["de"].content,
         ))
 
 
+            # node["auto"].content,
+            # node["auto"].menu,
+            #
+            # node["locale"].content,
+            # node["locale"].menu,
+            #
+            # node[""].content,
+            # node[""].menu,
+            #
+            # node[None].content,
+            # node[None].menu,
+            #
+            # node.locale.content,
+            # node.locale.menu,
+
+
+        # return repr((
+        #     node.content_type,
+        #     node[None].title,
+        #     node[None].menu,
+        #     node[None].keywords,
+        #     node[None].description,
+        #     node[None].content,
+        # ))
 
 
 

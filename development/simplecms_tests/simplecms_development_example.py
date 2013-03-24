@@ -26,7 +26,7 @@ simplecms.SimpleCms(
     host = "127.0.0.1",
     port = 8080,
     data_root_dir = os.path.join(THISDIR, "test_instance_data"),
-    languages = ["de", "en", "fr"],
+    languages = ["de", "de_AT", "de_DE", "en", "fr"],
     additional_global_config = {
         # Testumgebung aktivieren
         "environment": None,
@@ -35,7 +35,7 @@ simplecms.SimpleCms(
         "request.show_mismatched_params": True,
     }
 
-    # ToDo: Logdir
+    # ToDo: Log-Dateien eintragen
 
 
 
