@@ -44,11 +44,10 @@ def default(*args, **kwargs):
     if node:
         return repr((
             node.content_type,
-            node["de-at"].title,
-            node["de-de"].menu,
-            node["de-ch"].keywords,
-            node["de"].description,
-            node["de"].content,
+            node["auto"].title,
+            node["auto"].menu,
+            node["auto"].description,
+            node["auto"].content,
         ))
 
 

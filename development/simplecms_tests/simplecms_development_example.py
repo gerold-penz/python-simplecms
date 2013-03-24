@@ -12,7 +12,8 @@ import sys
 THISDIR = os.path.dirname(os.path.abspath(__file__))
 
 # Nachdem `simplecms` installiert wurde, kann man es einfach importieren,
-# ohne vorher den Pfad angeben zu müssen.
+# ohne vorher den Pfad angeben zu müssen. Die zwei Zeilen `APPDIR ...` und
+# `sys.path.append ...` sind dann nicht mehr notwendig und können entfernt werden.
 # ---------
 APPDIR = os.path.abspath(os.path.join(THISDIR, "..", ".."))
 sys.path.append(APPDIR)
@@ -33,7 +34,9 @@ simplecms.SimpleCms(
         "log.screen": True,
         "request.show_tracebacks": True,
         "request.show_mismatched_params": True,
-    }
+    },
+    error_logfile_path = os.path.join(THISDIR, "log", "simplecms_error.log"),
+    access_logfile_path = os.path.join(THISDIR, "log", "simplecms_access.log")
 
     # ToDo: Log-Dateien eintragen
 

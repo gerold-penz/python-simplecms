@@ -56,7 +56,9 @@ class SimpleCms(cherrypy.Application):
             wird er automatisch erstellt.
 
         :param languages: Liste mit den Sprachen in denen das CMS angezeigt
-            werden soll. Standard: ["de"]
+            werden soll. Es sind keine Bindestriche in den Sprachkürzeln erlaubt.
+            Stattdessen müssen Unterstriche verwendet werden. Statt "de-at" muss
+            man "de_AT" schreiben. Standard: ["de", "en"]
 
         :param additional_global_config: Zusätzlich zu den direkt übergebbaren
             Konfigurationsparametern, kann man ein Dictionary mit
@@ -84,10 +86,10 @@ class SimpleCms(cherrypy.Application):
         config.DATACSSDIR.value = os.path.join(data_root_dir, "css")
         config.DATAJSDIR.value = os.path.join(data_root_dir, "js")
         config.DATATRASHDIR.value = os.path.join(data_root_dir, "_trash")
-        config.LANGUAGES.value = languages
+        config.LANGUAGES.value = [lang.replace("-", "_").lower() for lang in languages]
 
         # Pfade für Sprachen hinzufügen
-        for lang in languages:
+        for lang in config.LANGUAGES.value:
             setattr(http_root, lang, http_root)
 
         # Globale CherryPy-Konfiguration

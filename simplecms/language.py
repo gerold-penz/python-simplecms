@@ -61,6 +61,7 @@ def get_accepted_language_codes(firstshot = False):
 
     # Browser
     accept_language = cherrypy.request.headers.get("ACCEPT-LANGUAGE")
+    accept_language.replace("-", "_").lower()
     if accept_language:
         # Möglichkeit 1: da, en-gb;q=0.8, en;q=0.7
         # Möglichkeit 2: de-de;q=1.0,de;q=0.8,en-us;q=0.5,en;q=0.3

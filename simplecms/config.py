@@ -119,6 +119,6 @@ LANGUAGES = Config(
     u"LANGUAGES",
     u"Sprachen",
     u"Liste mit den Sprachen in denen das CMS die Inhalte zeigt",
-    default = ["de"]
+    default = ["de", "en"]
 )
 

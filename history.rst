@@ -4,6 +4,16 @@ Simple Python CMS
 
 
 =============
+Version 0.1.9
+=============
+
+2013-03-24
+
+- Es können jetzt auch fünfstellige Sprachkürzel zusätzlich zu den zweistelligen
+  Sprachkürzeln verwendet werden. Z.B. ``["de", "de_AT", "de_DE"]``
+
+
+=============
 Version 0.1.8
 =============
 

@@ -21,3 +21,4 @@ dist
 *.sock
 *.rdb
 test_instance_data
+log
