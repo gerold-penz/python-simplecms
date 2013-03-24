@@ -6,6 +6,7 @@ Simple Python CMS - Öffentlicher Root-Ordner
 Created by Gerold 2013-02-21 http://halvar.at/
 """
 
+from simplecms import language
 from simplecms import datadir
 
 
@@ -28,15 +29,32 @@ def default(*args, **kwargs):
     basenode = datadir.basenode
     assert isinstance(basenode, datadir.Node)
 
+    # Sprache
+    accepted_language_codes = language.get_accepted_language_codes()
+
+    print
+    print repr(accepted_language_codes)
+    print
+
+    # Pfad zusammensetzen
+    path = "/" + "/".join(args)
+
+    # Im Datenbaum nachsehen, ob es den zugehörigen Ordner gibt.
+    node = datadir.find_path(path)
+    if node:
+        return repr((
+            node["de"].title,
+            node["de"].menu,
+            node["de"].keywords,
+            node["de"].description,
+            node["de"].content,
+        ))
 
 
 
 
 
-    # ToDo: Zuerst im Datenbaum nachsehen, ob es den zugehörigen Ordner gibt.
-
-
-    # ToDo: Danach im http_root nachsehen, ob es den zugehörigen Ordner gibt.
+    # ToDo: Im http_root nachsehen, ob es den zugehörigen Ordner gibt.
 
 
     # ToDo: Prüfen ob es Content gibt, der angezeigt werden kann.
@@ -71,8 +89,8 @@ def testseite(*args, **kwargs):
     Wird zum Entwickeln benötigt um ab und zu eine Funktion zu testen
     """
 
-    tree = datadir.tree
-    assert isinstance(tree, datadir.Node)
+    basenode = datadir.basenode
+    assert isinstance(basenode, datadir.Node)
 
     # for key, value in tree.iteritems():
     #     print key
@@ -85,11 +103,10 @@ def testseite(*args, **kwargs):
 
 
     print
-    print tree.title
+    print basenode.nodedir_path
     print
 
 
-    tree.title = u"Wir sind gekommen um zu bleiben"
 
 
     # Fertig

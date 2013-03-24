@@ -39,8 +39,6 @@ TYPE_BLOB_NAME = "blob_name"
 #TYPE_TIME = "time"
 
 
-# ToDo: Blobs mit Snappy komprimiert speichern
-
 # ToDo: Liste mit der Änderungshistorie eines Ordners zurück geben
 
 # ToDo: Änderungen rückgängig machbar
@@ -249,7 +247,7 @@ class Node(dict):
         @content.setter
         def content(self, value):
             """
-            Speichert den Content unkomprimiert in das *_content*-Attribut
+            Legt den Content unkomprimiert in das *_content*-Attribut ab
             """
 
             # Es muss vorher der Content-Type angegeben werden
@@ -409,6 +407,7 @@ class Node(dict):
             if data_key_type == TYPE_TIMESTAMP:
                 timestamp = getattr(self, data_key_name, None)
                 if timestamp:
+                    assert isinstance(timestamp, datetime.datetime)
                     data[data_key_name] = timestamp.isoformat()
                 else:
                     data[data_key_name] = None
@@ -438,7 +437,7 @@ class Node(dict):
             # MD5-Hash erstellen und Blob-Namen zusammensetzen
             md5hash = hashlib.md5(content_data).hexdigest()
             if self.content_type in constants.CONTENT_TYPES_NOT_COMPRESSIBLE:
-                blob_name = md5hash
+                blob_name = md5hash + ".blob"
             else:
                 blob_name = md5hash + ".snappy"
             self[lang].content_blob_name = blob_name
@@ -465,6 +464,7 @@ class Node(dict):
                 if data_key_type == TYPE_TIMESTAMP:
                     timestamp = getattr(self[lang], data_key_name)
                     if timestamp:
+                        assert isinstance(timestamp, datetime.datetime)
                         data.setdefault(
                             data_key_name, {}
                         )[lang] = timestamp.isoformat()
@@ -490,8 +490,8 @@ class Node(dict):
             os.fchmod(new_json_file.fileno(), NEW_FILE_MODE)
             json.dump(data, new_json_file, indent = 2)
 
-        # Alte JSON-Dateien im Current-Ordner mit Snappy komprimieren
-        # und in den Archive-Ordner verschieben
+        # Alte JSON-Dateien mit Snappy komprimieren und in den Archivordner
+        # speichern.
         for json_path in glob.glob(
             os.path.join(self.datadir_current_path, "*.json")
         ):

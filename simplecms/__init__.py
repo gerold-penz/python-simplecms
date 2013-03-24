@@ -11,10 +11,14 @@ Created by Gerold - http://halvar.at/
 import os
 import sys
 import cherrypy
+import logging
 import constants
 import config
 import datadir
 import http_root
+from cherrypy import _cperror
+from cherrypy import _cplogging
+from logging import handlers
 
 
 class SimpleCms(cherrypy.Application):
@@ -37,7 +41,9 @@ class SimpleCms(cherrypy.Application):
         global_staticdir_match = (
             r"(?i)(gif|jpg|png|jpeg|js|7z|pdf|zip|svg|"
             r"emf|avi|ods|css|ico|html|htm|p3p|swf|htc)$"
-        )
+        ),
+        error_logfile_path = None,
+        access_logfile_path = None
     ):
         """
         :param host: Hostname oder IP-Adresse an die der Server auf Anfragen
@@ -65,6 +71,11 @@ class SimpleCms(cherrypy.Application):
                 r"emf|avi|ods|css|ico|html|htm|p3p|swf|htc)$"
             )
 
+        :param error_logfile_path: Wenn angegeben, dann werden Fehler- und
+            Statusmeldungen in diese Logdatei geschrieben.
+
+        :param access_logfile_path: Wenn angegeben, dann werden
+            Zugriffsmeldungen in diese Datei geschrieben
         """
 
         # Globale Konfigurationsparameter übernehmen
@@ -74,6 +85,10 @@ class SimpleCms(cherrypy.Application):
         config.DATAJSDIR.value = os.path.join(data_root_dir, "js")
         config.DATATRASHDIR.value = os.path.join(data_root_dir, "_trash")
         config.LANGUAGES.value = languages
+
+        # Pfade für Sprachen hinzufügen
+        for lang in languages:
+            setattr(http_root, lang, http_root)
 
         # Globale CherryPy-Konfiguration
         self.cherrypy_config = {
@@ -96,6 +111,8 @@ class SimpleCms(cherrypy.Application):
                 "tools.decode.on": True,
                 # URL Anpassung
                 "tools.trailing_slash.on": True,
+                # Custom-Tools
+                #"tools.before_handler_tool.on": True,
             },
             "/": {
                 # Staticdir
@@ -112,49 +129,52 @@ class SimpleCms(cherrypy.Application):
             self, http_root, script_name, self.cherrypy_config
         )
 
+        # Rotated Error-Logging
+        if error_logfile_path:
+            error_logfile_path = os.path.abspath(error_logfile_path)
+
+            # Falls der Ordner noch nicht existiert wird er erstellt
+            error_logfile_dir = os.path.dirname(error_logfile_path)
+            if not os.path.isdir(error_logfile_dir):
+                os.makedirs(error_logfile_dir, 0770)
+
+            # Logging in eine täglich rotierende Datei umleiten
+            self.log.error_file = ""
+            error_logfile_handler = handlers.TimedRotatingFileHandler(
+                error_logfile_path,
+                when = "midnight",
+                interval = 1,
+                backupCount = 9,
+                encoding = "utf-8"
+            )
+            error_logfile_handler.setLevel(logging.DEBUG)
+            error_logfile_handler.setFormatter(_cplogging.logfmt)
+            self.log.error_log.addHandler(error_logfile_handler)
+
+        # Rotated Access-Logging
+        if access_logfile_path:
+            access_logfile_path = os.path.abspath(access_logfile_path)
+
+            # Falls der Ordner noch nicht existiert wird er erstellt
+            access_logfile_dir = os.path.dirname(access_logfile_path)
+            if not os.path.isdir(access_logfile_dir):
+                os.makedirs(access_logfile_dir, 0770)
+
+            # Logging in eine täglich rotierende Datei umleiten
+            self.log.access_file = ""
+            access_logfile_handler = handlers.TimedRotatingFileHandler(
+                access_logfile_path,
+                when = "midnight",
+                interval = 1,
+                backupCount = 9,
+                encoding = "utf-8"
+            )
+            access_logfile_handler.setLevel(logging.DEBUG)
+            access_logfile_handler.setFormatter(_cplogging.logfmt)
+            self.log.access_log.addHandler(access_logfile_handler)
+
         # Datenordner initialisieren
         datadir.init()
-
-
-
-
-        # # TESTS
-        # basenode = datadir.basenode
-        # basenode.find("/asdf/asdf")
-        #
-        # basenode = datadir.basenode
-        # assert isinstance(basenode, datadir.Node)
-        #
-        # print
-        # print tree.visible
-        # print tree["de"].title
-        # print tree["en"].title
-        # print tree["de"].description
-        #
-        # # tree.child("hallo").child("servus").child("test")
-        # # tree.children["hallo"].children[""]
-        # # node = datadir.search("/") tree.query("/")
-
-
-        basenode = datadir.basenode
-        assert isinstance(basenode, datadir.Node)
-
-        # for key, child in basenode.children.items():
-        #     assert isinstance(child, datadir.Node)
-        #     print child
-        #     for subchild in child.children.values():
-        #         print subchild
-        #
-        # print
-
-
-        #print basenode.children.new("hallowelt")
-        hallowelt = datadir.find_path("/hallowelt")
-
-        print repr(hallowelt["de"].content)
-        print repr(hallowelt["en"].content)
-
-
 
 
     def start(self):
@@ -166,5 +186,30 @@ class SimpleCms(cherrypy.Application):
         cherrypy.quickstart(self, config = self.cherrypy_config)
 
 
-
-
+# def before_handler_tool():
+#     """
+#     Diese Funktion wird ausgeführt, bevor der Request an den Request-Handler
+#     weitergegeben wird
+#     """
+#
+#     #
+#     # Prüfen ob der Request über HTTPS gekommen ist.
+#     # Damit kann Pound das HTTPS-Handling übernehmen
+#     #
+#     if "X-Ssl-Cipher" in cherrypy.request.headers:
+#
+#         # request.scheme
+#         cherrypy.request.scheme = "https"
+#
+#         # wsgi.url_scheme
+#         cherrypy.request.wsgi_environ["wsgi.url_scheme"] = "https"
+#
+#         # request.base
+#         base_url = lib.http.Url(cherrypy.request.base)
+#         base_url.scheme = "https"
+#         cherrypy.request.base = unicode(base_url)
+#
+#
+# cherrypy.tools.before_handler_tool = cherrypy.Tool(
+#     "before_handler", before_handler_tool
+# )

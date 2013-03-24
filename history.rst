@@ -15,6 +15,16 @@ Version 0.1.8
 - Set mit nicht gut komprimierbaren Mime-Typen zusammengestellt:
   *constants.CONTENT_TYPES_NOT_COMPRESSIBLE*
 
+- Beim Speichern des Contents in den Blob-Ordner, werden nur diese Dateien
+  mit Snappy komprimiert, deren Mime-Type nicht im Set
+  *constants.CONTENT_TYPES_NOT_COMPRESSIBLE* enthalten ist.
+
+- Das neue Modul *language.py* ist für Sprachermittlung und Übersetzungen
+  zuständig.
+
+- Das neue Modul *cookie.py* ist für das Lesen und Schreiben von Cookies
+  zuständig.
+
 
 =============
 Version 0.1.7
