@@ -60,14 +60,13 @@ setup(
         "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 2",
-        "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: CGI Tools/Libraries",
+        "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
     ],
-    # install_requires = [
-    #     "distribute",
-    #     "cherrypy",
-    #     "redis",
-    #     "Mako"
-    # ],
+    install_requires = [
+#        "distribute",
+        "cherrypy",
+        "Mako"
+    ],
     cmdclass = {"upload": upload},
 )
 
